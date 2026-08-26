@@ -1,0 +1,8 @@
+{
+  "track": "Track00005",
+  "model": "MuScriptor/muscriptor-medium",
+  "checkpoint": "/root/autodl-tmp/data/muscriptor_medium/model.safetensors",
+  "git": "275b312d30974888a58284ffbd36f6ac25786380",
+  "decode_s": 69.5,
+  "grid": null
+}

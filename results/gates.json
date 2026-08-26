@@ -1,0 +1,30 @@
+{
+  "GATE 0": {
+    "status": "PASS",
+    "evidence": "results/environment.json; RTX 5090 (sm_120, capability 12.0), torch 2.8.0+cu128, BF16 matmul OK, official RWKV7 clampw CUDA kernel compiled and fwd/bwd smoke OK, BabySlakh 16k downloaded with MD5 311096dc2bde7d61c97e930edbfc7f78 (match), no secrets recorded."
+  },
+  "GATE 1": {
+    "status": "PASS",
+    "evidence": "tests/test_gate1_data.py: 20 tracks, audio 16k mono, MIDI/audio alignment, exact tokenizer round-trip on the 10ms tick grid (incl. ties across chunk boundaries, drums, program groups), every chunk EOS-terminated, 0 truncated chunks (223 chunks / 161k tokens), dataset window alignment."
+  },
+  "GATE 2": {
+    "status": "PASS",
+    "evidence": "tests/test_rwkv7_parity.py: pure-torch scan vs official CUDA kernel fwd 2.4e-4 (bf16) and bwd ~1e-8; parallel (GPT) == stepwise RNN with official per-layer x_prev shift-carry (3.4e-8, non-vacuous broken-shift ablation); cross-chunk state carry+lead == joint forward (2.2e-6) and reset differs (2e-2); streaming chunks == joint batch (1.5e-8); BF16 smoke."
+  },
+  "GATE 3": {
+    "status": "PASS",
+    "evidence": "results/gate3_overfit_v2: 1-song overfit (Track00001, 21.87M R0, BF16, 4000 steps). Teacher-forced acc 100%, EOS acc 1.0; GENERATIVE transcription: token match 99.8%, 0 truncation, 0 boundary errors, onset F1 0.988 (continuous) / 0.991 (reset), offset F1 0.916/0.917, instrument F1 0.988/0.991. Listening MIDIs in artifacts/listening/Track00001/."
+  },
+  "GATE 4": {
+    "status": "PASS",
+    "evidence": "results/gate4_overfit_v2: 10 tracks (split-safe: excludes valid/test tracks), 4500 steps, final loss 0.0024, token acc 100%, EOS acc 1.0, 0 truncation. Held-out sanity (Track00005/15, never trained): onset F1 ~0.01 (expected for a memorizing model; documented as the generalization gap). Train-track continuity: continuous F1 0.579 vs reset 0.081 (Track00008: 0.991 vs 0.063)."
+  },
+  "GATE 5": {
+    "status": "PASS",
+    "evidence": "results/gate5_probe: controlled 2-class instrument-history task (guitar vs piano stem history, 2 neutral identical chunks, bit-identical observations). continuous val acc 1.0 vs reset 0.483 (chance). State-distance analysis: inter-class state distance 43.2 (0 neutrals) -> 15.9 -> 3.5 (2 neutrals) -> 0.41 (4 neutrals); classification stays 100% at 2 neutrals. Probe init deviation (slow-decay w0 bias) documented in code; without it the task is unlearnable (vanishing remote-history gradient - measured)."
+  },
+  "GATE 6": {
+    "status": "PASS",
+    "evidence": "results/gate4_overfit_v2/eval/{valid,test,train}: held-out (4 tracks) onset F1 0.007-0.019 both modes, 0 truncation, 0 boundary errors, RTF 0.35-0.75, inference VRAM ~0.13GB (fixed recurrent state size 6*8*64*64*4B = 786KB/layer group + buffers). Continuous-vs-reset: valid/test equivalent at near-zero F1; on train tracks continuous 0.579 vs reset 0.081."
+  }
+}

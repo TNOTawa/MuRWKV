@@ -1,0 +1,12 @@
+{
+  "tracks": 2,
+  "n_gt": 9548,
+  "n_pred": 12816,
+  "onset_p": 0.505461922596754,
+  "onset_r": 0.6784666945957268,
+  "onset_f1": 0.5793239134323018,
+  "offset_f1": 0.0,
+  "inst_f1": 0.5793239134323018,
+  "boundary_errors": 0,
+  "truncated_chunks": 0
+}
