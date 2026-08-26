@@ -13,9 +13,10 @@ python -m murwkv.training.train --exp $ROOT/results/gate3_overfit --data-root $D
     --tracks Track00001 --units 4 --steps 4000 --lr-init 6e-4 --warmup-steps 100 --seed 42 \
     --log-every 20 --save-every 1000
 
-echo "== GATE 3 eval on train track =="
+echo "== GATE 3 eval on the overfit track =="
 python -m murwkv.eval.eval_heldout --exp $ROOT/results/gate3_overfit \
-    --ckpt $ROOT/results/gate3_overfit/final.pt --data-root $DATA --split train --mode both
+    --ckpt $ROOT/results/gate3_overfit/final.pt --data-root $DATA --mode both \
+    --tracks Track00001
 
 echo "== GATE 4: 10-song overfit =="
 python -m murwkv.training.train --exp $ROOT/results/gate4_overfit --data-root $DATA \

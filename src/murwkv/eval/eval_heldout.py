@@ -32,13 +32,17 @@ def main():
     ap.add_argument("--data-root", default="/root/autodl-tmp/data/babyslakh/babyslakh_16k")
     ap.add_argument("--split", default="valid", choices=["valid", "test", "train"])
     ap.add_argument("--mode", default="both", choices=["continuous", "reset", "both"])
+    ap.add_argument("--tracks", nargs="*", default=None)
     ap.add_argument("--max-tokens", type=int, default=600)
     args = ap.parse_args()
 
     bs = BabySlakh(args.data_root)
-    split_path = os.path.join(args.exp, "split.json")
-    splits = json.load(open(split_path))
-    track_ids = splits[args.split]
+    if args.tracks:
+        track_ids = args.tracks
+    else:
+        split_path = os.path.join(args.exp, "split.json")
+        splits = json.load(open(split_path))
+        track_ids = splits[args.split]
     print("tracks:", track_ids)
 
     ckpt = torch.load(args.ckpt, map_location="cpu", weights_only=False)
