@@ -93,22 +93,37 @@ def test_parallel_vs_rnn():
         # parallel
         logits_p = model.forward_gpt(mel, is_audio, flat_midi)
         assert logits_p.abs().max() > 1e-2, "non-vacuity: parallel logits are ~zero"
-        # stepwise RNN
+        # stepwise RNN with official per-layer shift-carry buffers
         x = model.embed_plan(mel, is_audio, flat_midi)
-        S = model.initial_state(B, "cuda").S
+        state = model.initial_state(B, "cuda")
         outs = []
         for t in range(T_audio + M):
             xt = x[:, t]
-            v_first = torch.zeros_like(xt)
-            for i, block in enumerate(model.blocks):
-                xt, S[i], v_first = block.forward_step(xt, v_first, S[i])
-            outs.append(model.head(model.ln_out(xt)))
+            logits_r, state, _ = model.forward_rnn_step(xt, state)
+            outs.append(logits_r)
         logits_r = torch.stack(outs, dim=1)
 
     d = (logits_p - logits_r).abs().max().item()
     print(f"parallel-vs-rnn: max_abs_diff={d:.3e}")
     assert d < 1e-3, f"parity mismatch {d}"
-    print("OK parallel == stepwise RNN")
+    # non-vacuity of the shift-carry: a stepwise run with buffers zeroed every
+    # step (the old broken behavior) must disagree with the parallel path.
+    state_bad = model.initial_state(B, "cuda")
+    outs_bad = []
+    with torch.no_grad():
+        for t in range(T_audio + M):
+            xt = x[:, t]
+            lg, state_bad, _ = model.forward_rnn_step(xt, state_bad)
+            for i in range(cfg.n_layer):
+                state_bad.att_prev[i].zero_()
+                state_bad.ffn_prev[i].zero_()
+            outs_bad.append(lg)
+        logits_bad = torch.stack(outs_bad, dim=1)
+    d_bad = (logits_bad - logits_p).abs().max().item()
+    print(f"parallel-vs-rnn: broken-shift diff={d_bad:.3e} vs correct={d:.3e}")
+    assert d < 1e-5, f"parity mismatch {d}"
+    assert d_bad > 100 * d, f"shift-carry non-vacuity failed: broken-shift diff {d_bad} not >> correct {d}"
+    print("OK parallel == stepwise RNN (with official x_prev carry; broken-shift differs)")
 
 
 def test_cross_chunk_state_carry():

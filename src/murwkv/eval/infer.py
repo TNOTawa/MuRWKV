@@ -36,8 +36,19 @@ class Transcriber:
         self.max_tokens_per_chunk = max_tokens_per_chunk
 
     def _frontend(self, wav: torch.Tensor) -> torch.Tensor:
-        fm = LogMelFrontend(sample_rate=16000, n_fft=2048, hop_length=160, n_mels=512).to(wav.device)
-        return fm(wav)  # (1, F, 512)
+        """log-mel computed bit-identically to the training cache:
+        CPU fp32 STFT -> float16 round-trip -> model dtype.
+
+        (GPU STFT differs from CPU STFT in the last ulps; for a saturated
+        model that is enough to flip argmaxes — see REPORT_10H bug log.)
+        """
+        import numpy as np
+
+        fm = LogMelFrontend(sample_rate=16000, n_fft=2048, hop_length=160, n_mels=512)
+        with torch.no_grad():
+            mel = fm(wav.cpu()).squeeze(0)  # (F, 512) fp32
+        mel = torch.from_numpy(mel.numpy().astype(np.float16).astype(np.float32))
+        return mel.unsqueeze(0).to(self.device).to(next(self.model.parameters()).dtype)
 
     def _audio_chunk_emb(self, mel_chunk, conv_carry):
         """Frontend with causal carry. Returns (emb (1,500,C), new_carry)."""
@@ -51,27 +62,20 @@ class Transcriber:
         return x, new_carry
 
     def _blocks_parallel(self, x, state, lead=None):
-        """Run blocks over x (1,T,C) with optional 1-frame shift lead.
-        Returns (h (1,T,C) cropped, state updated, v_first_last (1,C))."""
-        model = self.model
-        if lead is not None:
-            x_full = torch.cat([lead, x], dim=1)
-            crop = 1
-        else:
-            x_full = x
-            crop = 0
-        v_first = None
-        for i, blk in enumerate(model.blocks):
-            init = state.S[i] if state is not None else None
-            x_full, v_first = blk.forward_parallel(x_full, v_first, init_state=init)
-            if state is not None:
-                state.S[i] = blk._last_state
-        h = model.ln_out(x_full)
-        return h[:, crop:], state, v_first[:, -1] if v_first is not None else None
+        """DEPRECATED - use model.process_audio_parallel (kept for tests)."""
+        return self.model.process_audio_parallel(x, state, lead=lead)[:2]
 
     @torch.no_grad()
     def transcribe_wav(self, wav: torch.Tensor, mode: str = "continuous", chunk_sec: float = 5.0):
-        """wav: (1, N) float32 16k mono. Returns (per-chunk token lists, notes, stats)."""
+        """wav: (1, N) float32 16k mono. Returns (per-chunk token lists, notes, stats).
+
+        Streaming protocol (exact, Gate-2-verified):
+          * frontend conv carry (2 mel frames),
+          * per-layer shift-carry buffers (att/ffn x_prev) carried in RWKVState,
+          * 1-frame shift lead fed to the chunk's block pass = the embedding
+            of the previous token (last MIDI token of the previous chunk; for
+            chunk 0 none), which is exactly the parallel-training semantics.
+        """
         assert mode in ("continuous", "reset")
         mel = self._frontend(wav)
         mel = mel.to(next(self.model.parameters()).dtype).to(self.device)  # (1, F, 512)
@@ -82,38 +86,40 @@ class Transcriber:
         B = 1
         state = model.initial_state(B, self.device)
         conv_carry = None
-        prev_emb = None
+        prev_emb = None  # embedding of the previous token (lead-in frame)
         dec = MT3Decoder(frame_rate=AUDIO_FRAME_RATE)
         all_tokens = []
-        v_first = None
         for c in range(n_chunks):
             if mode == "reset":
                 state = model.initial_state(B, self.device)
                 conv_carry = None
                 prev_emb = None
-                v_first = None
             seg = mel[:, c * CHUNK_FRAMES : (c + 1) * CHUNK_FRAMES]
             if seg.shape[1] < CHUNK_FRAMES:
                 seg = torch.nn.functional.pad(seg, (0, 0, 0, CHUNK_FRAMES - seg.shape[1]))
             x, conv_carry = self._audio_chunk_emb(seg, conv_carry)
-            h, state, v_first = self._blocks_parallel(x, state, lead=prev_emb)
-            prev_emb = x[:, -1:]
-            # greedy decode from last audio hidden
+            h, state, vf_last, att_prevs, ffn_prevs = model.process_audio_parallel(x, state, lead=prev_emb)
+            # greedy decode from the last audio hidden; the first step is
+            # seeded with the per-layer shift-carry buffers at the last frame
             logits = model.head(h[:, -1])
             chunk_tokens = []
-            vf = v_first
+            seed = (vf_last, att_prevs, ffn_prevs)
             for _ in range(self.max_tokens_per_chunk):
                 tok = int(logits.argmax(-1).item())
                 chunk_tokens.append(tok)
                 if tok == EOS_ID:
                     break
                 xt = model.emb(torch.tensor([[tok]], device=self.device)).squeeze(1)
-                logits, state, vf = model.forward_rnn_step(xt, state, vf)
+                logits, state, _ = model.forward_rnn_step(xt, state, seed)
+                seed = None  # only the audio->MIDI transition is seeded
             else:
                 stats["truncated"] += 1
                 chunk_tokens = chunk_tokens[: self.max_tokens_per_chunk - 1] + [EOS_ID]
             all_tokens.append(chunk_tokens)
             stats["tokens"] += len(chunk_tokens)
+            # the next chunk's shift lead = this chunk's last MIDI token
+            last_tok = chunk_tokens[-1]
+            prev_emb = model.emb(torch.tensor([[last_tok]], device=self.device))
             # decode
             dec.begin_chunk(c * chunk_sec, (c + 1) * chunk_sec)
             for t in chunk_tokens:

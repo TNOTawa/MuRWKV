@@ -163,6 +163,10 @@ class MuRWKV(nn.Module):
         """Loss plan: for each unit, positions [audio_end-1 .. audio_end+M-2]
         predict the next flat token (the unit's MIDI tokens, shifted by one).
 
+        Exactly M loss positions per unit, ending with the position of the
+        unit's LAST MIDI TOKEN (which predicts EOS — the EOS prediction MUST
+        be trained, or the model never learns to terminate a chunk).
+
         unit_midi_lens: per-row list of per-unit midi token counts, or a single
         list shared by all rows (B=1 convenience).
 
@@ -181,8 +185,11 @@ class MuRWKV(nn.Module):
                 if M <= 0:
                     continue
                 # this unit's audio spans [pos, pos + CHUNK_FRAMES)
-                E = pos + CHUNK_FRAMES - 1  # flat index of last audio frame
-                lo, hi = E, E + M - 1  # loss positions [lo, hi)  (hi exclusive)
+                E = pos + CHUNK_FRAMES - 1  # flat index of the last audio frame
+                # loss positions [lo, hi) == [E, E+M): M positions whose
+                # targets are the unit's M midi tokens shifted by one
+                # (position E+M-1 holds the last midi token, predicting EOS).
+                lo, hi = E, E + M
                 seg = midi_id[b, lo + 1 : hi + 1]
                 targets[b, lo:hi] = seg
                 mask[b, lo:hi] = seg != PAD_ID
@@ -208,13 +215,57 @@ class MuRWKV(nn.Module):
     # ------------------------------------------------------------------
 
     def initial_state(self, B: int, device) -> RWKVState:
-        return RWKVState.zeros(self.cfg.n_layer, B, self.cfg.n_embd // self.cfg.head_size, self.cfg.head_size, device)
+        return RWKVState.zeros(
+            self.cfg.n_layer, B,
+            self.cfg.n_embd // self.cfg.head_size, self.cfg.head_size, device,
+            C=self.cfg.n_embd,
+        )
 
-    def forward_rnn_step(self, x_t: torch.Tensor, state: RWKVState, v_first: torch.Tensor | None = None):
-        """One MIDI token: x_t (B, C) embedding. Returns (logits (B, vocab), new_state, v_first)."""
-        v_first = v_first if v_first is not None else torch.zeros_like(x_t)
+    def process_audio_parallel(self, x, state: RWKVState, lead=None):
+        """Process one audio chunk embedding block in parallel with optional
+        1-frame shift lead (the previous token's embedding).
+
+        Returns (h (1,T,C) cropped to chunk frames, state (updated), v_first_last,
+                 att_prevs, ffn_prevs) where att_prevs/ffn_prevs are the
+        per-layer ln1/ln2 outputs at the chunk's LAST frame — the official
+        RNN shift-carry seed for the first stepwise MIDI token.
+        """
+        if lead is not None:
+            x_full = torch.cat([lead, x], dim=1)
+            crop = 1
+        else:
+            x_full = x
+            crop = 0
+        v_first = torch.empty_like(x_full)
+        att_prevs, ffn_prevs = [], []
+        for blk in self.blocks:
+            init = state.S[blk.layer_id] if state is not None else None
+            x_full, v_first, ap, fp = blk.forward_parallel(x_full, v_first, init_state=init, capture_last=True)
+            if state is not None:
+                state.S[blk.layer_id] = blk._last_state
+            att_prevs.append(ap)
+            ffn_prevs.append(fp)
+        h = self.ln_out(x_full)
+        return h[:, crop:], state, v_first[:, -1], att_prevs, ffn_prevs
+
+    def forward_rnn_step(self, x_t: torch.Tensor, state: RWKVState, seed=None):
+        """One MIDI token: x_t (B, C) embedding.
+
+        seed: (v_first, att_prevs, ffn_prevs) from process_audio_parallel —
+        replaces the state's shift-carry buffers for THIS step only (the
+        audio→MIDI transition), consistent with the parallel training path.
+
+        Returns (logits (B, vocab), new_state, v_first).
+        """
+        v_first = seed[0] if seed is not None else torch.zeros_like(x_t)
         for i, block in enumerate(self.blocks):
-            x_t, state.S[i], v_first = block.forward_step(x_t, v_first, state.S[i])
+            ap = state.att_prev[i]
+            fp = state.ffn_prev[i]
+            if seed is not None:
+                ap, fp = seed[1][i], seed[2][i]
+            x_t, new_ap, new_fp, state.S[i], v_first = block.forward_step(x_t, v_first, state.S[i], ap, fp)
+            state.att_prev[i] = new_ap
+            state.ffn_prev[i] = new_fp
         x_t = self.ln_out(x_t)
         return self.head(x_t), state, v_first
 

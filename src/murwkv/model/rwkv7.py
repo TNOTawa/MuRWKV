@@ -100,37 +100,47 @@ def wkv7_step(r, w, k, v, a, b, S):
 
 
 def wkv7_scan(r, w, k, v, a, b, state=None, return_chunk_states=True):
-    """Parallel scan over (B,T,H,N) r,w,k,v,a,b; T padded to a multiple of 16.
+    """Parallel scan over (B,T,H,N) r,w,k,v,a,b (chunked like the CUDA kernel).
 
     Inputs may be bf16 or fp32 (cast to fp32 internally, like the CUDA kernel
-    which accumulates in fp32); output y and states are fp32, y cast back to
-    the input dtype at the end.
+    which accumulates in fp32); output y is cast back to the input dtype.
 
-    Returns (y (B,T,H,N), final_state (B,H,N,N), chunk_states (B, T//16, H, N, N) or None).
+    IMPORTANT: the returned final_state is the state at the TRUE sequence end
+    T — the tail is processed with real steps only (no zero-padding tail that
+    would decay the state). Padding is limited to the y buffer (dropped).
+
+    Returns (y (B,T,H,N), final_state (B,H,N,N) at T, chunk_states or None).
     """
     dtype = r.dtype
     r, w, k, v, a, b = (x.float() for x in (r, w, k, v, a, b))
     B, T, H, N = r.shape
+    main = (T // CHUNK_LEN) * CHUNK_LEN
+    rem = T - main
     tp = ((T + CHUNK_LEN - 1) // CHUNK_LEN) * CHUNK_LEN
     if tp != T:
-        pad = tp - T
-        r, w, k, v, a, b = (torch.nn.functional.pad(x, (0, 0, 0, 0, 0, pad)) for x in (r, w, k, v, a, b))
+        r, w, k, v, a, b = (torch.nn.functional.pad(x, (0, 0, 0, 0, 0, tp - T)) for x in (r, w, k, v, a, b))
     wd = torch.exp(W_SCALE * torch.sigmoid(w))
     S = state if state is not None else torch.zeros(B, H, N, N, dtype=torch.float32, device=r.device)
-    n_chunks = tp // CHUNK_LEN
     y = torch.empty(B, tp, H, N, dtype=torch.float32, device=r.device)
-    cs = torch.empty(B, n_chunks, H, N, N, dtype=torch.float32, device=r.device) if return_chunk_states else None
-    for c in range(n_chunks):
+    cs = torch.empty(B, main // CHUNK_LEN, H, N, N, dtype=torch.float32, device=r.device) if return_chunk_states else None
+
+    def step(tt):
+        nonlocal S
+        sa = torch.einsum("bhij,bhj->bhi", S, a[:, tt])
+        S = S * wd[:, tt].unsqueeze(-2) + torch.einsum("bhi,bhj->bhij", sa, b[:, tt]) + torch.einsum(
+            "bhi,bhj->bhij", v[:, tt], k[:, tt]
+        )
+        y[:, tt] = torch.einsum("bhij,bhj->bhi", S, r[:, tt])
+
+    for c in range(main // CHUNK_LEN):
         base = c * CHUNK_LEN
         for t in range(CHUNK_LEN):
-            tt = base + t
-            sa = torch.einsum("bhij,bhj->bhi", S, a[:, tt])
-            S = S * wd[:, tt].unsqueeze(-2) + torch.einsum("bhi,bhj->bhij", sa, b[:, tt]) + torch.einsum(
-                "bhi,bhj->bhij", v[:, tt], k[:, tt]
-            )
-            y[:, tt] = torch.einsum("bhij,bhj->bhi", S, r[:, tt])
+            step(base + t)
         if cs is not None:
             cs[:, c] = S
+    if rem > 0:
+        for t in range(T - rem, T):
+            step(t)  # real tail steps: final state is at the true T
     return y[:, :T].to(dtype), S, cs
 
 
@@ -290,13 +300,23 @@ class RWKV_Tmix_x070(nn.Module):
         x = self.output(x * g)
         return x, v_first
 
-    def forward_step(self, x_t, v_first_t, S):
-        """Single-token RNN step. x_t: (B,C); v_first_t: (B,C); S: (B,H,N,N). Returns (x, S, v_first)."""
+    def forward_step(self, x_t, x_prev, v_first_t, S):
+        """Single-token RNN step with official per-layer shift carry.
+
+        x_t: (B,C) current token input (after ln1); x_prev: (B,C) the SAME
+        tensor at the previous step (zero at sequence start). Returns
+        (out (B,C), new_x_prev, S, v_first).
+        """
         B, C = x_t.size()
         H = self.n_head
-        x_t = x_t.unsqueeze(1)  # (B,1,C)
-        xr, xw, xk, xv, xa, xg = self._mix(x_t)
-        r, w, k, v, a, kk, g, v_first = self._proj(xr, xw, xk, xv, xa, xg, v_first_t.unsqueeze(1))
+        xx = x_prev - x_t
+        xr = x_t + xx * self.x_r.squeeze(0)
+        xw = x_t + xx * self.x_w.squeeze(0)
+        xk = x_t + xx * self.x_k.squeeze(0)
+        xv = x_t + xx * self.x_v.squeeze(0)
+        xa = x_t + xx * self.x_a.squeeze(0)
+        xg = x_t + xx * self.x_g.squeeze(0)
+        r, w, k, v, a, kk, g, v_first = self._proj(xr, xw, xk, xv, xa, xg, v_first_t)
         y, S = wkv7_step(
             r.view(B, H, -1), w.view(B, H, -1), k.view(B, H, -1), v.view(B, H, -1),
             (-kk).view(B, H, -1), (kk * a).view(B, H, -1), S,
@@ -304,7 +324,7 @@ class RWKV_Tmix_x070(nn.Module):
         x = self.ln_x(y.view(B, C)).view(B, C)
         x = x + ((r.view(B, H, -1) * k.view(B, H, -1) * self.r_k).sum(dim=-1, keepdim=True) * v.view(B, H, -1)).view(B, C)
         x = self.output(x * g.view(B, C))
-        return x, S, v_first.squeeze(1)
+        return x, x_t, S, v_first
 
 
 class RWKV_CMix_x070(nn.Module):
@@ -333,6 +353,13 @@ class RWKV_CMix_x070(nn.Module):
         out = self.value(k)
         return out.squeeze(1) if unsq else out
 
+    def forward_step(self, x_t, x_prev):
+        """x_t / x_prev: (B,C). Returns (out (B,C), new_x_prev)."""
+        xx = x_prev - x_t
+        k = x_t + xx * self.x_k.squeeze(0)
+        k = torch.relu(self.key(k)) ** 2
+        return self.value(k), x_t
+
 
 class Block(nn.Module):
     def __init__(self, args, layer_id):
@@ -346,22 +373,39 @@ class Block(nn.Module):
         self.att = RWKV_Tmix_x070(args, layer_id)
         self.ffn = RWKV_CMix_x070(args, layer_id)
 
-    def forward_parallel(self, x, v_first, use_cuda_kernel=False, init_state=None):
+    def forward_parallel(self, x, v_first, use_cuda_kernel=False, init_state=None, capture_last=False):
         if self.layer_id == 0:
             x = self.ln0(x)
-        x_attn, v_first = self.att.forward_parallel(self.ln1(x), v_first, use_cuda_kernel, init_state)
+        ln1_in = self.ln1(x)
+        x_attn, v_first = self.att.forward_parallel(ln1_in, v_first, use_cuda_kernel, init_state)
         self._last_state = self.att._last_state
         x = x + x_attn
-        x = x + self.ffn(self.ln2(x))
+        ln2_in = self.ln2(x)
+        x = x + self.ffn(ln2_in)
+        if capture_last:
+            return x, v_first, ln1_in[:, -1], ln2_in[:, -1]
         return x, v_first
 
-    def forward_step(self, x_t, v_first_t, S):
+    def forward_step(self, x_t, v_first_t, S, att_prev=None, ffn_prev=None):
+        """RNN step with official per-layer shift-carry buffers.
+
+        x_t: (B,C) layer input (post ln0 for layer 0). att_prev/ffn_prev:
+        (B,C) previous token's ln1/ln2 outputs (zeros at sequence start).
+        Returns (out (B,C), new_att_prev, new_ffn_prev, S, v_first).
+        """
         if self.layer_id == 0:
             x_t = self.ln0(x_t)
-        x_attn, S, v_first = self.att.forward_step(self.ln1(x_t), v_first_t, S)
+        if att_prev is None:
+            att_prev = torch.zeros_like(x_t)
+        if ffn_prev is None:
+            ffn_prev = torch.zeros_like(x_t)
+        ln1_in = self.ln1(x_t)
+        x_attn, new_att_prev, S, v_first = self.att.forward_step(ln1_in, att_prev, v_first_t, S)
         x_t = x_t + x_attn
-        x_t = x_t + self.ffn(self.ln2(x_t))
-        return x_t, S, v_first
+        ln2_in = self.ln2(x_t)
+        x_ffn, new_ffn_prev = self.ffn.forward_step(ln2_in, ffn_prev)
+        x_t = x_t + x_ffn
+        return x_t, new_att_prev, new_ffn_prev, S, v_first
 
 
 # ---------------------------------------------------------------------------
@@ -371,22 +415,50 @@ class Block(nn.Module):
 
 @dataclass
 class RWKVState:
+    """Recurrent state: per-layer wkv state S (B,H,N,N) fp32 + the official
+    per-layer time-shift carry buffers (att_x_prev / ffn_x_prev, (B,C)),
+    matching RWKV-LM's RNN state layout (0=att_x_prev 1=att_kv 2=ffn_x_prev).
+    The shift buffers are part of the memory: dropping them changes outputs
+    (verified by Gate-2 parity tests)."""
+
     S: list  # per-layer (B,H,N,N) fp32
+    att_prev: list = None  # per-layer (B,C) previous ln1 output
+    ffn_prev: list = None  # per-layer (B,C) previous ln2 output
     B: int = 1
 
     @classmethod
-    def zeros(cls, n_layer, B, H, N, device):
-        return cls(S=[torch.zeros(B, H, N, N, dtype=torch.float32, device=device) for _ in range(n_layer)], B=B)
+    def zeros(cls, n_layer, B, H, N, device, C=None):
+        c = C if C is not None else N * H
+        return cls(
+            S=[torch.zeros(B, H, N, N, dtype=torch.float32, device=device) for _ in range(n_layer)],
+            att_prev=[torch.zeros(B, c, dtype=torch.float32, device=device) for _ in range(n_layer)],
+            ffn_prev=[torch.zeros(B, c, dtype=torch.float32, device=device) for _ in range(n_layer)],
+            B=B,
+        )
 
     def clone(self, deep=True):
-        return RWKVState(S=[s.clone() if deep else s for s in self.S], B=self.B)
+        return RWKVState(
+            S=[s.clone() if deep else s for s in self.S],
+            att_prev=[s.clone() if deep else s for s in (self.att_prev or [])],
+            ffn_prev=[s.clone() if deep else s for s in (self.ffn_prev or [])],
+            B=self.B,
+        )
 
     def reset(self):
         for s in self.S:
             s.zero_()
+        for s in self.att_prev or []:
+            s.zero_()
+        for s in self.ffn_prev or []:
+            s.zero_()
 
     def to_dict(self):
-        return {"S": [s.detach().cpu() for s in self.S], "B": self.B}
+        return {
+            "S": [s.detach().cpu() for s in self.S],
+            "att_prev": [s.detach().cpu() for s in (self.att_prev or [])],
+            "ffn_prev": [s.detach().cpu() for s in (self.ffn_prev or [])],
+            "B": self.B,
+        }
 
     def save(self, path):
         torch.save(self.to_dict(), path)
@@ -394,7 +466,12 @@ class RWKVState:
     @classmethod
     def load(cls, path, device=None):
         d = torch.load(path, map_location="cpu")
-        st = cls(S=[s.to(device) for s in d["S"]], B=d["B"])
+        st = cls(
+            S=[s.to(device) for s in d["S"]],
+            att_prev=[s.to(device) for s in d.get("att_prev", [torch.zeros_like(d["S"][0][:, 0, 0])] * len(d["S"]))],
+            ffn_prev=[s.to(device) for s in d.get("ffn_prev", [torch.zeros_like(d["S"][0][:, 0, 0])] * len(d["S"]))],
+            B=d["B"],
+        )
         return st
 
     def state_norm(self):
