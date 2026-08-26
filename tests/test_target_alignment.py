@@ -35,7 +35,7 @@ def build_synthetic(n_units, lens, B=1):
 def test_targets():
     model = MuRWKV(MuRWKVConfig())
     lens = [141, 444, 313]
-    ia, mid, per_row = build_synthetic(lens)
+    ia, mid, per_row = build_synthetic(n_units=len(lens), lens=lens)
     targets, mask = model.build_targets(ia, mid, per_row)
     pos = 0
     for u, M in enumerate(lens):
