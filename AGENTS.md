@@ -46,17 +46,28 @@
 
 ## Project map
 
-> Fill these in for each repository. Delete fields that do not apply.
-
-- **Project:** TODO
-- **Purpose:** TODO
-- **Main entry point:** TODO
-- **Architecture map:** TODO (prefer a pointer, e.g. `ARCHITECTURE.md`)
-- **Build/setup:** TODO
-- **Fast relevant tests:** TODO
-- **Full QA command:** TODO — prefer one canonical entry point such as `python qa.py`, `make qa`, or `npm run qa`
-- **Release/build artifact:** TODO
-- **Critical data/compatibility notes:** TODO (prefer pointers to focused docs)
+- **Project:** MuRWKV — pure RWKV-7 automatic music transcription (research, 10h run).
+- **Purpose:** answer whether a random-init, attention-free RWKV-7 can learn Audio→MIDI
+  from log-Mel directly and maintain musical state across 5s chunks without resets.
+- **Main entry point:** `src/murwkv/training/train.py` (train), `src/murwkv/eval/eval_heldout.py` (evaluate),
+  `src/murwkv/eval/infer.py` (streaming transcription).
+- **Architecture map:** `src/murwkv/model/rwkv7.py` (RWKV-7 core, official math/init;
+  vendored official clampw CUDA kernel in `src/murwkv/cuda/`), `src/murwkv/model/murwkv_model.py`
+  (unified audio+MIDI stream model), `src/murwkv/tokenizer.py` (MT3_FULL_PLUS, tie protocol),
+  `src/murwkv/data/babyslakh.py` (dataset). See `REPORT_10H.md` at the end of the run.
+- **Build/setup:** `pip install -r requirements.txt`; no build step (CUDA kernel auto-compiles
+  on first import; needs ninja).
+- **Fast relevant tests:** `tests/test_tokenizer.py`, `tests/test_rwkv7_parity.py` (Gate 2),
+  `tests/test_train_smoke.py`, `tests/test_gate1_data.py <babyslakh_root>` (Gate 1).
+- **Full QA command:** `python tests/qa.py` — runs every test in `tests/` that is runnable
+  on the current machine (needs CUDA for parity/smoke; Gate1 needs extracted BabySlakh).
+- **Release/build artifact:** listening MIDI artifacts under `artifacts/listening/<track>/`;
+  checkpoints in `results/<exp>/` (+ private HF repo if writable).
+- **Critical data/compatibility notes:** BabySlakh 16k (Zenodo 4603870, CC-BY-4.0) lives on
+  the data disk (`/root/autodl-tmp/data`), never in git. No pretrained weights may be loaded
+  for MuRWKV (random init only). Token truncation of target chunks is a pipeline bug
+  (must be 0 in official runs). Continuous inference requires the lead-in protocol
+  (conv carry 2 frames + shift lead 1 frame + state carry) verified in Gate 2.
 
 ## Completion
 

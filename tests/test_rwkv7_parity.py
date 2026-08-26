@@ -188,6 +188,60 @@ def test_cross_chunk_state_carry():
     print("OK cross-chunk state carry+lead == joint forward; reset differs")
 
 
+def test_streaming_parity():
+    """Chunked streaming (conv carry + shift lead + state carry) must produce
+    the same per-chunk last-frame hiddens as one joint batch forward."""
+    torch.manual_seed(11)
+    cfg = MuRWKVConfig(n_layer=2, n_embd=128, head_size=64)
+    model = randomize_model(MuRWKV(cfg)).cuda().float().eval()
+    B = 1
+    n_chunks = 3
+    mel = torch.randn(B, n_chunks * 32, cfg.n_mels, device="cuda") * 0.4
+    CF = 32  # fake "chunk frames" for this small test
+    # joint
+    ia = torch.zeros(B, n_chunks * CF, dtype=torch.bool, device="cuda")
+    ia[:, :] = True
+    mid = torch.zeros(B, n_chunks * CF, dtype=torch.long, device="cuda")
+    xj = model.embed_plan(mel, ia, mid)
+    x = xj
+    v_first = torch.empty_like(x)
+    S = []
+    for blk in model.blocks:
+        x, v_first = blk.forward_parallel(x, v_first)
+        S.append(blk._last_state)
+    h_joint = model.ln_out(x)
+    # streaming
+    state = model.initial_state(B, "cuda")
+    conv_carry = None
+    prev_emb = None
+    last_hiddens = []
+    for c in range(n_chunks):
+        seg = mel[:, c * CF : (c + 1) * CF]
+        if conv_carry is None:
+            xe = model.audio_front(seg)
+        else:
+            xe = model.audio_front(torch.cat([conv_carry, seg], 1))[:, 2:]
+        conv_carry = seg[:, -2:]
+        if prev_emb is not None:
+            xe = torch.cat([prev_emb, xe], 1)
+            crop = 1
+        else:
+            crop = 0
+        ve = torch.empty_like(xe)
+        for i, blk in enumerate(model.blocks):
+            xe, ve = blk.forward_parallel(xe, ve, init_state=state.S[i])
+            state.S[i] = blk._last_state
+        h = model.ln_out(xe)
+        last_hiddens.append(h[:, -1])
+        prev_emb = xe[:, -1:]  # this chunk's last embedded frame = next shift lead
+    h_stream = torch.stack(last_hiddens, 1)
+    h_ref = h_joint[:, CF - 1 :: CF]
+    d = (h_stream - h_ref).abs().max().item()
+    print(f"streaming-vs-batch: max_abs_diff={d:.3e}")
+    assert d < 1e-4, f"streaming mismatch {d}"
+    print("OK streaming chunks == joint batch")
+
+
 def test_bf16_smoke():
     torch.manual_seed(3)
     cfg = MuRWKVConfig(n_layer=2, n_embd=128, head_size=64)
@@ -210,5 +264,6 @@ if __name__ == "__main__":
     test_scan_vs_cuda_kernel()
     test_parallel_vs_rnn()
     test_cross_chunk_state_carry()
+    test_streaming_parity()
     test_bf16_smoke()
     print("GATE 2 PARITY: ALL PASS")
