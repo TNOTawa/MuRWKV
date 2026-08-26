@@ -54,8 +54,9 @@ class MuRWKVConfig:
 
     @property
     def dim_ffn(self):
-        # official RWKV default is ~3.5x; R0 uses 1x to keep ~24M params (documented)
-        return self.n_embd
+        # official RWKV default: 3.5x emb size, rounded to /32.
+        # R0: 6x512 with 1x would be ~13.5M; 3.5x gives ~21M (task target 20-30M).
+        return int((self.n_embd * 3.5) // 32 * 32)
 
 
 class CausalConv1d(nn.Module):

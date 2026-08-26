@@ -1,0 +1,55 @@
+{
+  "timestamp": "2026-08-27 02:35:26 CST",
+  "hostname": "autodl-container-gzw4qpf8tl-c978a258",
+  "os": "Linux-5.15.0-78-generic-x86_64-with-glibc2.35",
+  "python": "3.12.3",
+  "cpu_cores": 128,
+  "ram_gb": 791.2,
+  "gpu": {
+    "name": "NVIDIA GeForce RTX 5090",
+    "capability": [
+      12,
+      0
+    ],
+    "arch_list": [
+      "sm_70",
+      "sm_75",
+      "sm_80",
+      "sm_86",
+      "sm_90",
+      "sm_100",
+      "sm_120"
+    ],
+    "bf16_supported": true,
+    "total_vram_gb": 33.7
+  },
+  "torch": "2.8.0+cu128",
+  "cuda_runtime": "12.8",
+  "disk_/": {
+    "total_gb": 32.2,
+    "free_gb": 30.7
+  },
+  "disk_/root/autodl-tmp": {
+    "total_gb": 805.3,
+    "free_gb": 805.1
+  },
+  "bf16_matmul_ok": true,
+  "rwkv7_cuda_kernel": {
+    "available": true,
+    "import_error": null,
+    "fwd_smoke": true
+  },
+  "packages": {
+    "torch": "2.8.0+cu128",
+    "numpy": "2.3.2",
+    "soundfile": "0.14.0",
+    "pretty_midi": "0.2.11.post0",
+    "scipy": "1.18.1",
+    "torchvision": "0.23.0+cu128",
+    "huggingface_hub": "1.28.0",
+    "matplotlib": "3.10.5"
+  },
+  "git_commit": "da74d65322c6081f517c53ac5bbb76944444cc82",
+  "git_branch": "main",
+  "secrets_recorded": false
+}
