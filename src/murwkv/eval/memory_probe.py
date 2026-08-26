@@ -35,7 +35,7 @@ from ..model.rwkv7 import RWKVState
 NEUTRAL_FIXED_SEED = 999
 
 
-def make_neutral_chunk(mel_cache, n_frames=CHUNK_FRAMES):
+def make_neutral_chunk(n_frames=CHUNK_FRAMES):
     """A fixed neutral log-mel chunk (same for every sample, both classes)."""
     rng = np.random.RandomState(NEUTRAL_FIXED_SEED)
     # pink-ish noise spectrogram-like pattern: deterministic, bit-identical everywhere
@@ -45,9 +45,18 @@ def make_neutral_chunk(mel_cache, n_frames=CHUNK_FRAMES):
 
 
 class ProbeModel(nn.Module):
-    """Small RWKV-7 backbone (2 layers) + classifier on final states."""
+    """Small RWKV-7 backbone (2 layers) + classifier on final states.
 
-    def __init__(self, n_embd=256, head_size=64, n_layer=2, n_classes=2, n_mels=512):
+    NOTE (probe-specific init, documented deviation): with the official RWKV
+    decay init, per-frame decay of 0.56-0.99 over 1000 frames of neutral audio
+    zeroes both the retained signal AND its gradient (measured: probe features
+    were bit-identical across samples). The probe therefore biases the decay
+    slow (w0 -= 6 -> per-frame decay ~0.9985) so the remote-history signal and
+    its gradient survive; whether the model then USES the retained state is
+    exactly what the probe measures (continuous vs reset).
+    """
+
+    def __init__(self, n_embd=256, head_size=64, n_layer=2, n_classes=2, n_mels=512, decay_bias=-6.0):
         super().__init__()
         self.cfg = MuRWKVConfig(n_layer=n_layer, n_embd=n_embd, head_size=head_size, n_mels=n_mels)
         from ..model.murwkv_model import MuRWKV
@@ -59,6 +68,17 @@ class ProbeModel(nn.Module):
             nn.GELU(),
             nn.Linear(256, n_classes),
         )
+        if decay_bias:
+            with torch.no_grad():
+                for blk in self.backbone.blocks:
+                    blk.att.w0.data.add_(decay_bias)
+
+    def apply_decay_bias(self, decay_bias=-6.0):
+        """(Re-)apply after any parameter randomization (randomization would
+        otherwise overwrite w0)."""
+        with torch.no_grad():
+            for blk in self.backbone.blocks:
+                blk.att.w0.data.add_(decay_bias)
         # backbone output/ffn are zero-init -> probe must train from real init;
         # we randomize backbone head/emb consistently with the train path.
 
@@ -79,7 +99,7 @@ class ProbeModel(nn.Module):
         v_first = torch.empty_like(x)
         state = self.backbone.initial_state(B, mel.device)
         for blk in self.backbone.blocks:
-            x, v_first = blk.forward_parallel(x, v_first)
+            x, v_first = blk.forward_parallel(x, v_first, use_cuda_kernel=True)
             state.S[blk.layer_id] = blk._last_state
         h_last = self.backbone.ln_out(x)[:, -1]
         S = state.S[-1]  # (B,H,N,N) fp32
@@ -100,15 +120,9 @@ def build_probe_data(bs: BabySlakh, mel_cache_dir: str, class_map: dict, n_sampl
             if os.path.exists(p):
                 cache[(label, tid)] = np.load(p)
                 continue
-            # find a stem wav
-            td = os.path.join(bs.root, tid)
-            stem = None
-            for f in sorted(os.listdir(td)):
-                if f.endswith(".wav") and not f.startswith("mix"):
-                    stem = os.path.join(td, f)
-                    break
-            assert stem, f"no stem for {tid}"
-            wav, sr = sf.read(stem, dtype="float32")
+            stems = bs.stems(tid)
+            assert stems, f"no stem for {tid}"
+            wav, sr = sf.read(stems[0], dtype="float32")
             if sr != 16000:
                 raise ValueError(sr)
             if wav.ndim > 1:
@@ -164,6 +178,7 @@ def train_probe(args):
             nn.init.normal_(p, 0, 0.05)
         else:
             nn.init.normal_(p, 0, 0.02)
+    model.apply_decay_bias(-6.0)  # slow-decay probe init (after randomization)
     opt = torch.optim.AdamW(model.parameters(), lr=4e-4, weight_decay=0.01)
     n_chunks_total = args.hist_chunks + 2
     rows = []

@@ -153,7 +153,8 @@ class _WKVCUDA(torch.autograd.Function):
         sa = torch.empty(B, T, H, N, dtype=torch.float32, device=r.device)
         _WK_OP.forward(r.contiguous(), w.contiguous(), k.contiguous(), v.contiguous(), a.contiguous(), b.contiguous(), y, s, sa)
         ctx.save_for_backward(r, w, k, v, a, b, s, sa)
-        return y, s[:, -1]
+        # s: (B, H, T//16, N, N); final state = last chunk boundary per head
+        return y, s[:, :, -1]
 
     @staticmethod
     def backward(ctx, dy, dstate):

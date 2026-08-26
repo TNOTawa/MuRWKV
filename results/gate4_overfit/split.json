@@ -1,0 +1,28 @@
+{
+  "train": [
+    "Track00001",
+    "Track00002",
+    "Track00003",
+    "Track00004",
+    "Track00007",
+    "Track00008",
+    "Track00009",
+    "Track00010",
+    "Track00011",
+    "Track00012",
+    "Track00013",
+    "Track00014",
+    "Track00016",
+    "Track00017",
+    "Track00018",
+    "Track00019"
+  ],
+  "valid": [
+    "Track00005",
+    "Track00015"
+  ],
+  "test": [
+    "Track00006",
+    "Track00020"
+  ]
+}
