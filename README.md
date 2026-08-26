@@ -46,8 +46,11 @@ the audio history it has heard.
    `murwkv_continuous.mid`, `murwkv_reset.mid`, `muscriptor.mid` (baseline).
    Open them in any DAW/MuseScore.
 8. **Checkpoints:** `results/gate3_overfit_v2/final.pt` (1-song overfit),
-   `results/gate4_overfit_v2/final.pt` (10-song overfit) — on the data disk;
-   HF upload status in `REPORT_10H.md` §Final Git/HF State.
+   `results/gate4_overfit_v2/final.pt` (10-song overfit) — also on the private
+   HF repo **`TNOT/MuRWKV-R0`** (`murwkv_r0_gate4.pt`, 43.8 MB, bf16:
+   `hf download TNOT/MuRWKV-R0 murwkv_r0_gate4.pt --include murwkv_r0_gate4.pt`).
+   GitHub push was blocked by a token without write scope (commits are local —
+   see `REPORT_10H.md` §Final Git/HF State).
 9. **Reproduce:** `REPORT_10H.md` §Reproduction (clean-clone commands).
 
 ## Repo layout

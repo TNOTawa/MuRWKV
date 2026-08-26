@@ -181,6 +181,16 @@ python -m murwkv.eval.eval_heldout --exp results/repro --ckpt results/repro/fina
 
 ## Final Git / HF State
 
-- Git: main branch; final commit(s) below; everything pushed (see `git log`).
-- Checkpoints: `results/gate3_overfit_v2/`, `results/gate4_overfit_v2/` (final.pt + resumable
-  ckpts on the data disk, not in git); HF upload status in README/commit.
+- **Git:** all work is committed locally on `main` (18 commits, see `git log`).
+  **Push to GitHub was not possible in this run**: the fine-grained PAT
+  (`github_pat_*`, user TNOTawa) lacks `Contents: write` — verified via the
+  GitHub API (`403 Resource not accessible by personal access token`), so both
+  direct and proxy pushes are denied regardless of network path. The repository
+  commits remain on the instance's persistent disk; a token with write scope is
+  required to publish (one `git push origin main` after granting write).
+- **HF:** private model repo **`TNOT/MuRWKV-R0`** (private; the token's account
+  is `TNOT`, so the requested `TNOTawa` namespace was not creatable — recorded):
+  `murwkv_r0_gate4.pt` (model state only, 43.8 MB, bf16) + `config.json`.
+- **Local checkpoints (persistent):** `results/gate3_overfit_v2/final.pt`,
+  `results/gate4_overfit_v2/final.pt` (+ resumable `ckpt_*.pt` and `latest.pt`),
+  all configs/metrics/plots alongside.
