@@ -125,6 +125,12 @@ def run(args):
                 logits = model.forward_gpt(mel, is_audio, midi_id, use_cuda_kernel=use_kernel)
                 targets, mask = model.build_targets(is_audio, midi_id, batch["unit_midi_lens"])
                 loss, n_tok, acc = model.loss_and_metrics(logits, targets, mask)
+                # EOS-position accuracy (positions whose target is EOS)
+                eos_mask = mask & (targets == 1)
+                if eos_mask.sum() > 0:
+                    eos_acc = ((logits.argmax(-1) == targets) * eos_mask).sum() / eos_mask.sum()
+                else:
+                    eos_acc = torch.tensor(float("nan"))
             if not torch.isfinite(loss):
                 print(f"[step {step}] NaN loss — aborting step; dumping diagnostics")
                 torch.save(model.state_dict(), os.path.join(args.exp, "nan_checkpoint.pt"))
@@ -138,7 +144,7 @@ def run(args):
                 g["lr"] = lr * g["my_lr_scale"]
             opt.step()
             step += 1
-            row = {"step": step, "loss": float(loss), "acc": float(acc), "gnorm": float(gnorm), "lr": lr, "n_tok": n_tok}
+            row = {"step": step, "loss": float(loss), "acc": float(acc), "eos_acc": float(eos_acc), "gnorm": float(gnorm), "lr": lr, "n_tok": n_tok}
             log_rows.append(row)
             if step % args.log_every == 0 or step == 1:
                 dt = time.time() - t_last

@@ -44,9 +44,9 @@ def test_targets():
         assert mask[0, E : E + M].sum().item() == M
         # position E predicts token 0
         assert targets[0, E].item() == mid[0, pos + CHUNK_FRAMES].item()
-        # interior: position E+i predicts token i+1
+        # interior: position E+i (holding token i-1) predicts token i at flat pos+500+i
         for i in range(1, M - 1):
-            assert targets[0, E + i].item() == mid[0, pos + CHUNK_FRAMES + i + 1].item()
+            assert targets[0, E + i].item() == mid[0, pos + CHUNK_FRAMES + i].item()
         # the LAST loss position (E+M-1, holding the last midi token) predicts EOS
         assert targets[0, E + M - 1].item() == EOS_ID
         assert mid[0, E + M - 1].item() != PAD_ID
