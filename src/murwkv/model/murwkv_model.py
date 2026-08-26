@@ -159,19 +159,25 @@ class MuRWKV(nn.Module):
         x = self.ln_out(x)
         return self.head(x)
 
-    def build_targets(self, is_audio: torch.Tensor, midi_id: torch.Tensor, unit_midi_lens: list[int]):
+    def build_targets(self, is_audio: torch.Tensor, midi_id: torch.Tensor, unit_midi_lens: list):
         """Loss plan: for each unit, positions [audio_end-1 .. audio_end+M-2]
         predict the next flat token (the unit's MIDI tokens, shifted by one).
+
+        unit_midi_lens: per-row list of per-unit midi token counts, or a single
+        list shared by all rows (B=1 convenience).
 
         Returns (targets (B, L) int64, mask (B, L) bool).
         """
         B, L = is_audio.shape
+        per_row = unit_midi_lens
+        if per_row and isinstance(per_row[0], int):
+            per_row = [per_row] * B
+        assert len(per_row) == B, f"{len(per_row)} != {B}"
         targets = torch.zeros(B, L, dtype=torch.long, device=is_audio.device)
         mask = torch.zeros(B, L, dtype=torch.bool, device=is_audio.device)
-        audio_cum = torch.cumsum(is_audio.long(), dim=1)
         for b in range(B):
             pos = 0
-            for M in unit_midi_lens:
+            for M in per_row[b]:
                 if M <= 0:
                     continue
                 # this unit's audio spans [pos, pos + CHUNK_FRAMES)
