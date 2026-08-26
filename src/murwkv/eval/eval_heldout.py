@@ -71,9 +71,21 @@ def main():
         for mode in ("continuous", "reset"):
             if args.mode != "both" and args.mode != mode:
                 continue
+            torch.cuda.reset_peak_memory_stats()
             t0 = time.time()
             tokens, notes, stats = tr.transcribe_wav(wav_t, mode=mode)
             dt = time.time() - t0
+            peak_vram = torch.cuda.max_memory_allocated() / 1e9
+            # instrument continuity: predicted program sets per chunk
+            prog_sets = []
+            for toks in tokens:
+                cur = set()
+                for t in toks:
+                    ev = __import__("murwkv.tokenizer", fromlist=["VOCAB"]).VOCAB[t]
+                    if ev.type == "program":
+                        cur.add(ev.value)
+                prog_sets.append(cur)
+            switches = sum(1 for a, b in zip(prog_sets, prog_sets[1:]) if a != b)
             m = evaluate_track(tid, gt_notes, notes, duration_s=dur, extra=stats)
             m.tokens_per_chunk = [len(t) for t in tokens]
             row = {
@@ -83,6 +95,8 @@ def main():
                 "offset_f1": m.offset_f1, "inst_f1": m.inst_f1,
                 "boundary_errors": m.boundary_errors, "truncated": m.truncated_chunks,
                 "tokens_per_chunk": m.tokens_per_chunk, "decode_s": round(dt, 1),
+                "rtf": round(dt / max(1e-6, dur), 3), "peak_vram_gb": round(peak_vram, 2),
+                "inst_switches": switches, "n_chunks": len(tokens),
             }
             all_rows[mode].append(row)
             print(f"[{tid} {mode}] notes {m.n_gt}->{m.n_pred} onsetF1 {m.onset_f1:.3f} offF1 {m.offset_f1:.3f} instF1 {m.inst_f1:.3f} bnd {m.boundary_errors} trunc {m.truncated_chunks} {dt:.0f}s")
