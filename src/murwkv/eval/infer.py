@@ -26,7 +26,7 @@ from ..model.murwkv_model import (
 from ..model.rwkv7 import CHUNK_LEN
 from ..tokenizer import EOS_ID, MT3Decoder, Note, notes_from_pretty_midi, program_rep, tokens_to_midi
 
-DEFAULT_MAX_TOKENS_PER_CHUNK = 600
+DEFAULT_MAX_TOKENS_PER_CHUNK = 2048
 
 
 class Transcriber:

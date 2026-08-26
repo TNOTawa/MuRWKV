@@ -20,7 +20,7 @@ import torch
 from ..data.babyslakh import BabySlakh
 from ..model.murwkv_model import MuRWKVConfig, count_params
 from ..model.rwkv7 import KERNEL_AVAILABLE
-from ..tokenizer import notes_from_pretty_midi, program_rep
+from ..tokenizer import notes_from_pretty_midi, prepare_gt
 from .infer import Transcriber
 from .metrics import aggregate, evaluate_track
 
@@ -33,7 +33,7 @@ def main():
     ap.add_argument("--split", default="valid", choices=["valid", "test", "train"])
     ap.add_argument("--mode", default="both", choices=["continuous", "reset", "both"])
     ap.add_argument("--tracks", nargs="*", default=None)
-    ap.add_argument("--max-tokens", type=int, default=600)
+    ap.add_argument("--max-tokens", type=int, default=2048)
     args = ap.parse_args()
 
     bs = BabySlakh(args.data_root)
@@ -66,7 +66,9 @@ def main():
         if sr != 16000:
             raise ValueError(f"{tid} sr {sr}")
         wav_t = torch.from_numpy(wav).unsqueeze(0)
-        gt_notes = [program_rep(n) for n in notes_from_pretty_midi(__import__("pretty_midi").PrettyMIDI(bs.tracks[tid].midi_path))]
+        gt_notes = prepare_gt(notes_from_pretty_midi(
+                __import__("pretty_midi").PrettyMIDI(bs.tracks[tid].midi_path)
+            ))
         dur = len(wav) / sr
         for mode in ("continuous", "reset"):
             if args.mode != "both" and args.mode != mode:

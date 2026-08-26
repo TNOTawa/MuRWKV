@@ -28,17 +28,20 @@ from murwkv.tokenizer import (
     decode_chunks,
     encode_song,
     notes_from_pretty_midi,
+    prepare_gt,
     program_rep,
     token_id,
 )
 
 
 def notes_key(notes):
+    """Tick-grid keys (10ms) to avoid float artifacts; drums = (t, t+1)."""
     out = {}
     for n in notes:
         key = (n.is_drum, n.program, n.pitch)
-        end = round(n.onset + 0.01, 2) if n.is_drum else round(n.offset, 2)
-        out.setdefault(key, []).append((round(n.onset, 2), end))
+        on = round(n.onset * 100)
+        end = on + 1 if n.is_drum else round(n.offset * 100)
+        out.setdefault(key, []).append((on, end))
     return {k: sorted(v) for k, v in out.items()}
 
 
@@ -54,8 +57,14 @@ def main(root):
         pm = pretty_midi.PrettyMIDI(bs.tracks[tid].midi_path)
         dur_midi = max((n.end for inst in pm.instruments for n in inst.notes), default=0)
         dur_audio = info.frames / info.samplerate
-        assert abs(dur_midi - dur_audio) < 1.0, f"{tid} midi {dur_midi:.2f} vs audio {dur_audio:.2f}"
-        gt = [program_rep(n) for n in notes_from_pretty_midi(pm)]
+        # Slakh mixes include a reverb/silence tail after the last MIDI note.
+        # Required alignment: audio must cover the tokenized chunk grid
+        # (the final chunk may be mel-padded by the dataset, so we require at
+        # least all-but-last chunk fully covered, plus padding tolerance).
+        n_chunks = int(dur_midi // 5) + 1
+        min_audio = max(dur_midi - 1e-3, (n_chunks - 1) * 5 + 0.01)
+        assert dur_audio >= min_audio, f"{tid} midi {dur_midi:.2f} vs audio {dur_audio:.2f} (need {min_audio:.2f})"
+        gt = prepare_gt(notes_from_pretty_midi(pm))
         chunks, cstats = encode_song(gt)
         stats["truncated_chunks"] += cstats["truncated_chunks"]
         stats["chunks"] += len(chunks)
@@ -66,16 +75,19 @@ def main(root):
         # round trip
         rec = decode_chunks([c.tokens for c in chunks])
         assert notes_key(gt) == notes_key(rec), f"{tid} round-trip mismatch"
-        # tie cross-check: notes of chunk c whose offset > boundary must be in chunk c+1 tie keys
+        # tie cross-check: notes open across the boundary per the encoder's tick
+        # convention (on_tick < boundary_tick < off_tick, ticks rounded to 10ms)
         for c in chunks:
             if c.chunk_idx + 1 >= len(chunks):
                 continue
-            boundary = (c.chunk_idx + 1) * 5.0
+            boundary_tick = (c.chunk_idx + 1) * 500
             crossing = sorted(
                 {
                     (n.program, n.pitch)
                     for n in gt
-                    if not n.is_drum and n.onset < boundary and n.offset > boundary
+                    if not n.is_drum
+                    and round(n.onset * 100) < boundary_tick
+                    and round(n.offset * 100) > boundary_tick
                 }
             )
             nxt = chunks[c.chunk_idx + 1]
