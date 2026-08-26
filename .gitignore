@@ -1,0 +1,39 @@
+# secrets
+.env
+*.env
+**/credentials*
+**/*token*
+**/*.pem
+**/*.key
+
+# data (large, never commit)
+data/
+*.tar.gz
+*.flac
+*.wav
+*.mp3
+*.mid.bin
+babyslakh*/
+
+# checkpoints / outputs
+checkpoints/
+hf_cache/
+wandb/
+*.pt
+*.pth
+*.ckpt
+*.safetensors
+
+# python
+__pycache__/
+*.pyc
+.ipynb_checkpoints/
+.venv/
+build/
+dist/
+*.egg-info/
+
+# misc
+.nfs*
+nohup.out
+core.*
