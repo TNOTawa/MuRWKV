@@ -36,7 +36,7 @@ class Transcriber:
         self.max_tokens_per_chunk = max_tokens_per_chunk
 
     def _frontend(self, wav: torch.Tensor) -> torch.Tensor:
-        fm = LogMelFrontend(sample_rate=16000, n_fft=2048, hop_length=160, n_mels=512)
+        fm = LogMelFrontend(sample_rate=16000, n_fft=2048, hop_length=160, n_mels=512).to(wav.device)
         return fm(wav)  # (1, F, 512)
 
     def _audio_chunk_emb(self, mel_chunk, conv_carry):
@@ -73,7 +73,8 @@ class Transcriber:
     def transcribe_wav(self, wav: torch.Tensor, mode: str = "continuous", chunk_sec: float = 5.0):
         """wav: (1, N) float32 16k mono. Returns (per-chunk token lists, notes, stats)."""
         assert mode in ("continuous", "reset")
-        mel = self._frontend(wav).to(self.device)  # (1, F, 512)
+        mel = self._frontend(wav)
+        mel = mel.to(next(self.model.parameters()).dtype).to(self.device)  # (1, F, 512)
         F = mel.shape[1]
         n_chunks = (F + CHUNK_FRAMES - 1) // CHUNK_FRAMES
         stats = {"chunks": n_chunks, "truncated": 0, "tokens": 0, "boundary_errors": 0}
