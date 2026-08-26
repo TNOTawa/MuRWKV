@@ -1,9 +1,5 @@
-{
-  "track": "Track00001",
-  "checkpoint": "results/gate3_overfit_v2/final.pt",
-  "mode": "reset",
-  "git": "74e8164e65c946608c71deb22037704eee905b17",
-  "metrics": {
+[
+  {
     "track": "Track00001",
     "mode": "reset",
     "n_gt": 3124,
@@ -72,4 +68,4 @@
     "inst_switches": 28,
     "n_chunks": 49
   }
-}
+]
