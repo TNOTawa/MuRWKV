@@ -31,3 +31,14 @@ mirror side and excluded (`results/splits/slakh2100_flac_excluded.json`).
    usable for a YourMT3-compatible training path, but MuRWKV's tie/EOS
    protocol is designed against the original MIDI (use corpus 1).
 4. BabySlakh stays the debug corpus; gate tests reference it.
+## Network measurements (2026-08-27, server -> hf-mirror, xet/AWS-backed files)
+
+Measured ceilings for the 307 GB tar (choihy/slakh2100_yourmt3_16k):
+per-connection 0.2-0.6 MB/s with 1.5-10 s TTFB (mirror resolver quotas);
+aggregate ~2-4 MB/s regardless of 8/16/32/64 workers or range sizes
+(20 MB - 1 GB); HTTP/2 multiplexing, direct cas-bridge signed URLs,
+hf_xet protocol, and alternative mirrors (sukaka.top, hf-mirror.org,
+us.aws.cdn.hf.co) all measured slower or unreachable. => an IP-level
+bandwidth wall (~2-4 MB/s) to AWS us-east from this machine; the 307 GB
+tar needs ~1-2 days, not 10 h. The 16k+MIDI corpus above is the
+training-critical asset and is already complete.
