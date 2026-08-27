@@ -1,7 +1,8 @@
 # REPORT_R1 — Slakh2100 first generalization round (10h GPU session, 2026-08-28)
 
 Setup: RTX 5090 32 GB, torch 2.8.0+cu128, BF16, official RWKV-7 clampw kernel,
-container quota 16 cores / 92 GB (cgroup). Protocol constraints honored: no
+container quota 16 cores / 98.8 GB (cgroup, as recorded during this session in
+`results/environment.json`). Protocol constraints honored: no
 scheduled sampling, no architecture changes, test split sealed, checkpoint
 selection by validation loss only.
 
@@ -102,12 +103,23 @@ truncation (1246 vs 441 chunks) and 845 boundary errors (reset: 0).
   difference (stability vs truncation/boundary errors), not a transcription
   advantage. Train-track continuous≫reset does not count.
 
-**Answer to the round's question (rule 9):** at 120 songs the model still
-memorizes; no quantifiable held-out generalization, and recurrent continuity
-does not yet show a transcription-level benefit on unseen songs. The next
-levers (rule 3 ablations; larger corpus; EOS/truncation stability —
-continuous-mode chunk truncation is an R1-specific failure mode worth a
-scheduled-sampling ablation) are recorded for round 2.
+**Answer to the round's question (rule 9):** non-trivial **teacher-forced
+validation learning** emerged — on the 20 unseen validation tracks val loss
+dropped 1.593 → 1.330 (step 6000), and the checkpoint was selected solely by
+this held-out criterion — but it **failed to translate into useful
+free-running held-out transcription** (onset F1 0.010–0.026, 2.5–5× note
+overproduction, heavy truncation), and recurrent continuity does not yet show
+a transcription-level benefit on unseen songs. The candidate mechanism for
+the gap (§7) is an exposure/state-distribution mismatch: training exposes the
+model only to ≈20 s lifetimes from a fresh state with ground-truth
+teacher-forced MIDI history, while continuous inference runs minutes of
+self-generated (noisy) MIDI history through accumulated state. Under that
+regime the state behaves as a sticky recurrent attractor — instrument
+switches 41.1 → 8.5 and truncation 441 → 1246 chunks are state effects, not
+transcription gains. The next levers (rule 3 ablations; exposure/state-
+distribution mismatch first — scheduled sampling / noisy history and
+cross-window state-carry training; larger corpus; EOS/truncation stability)
+are recorded for round 2 (§7).
 
 ## 5. Protocol audit
 
@@ -123,10 +135,11 @@ scheduled-sampling ablation) are recorded for round 2.
 
 ## 6. Wrap-up / repository state (2026-08-28)
 
-- All R1 artifacts are committed and **pushed to origin/main** (tip
-  `3e61650`; fast-forward from `21ea80e` — no history was rewritten on the
-  remote). The earlier session's repeated push failures were caused by 558 MB
-  of feature caches in the four unpushed commits.
+- All R1 artifacts are committed and **pushed to origin/main**: the scientific
+  R1 artifacts landed at `3e61650` (fast-forward from `21ea80e` — no history
+  was rewritten on the remote); the R1-session final delivery/hygiene tip is
+  `bdf1880` (parent `3e61650`). The earlier session's repeated push failures
+  were caused by 558 MB of feature caches in the four unpushed commits.
 - Repository hygiene: derived G5-v2 feature caches
   (`results/gate5_probe_v2/feats/*.npz`, 558 MB) were dropped from those
   unpushed commits (they never reached origin) and `*.npz` is now gitignored.
@@ -143,3 +156,37 @@ scheduled-sampling ablation) are recorded for round 2.
 - Full QA gate (`python tests/qa.py`, GPU present): **QA PASS** — tokenizer,
   probe-v2 (6 checks), Slakh gate-1 (5), Gate-2 parity, trainer smoke,
   BabySlakh gate-1.
+
+## 7. Post-review addendum: wording corrections + R2 direction
+
+Applied after external review (no experiments rerun; documentation only):
+
+- §4 answer reworded: "at 120 songs the model still memorizes; no
+  quantifiable held-out generalization" was too strong — the 20-track
+  held-out validation curve (1.593 → 1.330 → 1.431) and checkpoint selection
+  on that criterion show real **teacher-forced conditional generalization**.
+  What failed is only its translation into **free-running generative
+  transcription**. Accurate statement: *non-trivial teacher-forced validation
+  learning emerged, but it failed to translate into useful free-running
+  held-out transcription.*
+- Header environment unified with the recorded session provenance:
+  16 cores / 98.8 GB / RTX 5090 (`results/environment.json`, regenerated
+  during the R1 wrap-up).
+- §6 delivery state made precise: scientific R1 artifacts at `3e61650`;
+  R1-session delivery/hygiene tip `bdf1880`.
+
+**R2 direction (agreed with review): attack the exposure/state-distribution
+mismatch first, not data scale.** R1 training gives the model ≈20 s lifetimes
+(fresh state, ground-truth teacher-forced MIDI history) while continuous
+inference runs minutes of self-generated MIDI through accumulated state.
+Two architecture-neutral changes, in priority order:
+
+- **A. Scheduled sampling / noisy history** — progressively mix model-generated
+  (or corrupted) MIDI into the history instead of pure ground truth, so the
+  state learns to recover from its own errors.
+- **B. Cross-window state-carry training** — train over adjacent windows of
+  the same track with the RWKV state carried (detached) across window
+  boundaries, instead of random 20 s windows that each restart from zero.
+
+Scale-up of the Slakh corpus is deliberately deferred until the free-running
+collapse is addressed.

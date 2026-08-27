@@ -1,7 +1,27 @@
 # MuRWKV — Pure RWKV-7 Automatic Music Transcription
 
-**10-hour from-scratch research run. Full results: [`REPORT_10H.md`](REPORT_10H.md).
-Gate ledger: [`results/gates.json`](results/gates.json) (G0–G6 all PASS).**
+**From-scratch research program: R0 10-hour run → R1 Slakh generalization round.**
+Reports: [`REPORT_10H.md`](REPORT_10H.md) (R0) · [`REPORT_R1.md`](REPORT_R1.md) (R1, latest).
+Gate ledger: [`results/gates.json`](results/gates.json).
+
+## Latest status — R1
+
+- **G5-v2 (leak-free memory probe, frozen G4 AMT checkpoint): PASS mechanism
+  claim** — continuous **0.750–0.766** vs reset **0.500 (exact chance)** on the
+  4 test tracks the AMT never trained on; instrument-related acoustic
+  information is linearly recoverable across unseen tracks
+  ([REPORT_R1.md §1](REPORT_R1.md)).
+- **Slakh R1:** 120 train / 20 val / 60 official-test tracks; best val loss
+  1.330 @ step 6000 (checkpoint selected on held-out validation only).
+- **Level 3: NOT PASS** — held-out onset F1 0.010 (continuous) / 0.026 (reset).
+- **Level 4: no evidence** — the paired ΔF1 CI excludes 0 on the negative side.
+- **Key finding:** non-trivial teacher-forced validation learning emerged, but
+  free-running generation collapsed — the recurrent state acts as a sticky
+  attractor (instrument switches 41.1 → 8.5, truncated chunks 441 → 1246),
+  not a transcription aid.
+- **R2 direction:** exposure/state-distribution mismatch first (scheduled
+  sampling / noisy history + cross-window state-carry training), not data
+  scale ([REPORT_R1.md §7](REPORT_R1.md)).
 
 ## What
 
@@ -39,14 +59,16 @@ the audio history it has heard.
    sequences (held-out ≈ F1 0.01 in both modes), so *generalization-level*
    continuity (Level 4) is **not yet established**. G0–G6 all PASS. Held-out
    note F1 ≈ 0.01 (10-song memorizer; generalization needs Slakh-scale data —
-   documented as the Level-3 gap).
+   documented as the Level-3 gap). R1 then tested generalization at 120 songs —
+   see **Latest status — R1** above.
 6. **Continuous vs reset:**
    * memory probe (G5, corrected scope): continuous 100% vs reset 48% (chance) —
      the state carries **remote acoustic source/track identity** through 2
-     identical neutral chunks; instrument-level cross-track generalization was
-     NOT established by G5 and is the target of the leak-free **G5-v2**
+     identical neutral chunks; the leak-free successor **G5-v2**
      (`src/murwkv/eval/memory_probe_v2.py`, frozen G4 AMT + linear probe,
-     track-level split, metadata-verified stems; ready to run);
+     track-level split, metadata-verified stems) has since **PASSed the
+     mechanism claim** on unseen tracks: continuous 0.750–0.766 vs reset 0.500
+     (exact chance) — see REPORT_R1.md §1;
    * memorized train tracks: continuous onset F1 0.579 vs reset 0.081
      (Track00008: 0.991 vs 0.063), fewer instrument switches/flicker with
      continuous — memorized-sequence evidence only (see REPORT erratum).
@@ -57,8 +79,9 @@ the audio history it has heard.
    `results/gate4_overfit_v2/final.pt` (10-song overfit) — also on the private
    HF repo **`TNOT/MuRWKV-R0`** (`murwkv_r0_gate4.pt`, 43.8 MB, bf16:
    `hf download TNOT/MuRWKV-R0 murwkv_r0_gate4.pt --include murwkv_r0_gate4.pt`).
-   GitHub push was blocked by a token without write scope (commits are local —
-   see `REPORT_10H.md` §Final Git/HF State).
+   The R0-era GitHub push blocker (token without write scope) was resolved:
+   everything through the R1 wrap-up is on GitHub — see `REPORT_10H.md`
+   §Final Git/HF State and `REPORT_R1.md` §6.
 9. **Reproduce:** `REPORT_10H.md` §Reproduction (clean-clone commands).
 
 ## Repo layout
