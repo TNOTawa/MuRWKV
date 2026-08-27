@@ -27,5 +27,17 @@
     "status": "PASS",
     "evidence": "results/gate4_overfit_v2/eval/{valid,test,train}: held-out (4 tracks) onset F1 0.007-0.019 both modes, 0 truncation, 0 boundary errors, RTF 0.35-0.75, inference VRAM ~0.13GB (fixed recurrent state size 6*8*64*64*4B = 786KB/layer group + buffers). Continuous-vs-reset: valid/test equivalent at near-zero F1; memorized train tracks only: continuous 0.579 vs reset 0.081 (Level 4 not established)."
   },
-  "_revision_note": "Post-review revision (round 1): G3 numbers relabeled as one-song memorized training track; G4/G6 continuous-vs-reset relabeled as memorized-train-sequence evidence only (Level 4 not established); G5 relabeled as remote acoustic SOURCE/track identity retention (instrument-level cross-track generalization NOT established; leak-free G5-v2 designed and code-ready); environment provenance switched to cgroup v2 quota. Original numeric evidence unchanged."
+  "_revision_note": "Post-review revision (round 1): G3 numbers relabeled as one-song memorized training track; G4/G6 continuous-vs-reset relabeled as memorized-train-sequence evidence only (Level 4 not established); G5 relabeled as remote acoustic SOURCE/track identity retention (instrument-level cross-track generalization NOT established; leak-free G5-v2 designed and code-ready); environment provenance switched to cgroup v2 quota. Original numeric evidence unchanged. | 2026-08-28 GPU round: GATE 7/8/9 added (R1 training, paired held-out, G5-v2 official).",
+  "GATE 7": {
+    "status": "PASS (as recorded)",
+    "evidence": "Slakh R1 training (results/slakh_r1): 120 train / 20 val / 60 test manifest (official-test-only pool; Gate-1 0 truncation; cap 4096), 12000 steps at 0.7-0.9 s/step, best_val = step 6000 (val loss 1.3300, sole criterion); val curve 1.593->1.330->1.431; test sealed during training."
+  },
+  "GATE 8": {
+    "status": "PASS (protocol executed); Level 3 NOT reached",
+    "evidence": "Paired held-out eval on 60 official test tracks (best_val, greedy, no teacher forcing; compiled decode symmetric): onset F1 cont 0.0100 vs reset 0.0262 (paired CI of delta excludes 0 NEGATIVELY); truncated 1246 vs 441; boundary errors 845 vs 0; switches 8.5 vs 41.1. Level 4: no evidence. See REPORT_R1.md."
+  },
+  "GATE 9": {
+    "status": "PASS",
+    "evidence": "G5-v2 official (corrected arms; frozen G4 AMT, ridge, track-level split, test=4 G4-untrained tracks): reset(neutral)=0.500 exact chance; continuous 0.750-0.766 (CI [0.649,0.853]); lead1 0.562; history 0.781; state distance 12.8->1.6 over 4 neutrals. Claim: instrument-related acoustic info linearly recoverable across unseen tracks from the frozen AMT representation."
+  }
 }

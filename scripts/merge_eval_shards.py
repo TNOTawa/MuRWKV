@@ -41,6 +41,8 @@ def main():
             for k, v in r.items():
                 if hasattr(m, k):
                     setattr(m, k, v)
+            m.truncated_chunks = int(r.get("truncated", 0))  # row key is "truncated"
+            m.boundary_errors = int(r.get("boundary_errors", 0))
             ms.append(m)
         agg = aggregate(ms)
         with open(os.path.join(out_dir, f"{mode}_agg.json"), "w") as f:

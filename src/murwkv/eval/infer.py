@@ -63,6 +63,10 @@ def compile_stepwise_decode(model: MuRWKV):
         args += [seed_ap[i] for i in ids]
         args += [seed_fp[i] for i in ids]
         outs = comp(*args)
+        # clone: reduce-overhead replays CUDA graphs whose static output
+        # buffers alias the returned tensors — a later replay would overwrite
+        # the state we are about to store
+        outs = tuple(o.clone() for o in outs)
         lg = outs[0]
         k = 1
         for i in ids:
