@@ -191,41 +191,51 @@ def build_samples(split_tracks: dict, stems_by_class: dict, stem_paths: dict, st
 @torch.no_grad()
 def extract_features(model: MuRWKV, mel_seq: torch.Tensor, arms: list[str],
                      device: str) -> dict[str, tuple[torch.Tensor, torch.Tensor]]:
-    """mel_seq: (T, 512) fp32 full sequence [history | N | N] (or parts).
+    """mel_seq: (T, 512) fp32 full sequence [history | N | N] (design: 2 neutrals).
 
     Returns per arm: (h_last (C,), S_last_flat (H*N*N,)) fp32 — features at
     the LAST observed frame, with the wkv state the arm ended with.
-    """
-    out = {}
-    dtype = next(model.parameters()).dtype
-    x = model.audio_front(mel_seq.unsqueeze(0).to(device=device, dtype=dtype))  # (1, T, C)
 
-    def run(slice_l, slice_r, label):
-        seg = x[:, slice_l:slice_r]
-        v_first = torch.empty_like(seg)
+    IMPORTANT (fixed after first official run): the audio frontend is run
+    PER-ARM. Slicing a joint-frontend output would leak <k-1> history mel
+    frames into the reset arm's first frames through the causal-conv context
+    (measured 0.69 test acc on a bit-identical-neutral arm — a real leak).
+    Each arm therefore builds its own batch and its own conv context:
+      continuous: [H H H H | N N]  — full stream (conv carry like a real song)
+      reset:      [N N] fresh      — pure neutral content, fresh conv carry
+      lead1:      [..H | N N]      — last 3 history frames visible (2 extra
+                  mel frames feed the conv), fresh state
+      history:    [H H H H]        — upper bound, no neutrals
+    """
+    hist_frames = mel_seq.shape[0] - 2 * CHUNK_FRAMES
+    dtype = next(model.parameters()).dtype
+    mel_dev = mel_seq.unsqueeze(0).to(device=device, dtype=dtype)
+    out = {}
+
+    def run_blocks(x, label):
+        v_first = torch.empty_like(x)
         s_last = None
         for blk in model.blocks:
-            # fresh wkv state at the arm's sequence start (continuous starts at
-            # history frame 0 like a streamed song; other arms start at their
-            # observation window). Never the CUDA kernel: T is not % 16 here.
-            seg, v_first = blk.forward_parallel(seg, v_first, use_cuda_kernel=False)
+            # Never the CUDA kernel: T is not % 16 here.
+            x, v_first = blk.forward_parallel(x, v_first, use_cuda_kernel=False)
             s_last = blk._last_state  # (B, H, N, N) fp32 at this layer's seq end
-        h = model.ln_out(seg)[:, -1].to(torch.float32).squeeze(0)  # (C,)
+        h = model.ln_out(x)[:, -1].to(torch.float32).squeeze(0)  # (C,)
         out[label] = (h, s_last.to(torch.float32).reshape(-1))
 
-    T = x.shape[1]
-    n_hist_mel = mel_seq.shape[0] - 2 * CHUNK_FRAMES  # design: exactly 2 neutrals
-    # continuous: whole sequence; lead1: last 3 history frames + neutrals
-    # (frontend conv carry needs 2 past mel frames for the final embedding);
-    # reset: neutrals only; history: history only.
     if "continuous" in arms:
-        run(0, T, "continuous")
-    if "lead1" in arms:
-        run(max(0, n_hist_mel - 2), T, "lead1")
+        run_blocks(model.audio_front(mel_dev), "continuous")
     if "reset" in arms:
-        run(n_hist_mel, T, "reset")
+        run_blocks(model.audio_front(mel_dev[:, hist_frames:]), "reset")
+    if "lead1" in arms:
+        # last 3 history mel frames; the two preceding mel frames feed the
+        # causal conv so the visible frames carry the same embeddings the
+        # continuous arm computes at those positions
+        lead = mel_dev[:, max(0, hist_frames - 5): hist_frames]
+        x = model.audio_front(torch.cat([lead, mel_dev[:, hist_frames:]], dim=1))
+        x = x[:, 2:]
+        run_blocks(x, "lead1")
     if "history" in arms:
-        run(0, n_hist_mel, "history")
+        run_blocks(model.audio_front(mel_dev[:, :hist_frames]), "history")
     return out
 
 
