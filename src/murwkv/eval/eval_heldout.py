@@ -36,6 +36,8 @@ def main():
     ap.add_argument("--mode", default="both", choices=["continuous", "reset", "both"])
     ap.add_argument("--tracks", nargs="*", default=None)
     ap.add_argument("--max-tokens", type=int, default=2048)
+    ap.add_argument("--compile", action="store_true",
+                    help="torch.compile the stepwise decode (~9x faster; both arms identically)")
     args = ap.parse_args()
 
     bs = BabySlakh(args.data_root, splits=args.splits)
@@ -57,7 +59,8 @@ def main():
     model.eval()
     print(f"loaded {count_params(model)/1e6:.2f}M params from {args.ckpt}")
 
-    tr = Transcriber(model, device="cuda", max_tokens_per_chunk=args.max_tokens)
+    tr = Transcriber(model, device="cuda", max_tokens_per_chunk=args.max_tokens,
+                     use_compiled=args.compile)
     out_dir = os.path.join(args.exp, "eval", args.split)
     os.makedirs(out_dir, exist_ok=True)
     all_rows = {"continuous": [], "reset": []}

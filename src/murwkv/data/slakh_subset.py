@@ -2,10 +2,12 @@
 and tests; see `scripts/prepare_slakh_subset.py` for the CLI).
 
 The corpus's own split directories are authoritative. The first
-generalization round (R1) uses:
+generalization round (R1) uses (protocol constraint — test strictly from the
+OFFICIAL test split; the first manifest draft mixed corpus VALIDATION into
+the test pool and was corrected on 2026-08-28, see split.json _meta):
     train: tracks drawn from corpus TRAIN,
     val:   further corpus-TRAIN tracks (early stopping; never corpus held-out),
-    test:  tracks drawn from corpus VALIDATION + TEST (pristine held-out).
+    test:  tracks drawn from corpus TEST only (pristine, sealed).
 Everything is track-level and deterministic per seed.
 """
 from __future__ import annotations
@@ -30,7 +32,10 @@ MIDI_MAX_SHORTFALL_S = -0.5
 
 
 def select_subset(bs: BabySlakh, n_train: int, n_val: int, n_test: int, seed: int = 42) -> dict:
-    """Deterministic track-level tri-partition. Returns {train, val, test}."""
+    """Deterministic track-level tri-partition. Returns {train, val, test}.
+
+    Protocol: train/val from corpus TRAIN; TEST strictly from corpus TEST.
+    """
     import random
 
     rng = random.Random(seed)
@@ -41,7 +46,7 @@ def select_subset(bs: BabySlakh, n_train: int, n_val: int, n_test: int, seed: in
     rng2 = random.Random(seed + 1)
     rng2.shuffle(val_pool)
     subset_val = sorted(val_pool[:n_val])
-    test_pool = bs.tracks_of("validation") + bs.tracks_of("test")
+    test_pool = bs.tracks_of("test")
     rng3 = random.Random(seed + 2)
     rng3.shuffle(test_pool)
     subset_test = sorted(test_pool[:n_test])
@@ -51,13 +56,13 @@ def select_subset(bs: BabySlakh, n_train: int, n_val: int, n_test: int, seed: in
 
 def check_subset_invariants(bs: BabySlakh, train, val, test) -> None:
     """Track-level disjointness; train/val stay inside corpus-train; test
-    inside corpus validation+test."""
+    inside the corpus TEST split ONLY (protocol constraint)."""
     assert len(set(train) & set(val)) == 0, "train/val overlap"
     assert len(set(train) & set(test)) == 0, "train/test overlap"
     assert len(set(val) & set(test)) == 0, "val/test overlap"
     assert set(train) <= set(bs.tracks_of("train")), "train not subset of corpus train"
     assert set(val) <= set(bs.tracks_of("train")), "val not subset of corpus train"
-    assert set(test) <= set(bs.tracks_of("validation") + bs.tracks_of("test")), "test touched corpus train"
+    assert set(test) <= set(bs.tracks_of("test")), "test must come from the OFFICIAL test split"
 
 
 def validate_tracks(bs: BabySlakh, track_ids: list[str], max_tokens_per_chunk: int = 4096) -> tuple[dict, list, list]:
