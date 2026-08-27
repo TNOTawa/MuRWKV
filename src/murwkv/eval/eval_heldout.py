@@ -93,8 +93,9 @@ def main():
             m = evaluate_track(tid, gt_notes, notes, duration_s=dur, extra=stats)
             m.tokens_per_chunk = [len(t) for t in tokens]
             row = {
-                "track": tid, "mode": mode,
+                "track": tid, "mode": mode, "duration_s": round(dur, 2),
                 "n_gt": m.n_gt, "n_pred": m.n_pred, "n_matched": m.n_matched, "n_inst_match": m.n_inst_match,
+                "n_offset_matched": m.n_offset_matched,
                 "onset_p": m.onset_p, "onset_r": m.onset_r, "onset_f1": m.onset_f1,
                 "offset_f1": m.offset_f1, "inst_f1": m.inst_f1,
                 "boundary_errors": m.boundary_errors, "truncated": m.truncated_chunks,

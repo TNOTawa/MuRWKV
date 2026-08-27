@@ -40,6 +40,7 @@ class TrackMetrics:
     inst_f1: float = 0.0
     n_matched: int = 0
     n_inst_match: int = 0
+    n_offset_matched: int = 0  # onset- AND offset-matched pairs (onset+offset F1)
     boundary_errors: int = 0
     truncated_chunks: int = 0
     tokens_per_chunk: list = None
@@ -87,6 +88,7 @@ def evaluate_track(track: str, gt_notes: list[Note], pred_notes: list[Note], dur
     m.offset_f1 = _f1(m.offset_p, m.offset_r)
     m.inst_f1 = _f1(inst_ok / max(1, m.n_pred), inst_ok / max(1, m.n_gt))
     m.n_inst_match = inst_ok
+    m.n_offset_matched = off_ok  # onset+offset F1: matched on BOTH tolerances
     if extra:
         m.boundary_errors = extra.get("boundary_errors", 0)
         m.truncated_chunks = extra.get("truncated", 0)

@@ -115,6 +115,27 @@ def run(args):
     assert stats["truncated_chunks"] == 0, f"PIPELINE BUG: {stats['truncated_chunks']} truncated chunks"
     print(f"[data] windows={len(ds)} stats={stats}")
 
+    # ---- validation set (OFFICIAL validation split only; test is sealed) ----
+    val_ds = None
+    val_idx = []
+    if args.val_every and args.val_every > 0:
+        val_tracks = splits.get("valid", []) or splits.get("validation", [])
+        if not val_tracks:
+            print("[val] no validation tracks in split.json; disabling val selection")
+            args.val_every = 0
+        else:
+            vstats = {"truncated_chunks": 0, "tracks": 0, "chunks": 0, "tokens": 0,
+                      "shortened": 0, "clipped_overlaps": 0}
+            val_ds = BabySlakhDataset(bs, val_tracks, n_units=args.units,
+                                      mel_cache_dir=mel_cache, token_stats=vstats,
+                                      max_tokens_per_chunk=args.max_tokens_per_chunk)
+            assert vstats["truncated_chunks"] == 0, f"PIPELINE BUG: val {vstats['truncated_chunks']} truncated"
+            val_idx = list(range(len(val_ds)))
+            if args.val_limit and args.val_limit > 0:
+                val_idx = val_idx[: args.val_limit]
+            print(f"[val] tracks={len(val_tracks)} windows={len(val_ds)} eval_every={args.val_every} "
+                  f"limit={len(val_idx)}")
+
     cfg = MuRWKVConfig(n_layer=args.n_layer, n_embd=args.n_embd, head_size=64)
     model = MuRWKV(cfg)
     n_params = count_params(model)
@@ -126,8 +147,48 @@ def run(args):
     order = list(range(len(ds)))
     step = 0
     log_rows = []
+    val_rows = []
     t_last = time.time()
     best_val_loss = 1e9
+    best_val_step = -1
+
+    @torch.no_grad()
+    def eval_val():
+        """Masked CE / acc / EOS-acc on the (deterministic) val window subset.
+        Pure selection criterion — never touches the test split."""
+        model.eval()
+        tot_loss = tot_tok = tot_acc = tot_eos = tot_eos_n = 0
+        for vi in val_idx:
+            it = val_ds[vi]
+            batch = collate_bucket([it], pad_to=args.pad_to)
+            mel = batch["mel"].cuda().bfloat16()
+            is_audio = batch["is_audio"].cuda()
+            midi_id = batch["midi_id"].cuda()
+            T = is_audio.shape[1]
+            use_kernel = KERNEL_AVAILABLE and T % 16 == 0
+            with torch.autocast("cuda", dtype=torch.bfloat16, enabled=False):
+                logits = model.forward_gpt(mel, is_audio, midi_id, use_cuda_kernel=use_kernel)
+                targets, mask = model.build_targets(is_audio, midi_id, batch["unit_midi_lens"])
+                loss, n_tok, acc = model.loss_and_metrics(logits, targets, mask)
+                eos_mask = mask & (targets == 1)
+                if eos_mask.sum() > 0:
+                    eos_acc = ((logits.argmax(-1) == targets) * eos_mask).sum() / eos_mask.sum()
+                else:
+                    eos_acc = torch.tensor(float("nan"))
+            tot_loss += float(loss) * n_tok
+            tot_tok += n_tok
+            tot_acc += float(acc) * n_tok
+            if eos_mask.sum() > 0:
+                tot_eos += float(eos_acc) * int(eos_mask.sum())
+                tot_eos_n += int(eos_mask.sum())
+        model.train()
+        if tot_tok == 0:
+            return {"val_loss": float("nan"), "val_acc": float("nan"), "val_eos_acc": float("nan")}
+        return {
+            "val_loss": tot_loss / tot_tok,
+            "val_acc": tot_acc / tot_tok,
+            "val_eos_acc": (tot_eos / tot_eos_n) if tot_eos_n else float("nan"),
+        }
     while step < args.steps:
         rng.shuffle(order)
         for idx in order:
@@ -182,11 +243,34 @@ def run(args):
                 }
                 torch.save(ckpt, os.path.join(args.exp, f"ckpt_{step:06d}.pt"))
                 torch.save(ckpt, os.path.join(args.exp, "latest.pt"))
-    # final save
+            if val_ds is not None and step % args.val_every == 0:
+                vr = eval_val()
+                vr["step"] = step
+                val_rows.append(vr)
+                print(f"[val {step}] loss {vr['val_loss']:.4f} acc {vr['val_acc']*100:.1f}% "
+                      f"eos {vr['val_eos_acc']*100:.1f}%", flush=True)
+                if vr["val_loss"] < best_val_loss - 1e-9:
+                    best_val_loss, best_val_step = vr["val_loss"], step
+                    ckpt = {
+                        "model": model.state_dict(), "opt": opt.state_dict(),
+                        "step": step, "args": vars(args), "loss": float(loss),
+                        "val_loss": best_val_loss,
+                    }
+                    torch.save(ckpt, os.path.join(args.exp, "best_val.pt"))
+                    print(f"[val {step}] NEW BEST val_loss {best_val_loss:.4f} -> best_val.pt", flush=True)
+    # final save + final val evaluation (for the record; selection happened during training)
+    if val_ds is not None:
+        vr = eval_val()
+        vr["step"] = step
+        val_rows.append(vr)
+        print(f"[val final {step}] loss {vr['val_loss']:.4f} acc {vr['val_acc']*100:.1f}% "
+              f"(best was step {best_val_step} / {best_val_loss:.4f})", flush=True)
     ckpt = {"model": model.state_dict(), "opt": opt.state_dict(), "step": step, "args": vars(args), "loss": float(loss)}
     torch.save(ckpt, os.path.join(args.exp, "final.pt"))
     with open(os.path.join(args.exp, "metrics.json"), "w") as f:
-        json.dump({"rows": log_rows, "stats": stats, "n_params": n_params, "args": vars(args)}, f, indent=2)
+        json.dump({"rows": log_rows, "val_rows": val_rows, "stats": stats,
+                   "n_params": n_params, "args": vars(args),
+                   "best_val": {"step": best_val_step, "val_loss": best_val_loss}}, f, indent=2)
     with open(os.path.join(args.exp, "metrics.csv"), "w") as f:
         import csv
 
@@ -207,6 +291,11 @@ def main():
     ap.add_argument("--units", type=int, default=4)
     ap.add_argument("--max-tokens-per-chunk", type=int, default=2048,
                     help="tokenizer cap; Slakh2100 chunks reach ~2.3k tokens -> use 4096 there")
+    ap.add_argument("--val-every", type=int, default=0,
+                    help=">0: evaluate masked-CE on the OFFICIAL validation split every N steps "
+                         "and save best_val.pt (sole checkpoint-selection criterion; test sealed)")
+    ap.add_argument("--val-limit", type=int, default=0,
+                    help="cap the number of validation windows evaluated per run (0 = all)")
     ap.add_argument("--steps", type=int, default=2000)
     ap.add_argument("--n-layer", type=int, default=6)
     ap.add_argument("--n-embd", type=int, default=512)

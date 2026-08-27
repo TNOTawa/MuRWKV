@@ -229,8 +229,8 @@ def extract_features(model: MuRWKV, mel_seq: torch.Tensor, arms: list[str],
     return out
 
 
-def feats_to_np(h: torch.Tensor, S: torch.Tensor) -> np.ndarray:
-    return np.concatenate([h.detach().cpu().numpy(), S.detach().cpu().numpy()]).astype(np.float32)
+def feats_to_np(*tensors: torch.Tensor) -> np.ndarray:
+    return np.concatenate([t.detach().cpu().numpy() for t in tensors]).astype(np.float32)
 
 
 def stats_feats(h: torch.Tensor, S: torch.Tensor, H: int, N: int) -> np.ndarray:
@@ -354,7 +354,10 @@ def build_mel_cache(bs: BabySlakh, samples: list[dict], cache_dir: str, stem_pat
             cache[(tid, sid)] = np.load(p)["mel"].astype(np.float32)
             continue
         frames = None if max_seconds <= 0 else int(max_seconds * 16000)
-        wav, sr = sf.read(stem_paths[(tid, sid)], dtype="float32", frames=frames)
+        if frames is None:
+            wav, sr = sf.read(stem_paths[(tid, sid)], dtype="float32")
+        else:
+            wav, sr = sf.read(stem_paths[(tid, sid)], dtype="float32", frames=frames)
         assert sr == 16000, f"{tid}/{sid}: sr {sr}"
         if wav.ndim > 1:
             wav = wav.mean(1)
@@ -448,7 +451,8 @@ def run(args):
     H = model.cfg.n_embd // model.cfg.head_size
     N = model.cfg.head_size
     hist_frames = args.hist_chunks * CHUNK_FRAMES
-    records = {sp: {a: {"tid": [], "class": [], "feat_full": [], "feat_stats": []} for a in arms}
+    records = {sp: {a: {"tid": [], "class": [], "feat_h": [], "feat_S": [],
+                        "feat_full": [], "feat_stats": []} for a in arms}
                for sp in by_split}
     n_done = 0
     for sp, samples in by_split.items():
@@ -465,6 +469,8 @@ def run(args):
                 rec = records[sp][a]
                 rec["tid"].append(s["tid"])
                 rec["class"].append(s["class"])
+                rec["feat_h"].append(feats_to_np(h))
+                rec["feat_S"].append(feats_to_np(S))
                 rec["feat_full"].append(feats_to_np(h, S))
                 rec["feat_stats"].append(stats_feats(h, S, H, N))
             n_done += 1
@@ -476,6 +482,7 @@ def run(args):
             rec = records[sp][a]
             np.savez(os.path.join(feats_dir, f"{a}_{sp}.npz"),
                      tid=np.array(rec["tid"]), label=np.array(rec["class"]),
+                     feat_h=np.stack(rec["feat_h"]), feat_S=np.stack(rec["feat_S"]),
                      feat_full=np.stack(rec["feat_full"]), feat_stats=np.stack(rec["feat_stats"]))
 
     # ---- probes ----
@@ -484,43 +491,42 @@ def run(args):
                "probes": {}, "state_distance": {}}
     label_of = lambda sp, a: np.load(os.path.join(feats_dir, f"{a}_{sp}.npz"))["label"].astype(np.float64) * 2 - 1  # noqa: E731
     for a in arms:
-        Xtr = np.load(os.path.join(feats_dir, f"{a}_train.npz"))["feat_full"]
-        Xva = np.load(os.path.join(feats_dir, f"{a}_val.npz"))["feat_full"]
-        Xte = np.load(os.path.join(feats_dir, f"{a}_test.npz"))["feat_full"]
-        ytr, yva, yte = label_of("train", a), label_of("val", a), label_of("test", a)
-        rows, best, _ = ridge_probe(Xtr, ytr, Xva, yva, Xte, yte)
-        entry = {"feature_set": "h_last+S_last", "dims": Xtr.shape[1], "ridge_rows": rows,
-                 "best": best}
-        if args.mlp:
-            entry["mlp"] = mlp_probe(Xtr, ytr, Xva, yva, Xte, yte, seed=args.seed_data)
-        # per-split accuracy + binomial 95% CI of the chosen ridge model
-        lam = best["lam"]
-        mu, sd, ymean = Xtr.mean(0), Xtr.std(0) + 1e-8, ytr.mean()
-        Xtr_s = (Xtr - mu) / sd
-        ytr_c = ytr.astype(np.float64) - ymean
-        alpha = np.linalg.solve(Xtr_s @ Xtr_s.T + lam * np.eye(Xtr_s.shape[0]), ytr_c)
-        w = Xtr_s.T @ alpha
-        acc_with_ci = {}
-        for sp_name, X, y in (("train", Xtr, ytr), ("val", Xva, yva), ("test", Xte, yte)):
-            Xs = (X - mu) / sd
-            pred = (Xs @ w + ymean > 0)
-            k = int((pred == (y > 0)).sum())
-            n = len(y)
-            lo, hi = binomial_ci(k, n)
-            acc_with_ci[sp_name] = {"acc": k / n, "k": k, "n": n, "ci95": [round(lo, 4), round(hi, 4)]}
-        entry["acc_ci"] = acc_with_ci
-        results["probes"][a] = entry
-        print(f"[g5v2] arm {a}: ridge best λ={lam} Test acc {acc_with_ci['test']['acc']:.4f} "
-              f"({acc_with_ci['test']['ci95']}) | val {acc_with_ci['val']['acc']:.4f} | "
-              f"train {acc_with_ci['train']['acc']:.4f}", flush=True)
-        # ---- low-dim stats-feature ridge (robustness) ----
-        Xtr_sm = np.load(os.path.join(feats_dir, f"{a}_train.npz"))["feat_stats"]
-        Xva_sm = np.load(os.path.join(feats_dir, f"{a}_val.npz"))["feat_stats"]
-        Xte_sm = np.load(os.path.join(feats_dir, f"{a}_test.npz"))["feat_stats"]
-        rows2, best2, _ = ridge_probe(Xtr_sm, ytr, Xva_sm, yva, Xte_sm, yte)
-        results["probes"][a + "_stats"] = {"feature_set": "per-head stats + h_last",
-                                           "dims": Xtr_sm.shape[1], "ridge_rows": rows2, "best": best2}
-        print(f"[g5v2] arm {a} (stats): best test acc {best2['test_acc']:.4f} (λ={best2['lam']})", flush=True)
+        feature_sets = [
+            ("h_last+S", "feat_full", args.mlp),
+            ("h_last_only", "feat_h", False),
+            ("S_only", "feat_S", False),
+            ("h_last+S_stats", "feat_stats", False),
+        ]
+        for fname, key, want_mlp in feature_sets:
+            Xtr = np.load(os.path.join(feats_dir, f"{a}_train.npz"))[key]
+            Xva = np.load(os.path.join(feats_dir, f"{a}_val.npz"))[key]
+            Xte = np.load(os.path.join(feats_dir, f"{a}_test.npz"))[key]
+            ytr, yva, yte = label_of("train", a), label_of("val", a), label_of("test", a)
+            rows, best, _ = ridge_probe(Xtr, ytr, Xva, yva, Xte, yte)
+            entry = {"feature_set": fname, "dims": Xtr.shape[1], "ridge_rows": rows,
+                     "best": best}
+            if want_mlp:
+                entry["mlp"] = mlp_probe(Xtr, ytr, Xva, yva, Xte, yte, seed=args.seed_data)
+            # per-split accuracy + binomial 95% CI of the chosen ridge model
+            lam = best["lam"]
+            mu, sd, ymean = Xtr.mean(0), Xtr.std(0) + 1e-8, ytr.mean()
+            Xtr_s = (Xtr - mu) / sd
+            ytr_c = ytr.astype(np.float64) - ymean
+            alpha = np.linalg.solve(Xtr_s @ Xtr_s.T + lam * np.eye(Xtr_s.shape[0]), ytr_c)
+            w = Xtr_s.T @ alpha
+            acc_with_ci = {}
+            for sp_name, X, y in (("train", Xtr, ytr), ("val", Xva, yva), ("test", Xte, yte)):
+                Xs = (X - mu) / sd
+                pred = (Xs @ w + ymean > 0)
+                k = int((pred == (y > 0)).sum())
+                n = len(y)
+                lo, hi = binomial_ci(k, n)
+                acc_with_ci[sp_name] = {"acc": k / n, "k": k, "n": n, "ci95": [round(lo, 4), round(hi, 4)]}
+            entry["acc_ci"] = acc_with_ci
+            results["probes"][f"{a}::{fname}"] = entry
+            print(f"[g5v2] arm {a} [{fname}]: ridge best λ={lam} Test acc {acc_with_ci['test']['acc']:.4f} "
+                  f"({acc_with_ci['test']['ci95']}) | val {acc_with_ci['val']['acc']:.4f} | "
+                  f"train {acc_with_ci['train']['acc']:.4f}", flush=True)
 
     # ---- state distance across neutral count (continuous, test tracks) ----
     dist_rows = []
