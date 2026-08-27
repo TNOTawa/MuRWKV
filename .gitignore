@@ -23,6 +23,7 @@ wandb/
 *.pth
 *.ckpt
 *.safetensors
+*.npz
 
 # python
 __pycache__/

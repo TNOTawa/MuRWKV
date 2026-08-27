@@ -2,7 +2,7 @@
   "track": "Track02049",
   "checkpoint": "results/slakh_r1/best_val.pt",
   "mode": "continuous",
-  "git": "b5c93ebd5811445be4bcc7fcb9185ee890c0c447",
+  "git": "07b659e",
   "metrics": {
     "track": "Track02049",
     "mode": "continuous",

@@ -1,0 +1,55 @@
+{
+  "generated_by": "wrap-up: single source of truth for derived G5-v2 feature caches",
+  "files": {
+    "continuous_test.npz": {
+      "sha256": "02ec0258812f7a6e59df20109a73696b2053b67b7f44e62a0cb989744f72efd5",
+      "bytes": 17181140
+    },
+    "continuous_train.npz": {
+      "sha256": "adfac9c32f4e107c2e613ab3e4715d226724ab7277b250f85a99da49f21bd183",
+      "bytes": 120259028
+    },
+    "continuous_val.npz": {
+      "sha256": "45ed8958a036e1113dc3c50980b562b4e23a1331814d5ad19102bad69817a868",
+      "bytes": 8591316
+    },
+    "history_test.npz": {
+      "sha256": "f42659a603c2193b61ef32a9885ca20d3e4c95b44261ab4b531f4a4802915e12",
+      "bytes": 17181140
+    },
+    "history_train.npz": {
+      "sha256": "87f0a02902905398f9a09bdd49eb97ca231eea7b4f089d6e0bb05e58312be9a0",
+      "bytes": 120259028
+    },
+    "history_val.npz": {
+      "sha256": "f96d0414e82b6cd870ae37bb900bd31913070f64904c154ce70e8e5ae0ad5b84",
+      "bytes": 8591316
+    },
+    "lead1_test.npz": {
+      "sha256": "1fccd2661bda79c63dd1629a441d4d80aa7072c1a753ee434996f1ca6aeae8b5",
+      "bytes": 17181140
+    },
+    "lead1_train.npz": {
+      "sha256": "f7add757b0ca751165b24725b62c04733f576d5d0d5ca9b9da38eca9122b2a08",
+      "bytes": 120259028
+    },
+    "lead1_val.npz": {
+      "sha256": "3a5abd56c619af978983bce69b26275d69291311099205c5a6173c62a0b70af1",
+      "bytes": 8591316
+    },
+    "reset_test.npz": {
+      "sha256": "3e065c9ec1f2c71715f17e085df717e439aadc380b51413dd4ab5ed37311a05c",
+      "bytes": 17181140
+    },
+    "reset_train.npz": {
+      "sha256": "d41e6d400539b87736b2ddf49152c76c0fc85553fc40ca6fddabaf61e2fb8940",
+      "bytes": 120259028
+    },
+    "reset_val.npz": {
+      "sha256": "032beb0a1dd09542c2aee52729b308d2c4a199e83866d448621d6e6e3cf3ba47",
+      "bytes": 8591316
+    }
+  },
+  "regenerate_cmd": "python -m murwkv.eval.memory_probe_v2 --exp results/gate5_probe_v2 --data-root /root/autodl-tmp/data/babyslakh/babyslakh_16k --ckpt results/gate4_overfit_v2/final.pt --device cuda",
+  "note": "Feature caches are regenerable (frozen G4 ckpt + BabySlakh); kept out of git per repo convention. Manifest committed for integrity verification."
+}

@@ -1,0 +1,102 @@
+{
+  "rows": [
+    {
+      "step": 1,
+      "loss": 7.351070404052734,
+      "acc": 0.0,
+      "eos_acc": 0.0,
+      "gnorm": 580.0,
+      "lr": 5.999999999999999e-06,
+      "n_tok": 1630
+    },
+    {
+      "step": 2,
+      "loss": 6.804605960845947,
+      "acc": 0.06822708994150162,
+      "eos_acc": 0.0,
+      "gnorm": 568.0,
+      "lr": 1.194e-05,
+      "n_tok": 2008
+    },
+    {
+      "step": 3,
+      "loss": 6.706012725830078,
+      "acc": 0.1160968691110611,
+      "eos_acc": 0.0,
+      "gnorm": 432.0,
+      "lr": 1.7879999999999998e-05,
+      "n_tok": 1404
+    },
+    {
+      "step": 4,
+      "loss": 5.013334274291992,
+      "acc": 0.26236334443092346,
+      "eos_acc": 0.0,
+      "gnorm": 328.0,
+      "lr": 2.382e-05,
+      "n_tok": 1921
+    }
+  ],
+  "val_rows": [
+    {
+      "val_loss": 6.757119231647587,
+      "val_acc": 0.13131497115489232,
+      "val_eos_acc": 0.0,
+      "step": 2
+    },
+    {
+      "val_loss": 5.958392822892479,
+      "val_acc": 0.16177274959106505,
+      "val_eos_acc": 0.0,
+      "step": 4
+    },
+    {
+      "val_loss": 5.958392822892479,
+      "val_acc": 0.16177274959106505,
+      "val_eos_acc": 0.0,
+      "step": 4
+    }
+  ],
+  "stats": {
+    "truncated_chunks": 0,
+    "tracks": 2,
+    "chunks": 85,
+    "tokens": 38168,
+    "shortened": 0,
+    "clipped_overlaps": 107
+  },
+  "n_params": 21870080,
+  "args": {
+    "exp": "results/smoke_val",
+    "data_root": "/root/autodl-tmp/data/babyslakh/babyslakh_16k",
+    "splits": false,
+    "tracks": [
+      "Track00001",
+      "Track00002"
+    ],
+    "units": 4,
+    "max_tokens_per_chunk": 2048,
+    "val_every": 2,
+    "val_limit": 2,
+    "steps": 4,
+    "n_layer": 6,
+    "n_embd": 512,
+    "lr_init": 0.0006,
+    "lr_final": 1e-05,
+    "warmup_steps": 100,
+    "beta1": 0.9,
+    "beta2": 0.99,
+    "adam_eps": 1e-18,
+    "weight_decay": 0.1,
+    "grad_clip": 1.0,
+    "seed": 42,
+    "log_every": 10,
+    "save_every": 100,
+    "pad_to": null,
+    "mel_cache": ""
+  },
+  "best_val": {
+    "step": 4,
+    "val_loss": 5.958392822892479
+  }
+}
