@@ -1,0 +1,4354 @@
+[
+  {
+    "split": "train",
+    "tid": "Track00001",
+    "stem": "S07",
+    "class": 0,
+    "start": 3828,
+    "hist_frames": 2000
+  },
+  {
+    "split": "train",
+    "tid": "Track00001",
+    "stem": "S00",
+    "class": 0,
+    "start": 2970,
+    "hist_frames": 2000
+  },
+  {
+    "split": "train",
+    "tid": "Track00001",
+    "stem": "S08",
+    "class": 0,
+    "start": 1144,
+    "hist_frames": 2000
+  },
+  {
+    "split": "train",
+    "tid": "Track00001",
+    "stem": "S08",
+    "class": 0,
+    "start": 2750,
+    "hist_frames": 2000
+  },
+  {
+    "split": "train",
+    "tid": "Track00001",
+    "stem": "S00",
+    "class": 0,
+    "start": 11620,
+    "hist_frames": 2000
+  },
+  {
+    "split": "train",
+    "tid": "Track00001",
+    "stem": "S00",
+    "class": 0,
+    "start": 571,
+    "hist_frames": 2000
+  },
+  {
+    "split": "train",
+    "tid": "Track00001",
+    "stem": "S00",
+    "class": 0,
+    "start": 519,
+    "hist_frames": 2000
+  },
+  {
+    "split": "train",
+    "tid": "Track00001",
+    "stem": "S07",
+    "class": 0,
+    "start": 21244,
+    "hist_frames": 2000
+  },
+  {
+    "split": "train",
+    "tid": "Track00001",
+    "stem": "S08",
+    "class": 0,
+    "start": 15867,
+    "hist_frames": 2000
+  },
+  {
+    "split": "train",
+    "tid": "Track00001",
+    "stem": "S08",
+    "class": 0,
+    "start": 15189,
+    "hist_frames": 2000
+  },
+  {
+    "split": "train",
+    "tid": "Track00001",
+    "stem": "S00",
+    "class": 0,
+    "start": 2991,
+    "hist_frames": 2000
+  },
+  {
+    "split": "train",
+    "tid": "Track00001",
+    "stem": "S00",
+    "class": 0,
+    "start": 3749,
+    "hist_frames": 2000
+  },
+  {
+    "split": "train",
+    "tid": "Track00001",
+    "stem": "S00",
+    "class": 0,
+    "start": 16485,
+    "hist_frames": 2000
+  },
+  {
+    "split": "train",
+    "tid": "Track00001",
+    "stem": "S07",
+    "class": 0,
+    "start": 8186,
+    "hist_frames": 2000
+  },
+  {
+    "split": "train",
+    "tid": "Track00001",
+    "stem": "S00",
+    "class": 0,
+    "start": 21864,
+    "hist_frames": 2000
+  },
+  {
+    "split": "train",
+    "tid": "Track00001",
+    "stem": "S08",
+    "class": 0,
+    "start": 15266,
+    "hist_frames": 2000
+  },
+  {
+    "split": "train",
+    "tid": "Track00001",
+    "stem": "S02",
+    "class": 1,
+    "start": 19708,
+    "hist_frames": 2000
+  },
+  {
+    "split": "train",
+    "tid": "Track00001",
+    "stem": "S02",
+    "class": 1,
+    "start": 16876,
+    "hist_frames": 2000
+  },
+  {
+    "split": "train",
+    "tid": "Track00001",
+    "stem": "S02",
+    "class": 1,
+    "start": 8833,
+    "hist_frames": 2000
+  },
+  {
+    "split": "train",
+    "tid": "Track00001",
+    "stem": "S02",
+    "class": 1,
+    "start": 21123,
+    "hist_frames": 2000
+  },
+  {
+    "split": "train",
+    "tid": "Track00001",
+    "stem": "S02",
+    "class": 1,
+    "start": 15762,
+    "hist_frames": 2000
+  },
+  {
+    "split": "train",
+    "tid": "Track00001",
+    "stem": "S02",
+    "class": 1,
+    "start": 8731,
+    "hist_frames": 2000
+  },
+  {
+    "split": "train",
+    "tid": "Track00001",
+    "stem": "S02",
+    "class": 1,
+    "start": 21478,
+    "hist_frames": 2000
+  },
+  {
+    "split": "train",
+    "tid": "Track00001",
+    "stem": "S02",
+    "class": 1,
+    "start": 14856,
+    "hist_frames": 2000
+  },
+  {
+    "split": "train",
+    "tid": "Track00001",
+    "stem": "S02",
+    "class": 1,
+    "start": 16649,
+    "hist_frames": 2000
+  },
+  {
+    "split": "train",
+    "tid": "Track00001",
+    "stem": "S02",
+    "class": 1,
+    "start": 189,
+    "hist_frames": 2000
+  },
+  {
+    "split": "train",
+    "tid": "Track00001",
+    "stem": "S02",
+    "class": 1,
+    "start": 4711,
+    "hist_frames": 2000
+  },
+  {
+    "split": "train",
+    "tid": "Track00001",
+    "stem": "S02",
+    "class": 1,
+    "start": 21540,
+    "hist_frames": 2000
+  },
+  {
+    "split": "train",
+    "tid": "Track00001",
+    "stem": "S02",
+    "class": 1,
+    "start": 5475,
+    "hist_frames": 2000
+  },
+  {
+    "split": "train",
+    "tid": "Track00001",
+    "stem": "S02",
+    "class": 1,
+    "start": 2498,
+    "hist_frames": 2000
+  },
+  {
+    "split": "train",
+    "tid": "Track00001",
+    "stem": "S02",
+    "class": 1,
+    "start": 5374,
+    "hist_frames": 2000
+  },
+  {
+    "split": "train",
+    "tid": "Track00001",
+    "stem": "S02",
+    "class": 1,
+    "start": 18262,
+    "hist_frames": 2000
+  },
+  {
+    "split": "train",
+    "tid": "Track00002",
+    "stem": "S08",
+    "class": 0,
+    "start": 4726,
+    "hist_frames": 2000
+  },
+  {
+    "split": "train",
+    "tid": "Track00002",
+    "stem": "S08",
+    "class": 0,
+    "start": 11345,
+    "hist_frames": 2000
+  },
+  {
+    "split": "train",
+    "tid": "Track00002",
+    "stem": "S08",
+    "class": 0,
+    "start": 4627,
+    "hist_frames": 2000
+  },
+  {
+    "split": "train",
+    "tid": "Track00002",
+    "stem": "S08",
+    "class": 0,
+    "start": 14881,
+    "hist_frames": 2000
+  },
+  {
+    "split": "train",
+    "tid": "Track00002",
+    "stem": "S08",
+    "class": 0,
+    "start": 13639,
+    "hist_frames": 2000
+  },
+  {
+    "split": "train",
+    "tid": "Track00002",
+    "stem": "S08",
+    "class": 0,
+    "start": 1317,
+    "hist_frames": 2000
+  },
+  {
+    "split": "train",
+    "tid": "Track00002",
+    "stem": "S08",
+    "class": 0,
+    "start": 8902,
+    "hist_frames": 2000
+  },
+  {
+    "split": "train",
+    "tid": "Track00002",
+    "stem": "S08",
+    "class": 0,
+    "start": 9839,
+    "hist_frames": 2000
+  },
+  {
+    "split": "train",
+    "tid": "Track00002",
+    "stem": "S08",
+    "class": 0,
+    "start": 15220,
+    "hist_frames": 2000
+  },
+  {
+    "split": "train",
+    "tid": "Track00002",
+    "stem": "S08",
+    "class": 0,
+    "start": 12654,
+    "hist_frames": 2000
+  },
+  {
+    "split": "train",
+    "tid": "Track00002",
+    "stem": "S08",
+    "class": 0,
+    "start": 16248,
+    "hist_frames": 2000
+  },
+  {
+    "split": "train",
+    "tid": "Track00002",
+    "stem": "S08",
+    "class": 0,
+    "start": 15339,
+    "hist_frames": 2000
+  },
+  {
+    "split": "train",
+    "tid": "Track00002",
+    "stem": "S08",
+    "class": 0,
+    "start": 1485,
+    "hist_frames": 2000
+  },
+  {
+    "split": "train",
+    "tid": "Track00002",
+    "stem": "S08",
+    "class": 0,
+    "start": 5569,
+    "hist_frames": 2000
+  },
+  {
+    "split": "train",
+    "tid": "Track00002",
+    "stem": "S08",
+    "class": 0,
+    "start": 17013,
+    "hist_frames": 2000
+  },
+  {
+    "split": "train",
+    "tid": "Track00002",
+    "stem": "S08",
+    "class": 0,
+    "start": 9688,
+    "hist_frames": 2000
+  },
+  {
+    "split": "train",
+    "tid": "Track00002",
+    "stem": "S06",
+    "class": 1,
+    "start": 4059,
+    "hist_frames": 2000
+  },
+  {
+    "split": "train",
+    "tid": "Track00002",
+    "stem": "S06",
+    "class": 1,
+    "start": 13642,
+    "hist_frames": 2000
+  },
+  {
+    "split": "train",
+    "tid": "Track00002",
+    "stem": "S06",
+    "class": 1,
+    "start": 3914,
+    "hist_frames": 2000
+  },
+  {
+    "split": "train",
+    "tid": "Track00002",
+    "stem": "S06",
+    "class": 1,
+    "start": 15899,
+    "hist_frames": 2000
+  },
+  {
+    "split": "train",
+    "tid": "Track00002",
+    "stem": "S06",
+    "class": 1,
+    "start": 8371,
+    "hist_frames": 2000
+  },
+  {
+    "split": "train",
+    "tid": "Track00002",
+    "stem": "S06",
+    "class": 1,
+    "start": 11316,
+    "hist_frames": 2000
+  },
+  {
+    "split": "train",
+    "tid": "Track00002",
+    "stem": "S06",
+    "class": 1,
+    "start": 5150,
+    "hist_frames": 2000
+  },
+  {
+    "split": "train",
+    "tid": "Track00002",
+    "stem": "S06",
+    "class": 1,
+    "start": 5074,
+    "hist_frames": 2000
+  },
+  {
+    "split": "train",
+    "tid": "Track00002",
+    "stem": "S06",
+    "class": 1,
+    "start": 14636,
+    "hist_frames": 2000
+  },
+  {
+    "split": "train",
+    "tid": "Track00002",
+    "stem": "S06",
+    "class": 1,
+    "start": 2572,
+    "hist_frames": 2000
+  },
+  {
+    "split": "train",
+    "tid": "Track00002",
+    "stem": "S06",
+    "class": 1,
+    "start": 7017,
+    "hist_frames": 2000
+  },
+  {
+    "split": "train",
+    "tid": "Track00002",
+    "stem": "S06",
+    "class": 1,
+    "start": 9376,
+    "hist_frames": 2000
+  },
+  {
+    "split": "train",
+    "tid": "Track00002",
+    "stem": "S06",
+    "class": 1,
+    "start": 7189,
+    "hist_frames": 2000
+  },
+  {
+    "split": "train",
+    "tid": "Track00002",
+    "stem": "S06",
+    "class": 1,
+    "start": 10386,
+    "hist_frames": 2000
+  },
+  {
+    "split": "train",
+    "tid": "Track00002",
+    "stem": "S06",
+    "class": 1,
+    "start": 15100,
+    "hist_frames": 2000
+  },
+  {
+    "split": "train",
+    "tid": "Track00002",
+    "stem": "S06",
+    "class": 1,
+    "start": 8435,
+    "hist_frames": 2000
+  },
+  {
+    "split": "train",
+    "tid": "Track00003",
+    "stem": "S02",
+    "class": 0,
+    "start": 13969,
+    "hist_frames": 2000
+  },
+  {
+    "split": "train",
+    "tid": "Track00003",
+    "stem": "S03",
+    "class": 0,
+    "start": 3319,
+    "hist_frames": 2000
+  },
+  {
+    "split": "train",
+    "tid": "Track00003",
+    "stem": "S07",
+    "class": 0,
+    "start": 6376,
+    "hist_frames": 2000
+  },
+  {
+    "split": "train",
+    "tid": "Track00003",
+    "stem": "S07",
+    "class": 0,
+    "start": 16400,
+    "hist_frames": 2000
+  },
+  {
+    "split": "train",
+    "tid": "Track00003",
+    "stem": "S03",
+    "class": 0,
+    "start": 11837,
+    "hist_frames": 2000
+  },
+  {
+    "split": "train",
+    "tid": "Track00003",
+    "stem": "S03",
+    "class": 0,
+    "start": 16876,
+    "hist_frames": 2000
+  },
+  {
+    "split": "train",
+    "tid": "Track00003",
+    "stem": "S07",
+    "class": 0,
+    "start": 5724,
+    "hist_frames": 2000
+  },
+  {
+    "split": "train",
+    "tid": "Track00003",
+    "stem": "S08",
+    "class": 0,
+    "start": 6660,
+    "hist_frames": 2000
+  },
+  {
+    "split": "train",
+    "tid": "Track00003",
+    "stem": "S04",
+    "class": 0,
+    "start": 1976,
+    "hist_frames": 2000
+  },
+  {
+    "split": "train",
+    "tid": "Track00003",
+    "stem": "S04",
+    "class": 0,
+    "start": 17509,
+    "hist_frames": 2000
+  },
+  {
+    "split": "train",
+    "tid": "Track00003",
+    "stem": "S03",
+    "class": 0,
+    "start": 16370,
+    "hist_frames": 2000
+  },
+  {
+    "split": "train",
+    "tid": "Track00003",
+    "stem": "S08",
+    "class": 0,
+    "start": 15480,
+    "hist_frames": 2000
+  },
+  {
+    "split": "train",
+    "tid": "Track00003",
+    "stem": "S04",
+    "class": 0,
+    "start": 4545,
+    "hist_frames": 2000
+  },
+  {
+    "split": "train",
+    "tid": "Track00003",
+    "stem": "S03",
+    "class": 0,
+    "start": 1575,
+    "hist_frames": 2000
+  },
+  {
+    "split": "train",
+    "tid": "Track00003",
+    "stem": "S08",
+    "class": 0,
+    "start": 5409,
+    "hist_frames": 2000
+  },
+  {
+    "split": "train",
+    "tid": "Track00003",
+    "stem": "S03",
+    "class": 0,
+    "start": 17893,
+    "hist_frames": 2000
+  },
+  {
+    "split": "train",
+    "tid": "Track00003",
+    "stem": "S00",
+    "class": 1,
+    "start": 10658,
+    "hist_frames": 2000
+  },
+  {
+    "split": "train",
+    "tid": "Track00003",
+    "stem": "S00",
+    "class": 1,
+    "start": 55,
+    "hist_frames": 2000
+  },
+  {
+    "split": "train",
+    "tid": "Track00003",
+    "stem": "S00",
+    "class": 1,
+    "start": 2871,
+    "hist_frames": 2000
+  },
+  {
+    "split": "train",
+    "tid": "Track00003",
+    "stem": "S00",
+    "class": 1,
+    "start": 7111,
+    "hist_frames": 2000
+  },
+  {
+    "split": "train",
+    "tid": "Track00003",
+    "stem": "S00",
+    "class": 1,
+    "start": 14181,
+    "hist_frames": 2000
+  },
+  {
+    "split": "train",
+    "tid": "Track00003",
+    "stem": "S00",
+    "class": 1,
+    "start": 10630,
+    "hist_frames": 2000
+  },
+  {
+    "split": "train",
+    "tid": "Track00003",
+    "stem": "S00",
+    "class": 1,
+    "start": 12491,
+    "hist_frames": 2000
+  },
+  {
+    "split": "train",
+    "tid": "Track00003",
+    "stem": "S00",
+    "class": 1,
+    "start": 17612,
+    "hist_frames": 2000
+  },
+  {
+    "split": "train",
+    "tid": "Track00003",
+    "stem": "S00",
+    "class": 1,
+    "start": 13829,
+    "hist_frames": 2000
+  },
+  {
+    "split": "train",
+    "tid": "Track00003",
+    "stem": "S00",
+    "class": 1,
+    "start": 18931,
+    "hist_frames": 2000
+  },
+  {
+    "split": "train",
+    "tid": "Track00003",
+    "stem": "S00",
+    "class": 1,
+    "start": 17453,
+    "hist_frames": 2000
+  },
+  {
+    "split": "train",
+    "tid": "Track00003",
+    "stem": "S00",
+    "class": 1,
+    "start": 8530,
+    "hist_frames": 2000
+  },
+  {
+    "split": "train",
+    "tid": "Track00003",
+    "stem": "S00",
+    "class": 1,
+    "start": 13443,
+    "hist_frames": 2000
+  },
+  {
+    "split": "train",
+    "tid": "Track00003",
+    "stem": "S00",
+    "class": 1,
+    "start": 18512,
+    "hist_frames": 2000
+  },
+  {
+    "split": "train",
+    "tid": "Track00003",
+    "stem": "S00",
+    "class": 1,
+    "start": 17229,
+    "hist_frames": 2000
+  },
+  {
+    "split": "train",
+    "tid": "Track00003",
+    "stem": "S00",
+    "class": 1,
+    "start": 12299,
+    "hist_frames": 2000
+  },
+  {
+    "split": "train",
+    "tid": "Track00004",
+    "stem": "S04",
+    "class": 0,
+    "start": 7008,
+    "hist_frames": 2000
+  },
+  {
+    "split": "train",
+    "tid": "Track00004",
+    "stem": "S04",
+    "class": 0,
+    "start": 19251,
+    "hist_frames": 2000
+  },
+  {
+    "split": "train",
+    "tid": "Track00004",
+    "stem": "S04",
+    "class": 0,
+    "start": 1720,
+    "hist_frames": 2000
+  },
+  {
+    "split": "train",
+    "tid": "Track00004",
+    "stem": "S04",
+    "class": 0,
+    "start": 14436,
+    "hist_frames": 2000
+  },
+  {
+    "split": "train",
+    "tid": "Track00004",
+    "stem": "S04",
+    "class": 0,
+    "start": 16072,
+    "hist_frames": 2000
+  },
+  {
+    "split": "train",
+    "tid": "Track00004",
+    "stem": "S04",
+    "class": 0,
+    "start": 12469,
+    "hist_frames": 2000
+  },
+  {
+    "split": "train",
+    "tid": "Track00004",
+    "stem": "S04",
+    "class": 0,
+    "start": 80,
+    "hist_frames": 2000
+  },
+  {
+    "split": "train",
+    "tid": "Track00004",
+    "stem": "S04",
+    "class": 0,
+    "start": 15735,
+    "hist_frames": 2000
+  },
+  {
+    "split": "train",
+    "tid": "Track00004",
+    "stem": "S04",
+    "class": 0,
+    "start": 9778,
+    "hist_frames": 2000
+  },
+  {
+    "split": "train",
+    "tid": "Track00004",
+    "stem": "S04",
+    "class": 0,
+    "start": 15715,
+    "hist_frames": 2000
+  },
+  {
+    "split": "train",
+    "tid": "Track00004",
+    "stem": "S04",
+    "class": 0,
+    "start": 13123,
+    "hist_frames": 2000
+  },
+  {
+    "split": "train",
+    "tid": "Track00004",
+    "stem": "S04",
+    "class": 0,
+    "start": 5150,
+    "hist_frames": 2000
+  },
+  {
+    "split": "train",
+    "tid": "Track00004",
+    "stem": "S04",
+    "class": 0,
+    "start": 19382,
+    "hist_frames": 2000
+  },
+  {
+    "split": "train",
+    "tid": "Track00004",
+    "stem": "S04",
+    "class": 0,
+    "start": 19676,
+    "hist_frames": 2000
+  },
+  {
+    "split": "train",
+    "tid": "Track00004",
+    "stem": "S04",
+    "class": 0,
+    "start": 6752,
+    "hist_frames": 2000
+  },
+  {
+    "split": "train",
+    "tid": "Track00004",
+    "stem": "S04",
+    "class": 0,
+    "start": 17002,
+    "hist_frames": 2000
+  },
+  {
+    "split": "train",
+    "tid": "Track00004",
+    "stem": "S07",
+    "class": 1,
+    "start": 15546,
+    "hist_frames": 2000
+  },
+  {
+    "split": "train",
+    "tid": "Track00004",
+    "stem": "S06",
+    "class": 1,
+    "start": 15331,
+    "hist_frames": 2000
+  },
+  {
+    "split": "train",
+    "tid": "Track00004",
+    "stem": "S06",
+    "class": 1,
+    "start": 881,
+    "hist_frames": 2000
+  },
+  {
+    "split": "train",
+    "tid": "Track00004",
+    "stem": "S07",
+    "class": 1,
+    "start": 15591,
+    "hist_frames": 2000
+  },
+  {
+    "split": "train",
+    "tid": "Track00004",
+    "stem": "S06",
+    "class": 1,
+    "start": 4588,
+    "hist_frames": 2000
+  },
+  {
+    "split": "train",
+    "tid": "Track00004",
+    "stem": "S07",
+    "class": 1,
+    "start": 11432,
+    "hist_frames": 2000
+  },
+  {
+    "split": "train",
+    "tid": "Track00004",
+    "stem": "S07",
+    "class": 1,
+    "start": 9785,
+    "hist_frames": 2000
+  },
+  {
+    "split": "train",
+    "tid": "Track00004",
+    "stem": "S07",
+    "class": 1,
+    "start": 18443,
+    "hist_frames": 2000
+  },
+  {
+    "split": "train",
+    "tid": "Track00004",
+    "stem": "S07",
+    "class": 1,
+    "start": 18432,
+    "hist_frames": 2000
+  },
+  {
+    "split": "train",
+    "tid": "Track00004",
+    "stem": "S06",
+    "class": 1,
+    "start": 16684,
+    "hist_frames": 2000
+  },
+  {
+    "split": "train",
+    "tid": "Track00004",
+    "stem": "S07",
+    "class": 1,
+    "start": 2375,
+    "hist_frames": 2000
+  },
+  {
+    "split": "train",
+    "tid": "Track00004",
+    "stem": "S06",
+    "class": 1,
+    "start": 11129,
+    "hist_frames": 2000
+  },
+  {
+    "split": "train",
+    "tid": "Track00004",
+    "stem": "S07",
+    "class": 1,
+    "start": 10520,
+    "hist_frames": 2000
+  },
+  {
+    "split": "train",
+    "tid": "Track00004",
+    "stem": "S07",
+    "class": 1,
+    "start": 8765,
+    "hist_frames": 2000
+  },
+  {
+    "split": "train",
+    "tid": "Track00004",
+    "stem": "S06",
+    "class": 1,
+    "start": 17277,
+    "hist_frames": 2000
+  },
+  {
+    "split": "train",
+    "tid": "Track00004",
+    "stem": "S06",
+    "class": 1,
+    "start": 8036,
+    "hist_frames": 2000
+  },
+  {
+    "split": "train",
+    "tid": "Track00007",
+    "stem": "S07",
+    "class": 0,
+    "start": 12185,
+    "hist_frames": 2000
+  },
+  {
+    "split": "train",
+    "tid": "Track00007",
+    "stem": "S04",
+    "class": 0,
+    "start": 929,
+    "hist_frames": 2000
+  },
+  {
+    "split": "train",
+    "tid": "Track00007",
+    "stem": "S07",
+    "class": 0,
+    "start": 1224,
+    "hist_frames": 2000
+  },
+  {
+    "split": "train",
+    "tid": "Track00007",
+    "stem": "S04",
+    "class": 0,
+    "start": 6838,
+    "hist_frames": 2000
+  },
+  {
+    "split": "train",
+    "tid": "Track00007",
+    "stem": "S04",
+    "class": 0,
+    "start": 10256,
+    "hist_frames": 2000
+  },
+  {
+    "split": "train",
+    "tid": "Track00007",
+    "stem": "S07",
+    "class": 0,
+    "start": 14239,
+    "hist_frames": 2000
+  },
+  {
+    "split": "train",
+    "tid": "Track00007",
+    "stem": "S04",
+    "class": 0,
+    "start": 9999,
+    "hist_frames": 2000
+  },
+  {
+    "split": "train",
+    "tid": "Track00007",
+    "stem": "S07",
+    "class": 0,
+    "start": 15911,
+    "hist_frames": 2000
+  },
+  {
+    "split": "train",
+    "tid": "Track00007",
+    "stem": "S04",
+    "class": 0,
+    "start": 11394,
+    "hist_frames": 2000
+  },
+  {
+    "split": "train",
+    "tid": "Track00007",
+    "stem": "S04",
+    "class": 0,
+    "start": 21402,
+    "hist_frames": 2000
+  },
+  {
+    "split": "train",
+    "tid": "Track00007",
+    "stem": "S04",
+    "class": 0,
+    "start": 22372,
+    "hist_frames": 2000
+  },
+  {
+    "split": "train",
+    "tid": "Track00007",
+    "stem": "S07",
+    "class": 0,
+    "start": 18487,
+    "hist_frames": 2000
+  },
+  {
+    "split": "train",
+    "tid": "Track00007",
+    "stem": "S04",
+    "class": 0,
+    "start": 5325,
+    "hist_frames": 2000
+  },
+  {
+    "split": "train",
+    "tid": "Track00007",
+    "stem": "S07",
+    "class": 0,
+    "start": 16364,
+    "hist_frames": 2000
+  },
+  {
+    "split": "train",
+    "tid": "Track00007",
+    "stem": "S04",
+    "class": 0,
+    "start": 17442,
+    "hist_frames": 2000
+  },
+  {
+    "split": "train",
+    "tid": "Track00007",
+    "stem": "S04",
+    "class": 0,
+    "start": 4768,
+    "hist_frames": 2000
+  },
+  {
+    "split": "train",
+    "tid": "Track00007",
+    "stem": "S08",
+    "class": 1,
+    "start": 7971,
+    "hist_frames": 2000
+  },
+  {
+    "split": "train",
+    "tid": "Track00007",
+    "stem": "S08",
+    "class": 1,
+    "start": 5382,
+    "hist_frames": 2000
+  },
+  {
+    "split": "train",
+    "tid": "Track00007",
+    "stem": "S08",
+    "class": 1,
+    "start": 16547,
+    "hist_frames": 2000
+  },
+  {
+    "split": "train",
+    "tid": "Track00007",
+    "stem": "S08",
+    "class": 1,
+    "start": 12882,
+    "hist_frames": 2000
+  },
+  {
+    "split": "train",
+    "tid": "Track00007",
+    "stem": "S03",
+    "class": 1,
+    "start": 4224,
+    "hist_frames": 2000
+  },
+  {
+    "split": "train",
+    "tid": "Track00007",
+    "stem": "S08",
+    "class": 1,
+    "start": 18406,
+    "hist_frames": 2000
+  },
+  {
+    "split": "train",
+    "tid": "Track00007",
+    "stem": "S08",
+    "class": 1,
+    "start": 17533,
+    "hist_frames": 2000
+  },
+  {
+    "split": "train",
+    "tid": "Track00007",
+    "stem": "S08",
+    "class": 1,
+    "start": 19634,
+    "hist_frames": 2000
+  },
+  {
+    "split": "train",
+    "tid": "Track00007",
+    "stem": "S03",
+    "class": 1,
+    "start": 1339,
+    "hist_frames": 2000
+  },
+  {
+    "split": "train",
+    "tid": "Track00007",
+    "stem": "S03",
+    "class": 1,
+    "start": 2250,
+    "hist_frames": 2000
+  },
+  {
+    "split": "train",
+    "tid": "Track00007",
+    "stem": "S03",
+    "class": 1,
+    "start": 22146,
+    "hist_frames": 2000
+  },
+  {
+    "split": "train",
+    "tid": "Track00007",
+    "stem": "S03",
+    "class": 1,
+    "start": 1462,
+    "hist_frames": 2000
+  },
+  {
+    "split": "train",
+    "tid": "Track00007",
+    "stem": "S08",
+    "class": 1,
+    "start": 20052,
+    "hist_frames": 2000
+  },
+  {
+    "split": "train",
+    "tid": "Track00007",
+    "stem": "S01",
+    "class": 1,
+    "start": 10294,
+    "hist_frames": 2000
+  },
+  {
+    "split": "train",
+    "tid": "Track00007",
+    "stem": "S01",
+    "class": 1,
+    "start": 20422,
+    "hist_frames": 2000
+  },
+  {
+    "split": "train",
+    "tid": "Track00007",
+    "stem": "S01",
+    "class": 1,
+    "start": 11343,
+    "hist_frames": 2000
+  },
+  {
+    "split": "train",
+    "tid": "Track00008",
+    "stem": "S03",
+    "class": 0,
+    "start": 19326,
+    "hist_frames": 2000
+  },
+  {
+    "split": "train",
+    "tid": "Track00008",
+    "stem": "S03",
+    "class": 0,
+    "start": 1718,
+    "hist_frames": 2000
+  },
+  {
+    "split": "train",
+    "tid": "Track00008",
+    "stem": "S03",
+    "class": 0,
+    "start": 14682,
+    "hist_frames": 2000
+  },
+  {
+    "split": "train",
+    "tid": "Track00008",
+    "stem": "S03",
+    "class": 0,
+    "start": 9606,
+    "hist_frames": 2000
+  },
+  {
+    "split": "train",
+    "tid": "Track00008",
+    "stem": "S03",
+    "class": 0,
+    "start": 11151,
+    "hist_frames": 2000
+  },
+  {
+    "split": "train",
+    "tid": "Track00008",
+    "stem": "S03",
+    "class": 0,
+    "start": 15930,
+    "hist_frames": 2000
+  },
+  {
+    "split": "train",
+    "tid": "Track00008",
+    "stem": "S03",
+    "class": 0,
+    "start": 22710,
+    "hist_frames": 2000
+  },
+  {
+    "split": "train",
+    "tid": "Track00008",
+    "stem": "S03",
+    "class": 0,
+    "start": 11685,
+    "hist_frames": 2000
+  },
+  {
+    "split": "train",
+    "tid": "Track00008",
+    "stem": "S03",
+    "class": 0,
+    "start": 13598,
+    "hist_frames": 2000
+  },
+  {
+    "split": "train",
+    "tid": "Track00008",
+    "stem": "S03",
+    "class": 0,
+    "start": 2446,
+    "hist_frames": 2000
+  },
+  {
+    "split": "train",
+    "tid": "Track00008",
+    "stem": "S03",
+    "class": 0,
+    "start": 6955,
+    "hist_frames": 2000
+  },
+  {
+    "split": "train",
+    "tid": "Track00008",
+    "stem": "S03",
+    "class": 0,
+    "start": 19829,
+    "hist_frames": 2000
+  },
+  {
+    "split": "train",
+    "tid": "Track00008",
+    "stem": "S03",
+    "class": 0,
+    "start": 16444,
+    "hist_frames": 2000
+  },
+  {
+    "split": "train",
+    "tid": "Track00008",
+    "stem": "S03",
+    "class": 0,
+    "start": 22094,
+    "hist_frames": 2000
+  },
+  {
+    "split": "train",
+    "tid": "Track00008",
+    "stem": "S03",
+    "class": 0,
+    "start": 21340,
+    "hist_frames": 2000
+  },
+  {
+    "split": "train",
+    "tid": "Track00008",
+    "stem": "S03",
+    "class": 0,
+    "start": 19656,
+    "hist_frames": 2000
+  },
+  {
+    "split": "train",
+    "tid": "Track00008",
+    "stem": "S05",
+    "class": 1,
+    "start": 11847,
+    "hist_frames": 2000
+  },
+  {
+    "split": "train",
+    "tid": "Track00008",
+    "stem": "S05",
+    "class": 1,
+    "start": 9450,
+    "hist_frames": 2000
+  },
+  {
+    "split": "train",
+    "tid": "Track00008",
+    "stem": "S05",
+    "class": 1,
+    "start": 13375,
+    "hist_frames": 2000
+  },
+  {
+    "split": "train",
+    "tid": "Track00008",
+    "stem": "S05",
+    "class": 1,
+    "start": 7673,
+    "hist_frames": 2000
+  },
+  {
+    "split": "train",
+    "tid": "Track00008",
+    "stem": "S05",
+    "class": 1,
+    "start": 286,
+    "hist_frames": 2000
+  },
+  {
+    "split": "train",
+    "tid": "Track00008",
+    "stem": "S05",
+    "class": 1,
+    "start": 19104,
+    "hist_frames": 2000
+  },
+  {
+    "split": "train",
+    "tid": "Track00008",
+    "stem": "S05",
+    "class": 1,
+    "start": 3947,
+    "hist_frames": 2000
+  },
+  {
+    "split": "train",
+    "tid": "Track00008",
+    "stem": "S02",
+    "class": 1,
+    "start": 7161,
+    "hist_frames": 2000
+  },
+  {
+    "split": "train",
+    "tid": "Track00008",
+    "stem": "S05",
+    "class": 1,
+    "start": 17602,
+    "hist_frames": 2000
+  },
+  {
+    "split": "train",
+    "tid": "Track00008",
+    "stem": "S02",
+    "class": 1,
+    "start": 10559,
+    "hist_frames": 2000
+  },
+  {
+    "split": "train",
+    "tid": "Track00008",
+    "stem": "S05",
+    "class": 1,
+    "start": 11890,
+    "hist_frames": 2000
+  },
+  {
+    "split": "train",
+    "tid": "Track00008",
+    "stem": "S05",
+    "class": 1,
+    "start": 23335,
+    "hist_frames": 2000
+  },
+  {
+    "split": "train",
+    "tid": "Track00008",
+    "stem": "S02",
+    "class": 1,
+    "start": 14970,
+    "hist_frames": 2000
+  },
+  {
+    "split": "train",
+    "tid": "Track00008",
+    "stem": "S02",
+    "class": 1,
+    "start": 105,
+    "hist_frames": 2000
+  },
+  {
+    "split": "train",
+    "tid": "Track00008",
+    "stem": "S05",
+    "class": 1,
+    "start": 7832,
+    "hist_frames": 2000
+  },
+  {
+    "split": "train",
+    "tid": "Track00008",
+    "stem": "S02",
+    "class": 1,
+    "start": 14540,
+    "hist_frames": 2000
+  },
+  {
+    "split": "train",
+    "tid": "Track00009",
+    "stem": "S12",
+    "class": 0,
+    "start": 13663,
+    "hist_frames": 2000
+  },
+  {
+    "split": "train",
+    "tid": "Track00009",
+    "stem": "S12",
+    "class": 0,
+    "start": 5797,
+    "hist_frames": 2000
+  },
+  {
+    "split": "train",
+    "tid": "Track00009",
+    "stem": "S12",
+    "class": 0,
+    "start": 8685,
+    "hist_frames": 2000
+  },
+  {
+    "split": "train",
+    "tid": "Track00009",
+    "stem": "S12",
+    "class": 0,
+    "start": 12366,
+    "hist_frames": 2000
+  },
+  {
+    "split": "train",
+    "tid": "Track00009",
+    "stem": "S12",
+    "class": 0,
+    "start": 13567,
+    "hist_frames": 2000
+  },
+  {
+    "split": "train",
+    "tid": "Track00009",
+    "stem": "S12",
+    "class": 0,
+    "start": 8426,
+    "hist_frames": 2000
+  },
+  {
+    "split": "train",
+    "tid": "Track00009",
+    "stem": "S12",
+    "class": 0,
+    "start": 11865,
+    "hist_frames": 2000
+  },
+  {
+    "split": "train",
+    "tid": "Track00009",
+    "stem": "S12",
+    "class": 0,
+    "start": 10129,
+    "hist_frames": 2000
+  },
+  {
+    "split": "train",
+    "tid": "Track00009",
+    "stem": "S12",
+    "class": 0,
+    "start": 11690,
+    "hist_frames": 2000
+  },
+  {
+    "split": "train",
+    "tid": "Track00009",
+    "stem": "S12",
+    "class": 0,
+    "start": 13665,
+    "hist_frames": 2000
+  },
+  {
+    "split": "train",
+    "tid": "Track00009",
+    "stem": "S12",
+    "class": 0,
+    "start": 1738,
+    "hist_frames": 2000
+  },
+  {
+    "split": "train",
+    "tid": "Track00009",
+    "stem": "S12",
+    "class": 0,
+    "start": 7997,
+    "hist_frames": 2000
+  },
+  {
+    "split": "train",
+    "tid": "Track00009",
+    "stem": "S12",
+    "class": 0,
+    "start": 8951,
+    "hist_frames": 2000
+  },
+  {
+    "split": "train",
+    "tid": "Track00009",
+    "stem": "S12",
+    "class": 0,
+    "start": 13233,
+    "hist_frames": 2000
+  },
+  {
+    "split": "train",
+    "tid": "Track00009",
+    "stem": "S12",
+    "class": 0,
+    "start": 3915,
+    "hist_frames": 2000
+  },
+  {
+    "split": "train",
+    "tid": "Track00009",
+    "stem": "S12",
+    "class": 0,
+    "start": 5493,
+    "hist_frames": 2000
+  },
+  {
+    "split": "train",
+    "tid": "Track00009",
+    "stem": "S00",
+    "class": 1,
+    "start": 4810,
+    "hist_frames": 2000
+  },
+  {
+    "split": "train",
+    "tid": "Track00009",
+    "stem": "S00",
+    "class": 1,
+    "start": 6643,
+    "hist_frames": 2000
+  },
+  {
+    "split": "train",
+    "tid": "Track00009",
+    "stem": "S00",
+    "class": 1,
+    "start": 9920,
+    "hist_frames": 2000
+  },
+  {
+    "split": "train",
+    "tid": "Track00009",
+    "stem": "S00",
+    "class": 1,
+    "start": 11071,
+    "hist_frames": 2000
+  },
+  {
+    "split": "train",
+    "tid": "Track00009",
+    "stem": "S00",
+    "class": 1,
+    "start": 5235,
+    "hist_frames": 2000
+  },
+  {
+    "split": "train",
+    "tid": "Track00009",
+    "stem": "S00",
+    "class": 1,
+    "start": 8599,
+    "hist_frames": 2000
+  },
+  {
+    "split": "train",
+    "tid": "Track00009",
+    "stem": "S00",
+    "class": 1,
+    "start": 8833,
+    "hist_frames": 2000
+  },
+  {
+    "split": "train",
+    "tid": "Track00009",
+    "stem": "S00",
+    "class": 1,
+    "start": 1406,
+    "hist_frames": 2000
+  },
+  {
+    "split": "train",
+    "tid": "Track00009",
+    "stem": "S00",
+    "class": 1,
+    "start": 3235,
+    "hist_frames": 2000
+  },
+  {
+    "split": "train",
+    "tid": "Track00009",
+    "stem": "S00",
+    "class": 1,
+    "start": 9956,
+    "hist_frames": 2000
+  },
+  {
+    "split": "train",
+    "tid": "Track00009",
+    "stem": "S00",
+    "class": 1,
+    "start": 2828,
+    "hist_frames": 2000
+  },
+  {
+    "split": "train",
+    "tid": "Track00009",
+    "stem": "S00",
+    "class": 1,
+    "start": 4448,
+    "hist_frames": 2000
+  },
+  {
+    "split": "train",
+    "tid": "Track00009",
+    "stem": "S00",
+    "class": 1,
+    "start": 4334,
+    "hist_frames": 2000
+  },
+  {
+    "split": "train",
+    "tid": "Track00009",
+    "stem": "S00",
+    "class": 1,
+    "start": 2591,
+    "hist_frames": 2000
+  },
+  {
+    "split": "train",
+    "tid": "Track00009",
+    "stem": "S00",
+    "class": 1,
+    "start": 9865,
+    "hist_frames": 2000
+  },
+  {
+    "split": "train",
+    "tid": "Track00009",
+    "stem": "S00",
+    "class": 1,
+    "start": 741,
+    "hist_frames": 2000
+  },
+  {
+    "split": "train",
+    "tid": "Track00011",
+    "stem": "S03",
+    "class": 0,
+    "start": 8531,
+    "hist_frames": 2000
+  },
+  {
+    "split": "train",
+    "tid": "Track00011",
+    "stem": "S06",
+    "class": 0,
+    "start": 10590,
+    "hist_frames": 2000
+  },
+  {
+    "split": "train",
+    "tid": "Track00011",
+    "stem": "S05",
+    "class": 0,
+    "start": 10090,
+    "hist_frames": 2000
+  },
+  {
+    "split": "train",
+    "tid": "Track00011",
+    "stem": "S07",
+    "class": 0,
+    "start": 14212,
+    "hist_frames": 2000
+  },
+  {
+    "split": "train",
+    "tid": "Track00011",
+    "stem": "S07",
+    "class": 0,
+    "start": 5448,
+    "hist_frames": 2000
+  },
+  {
+    "split": "train",
+    "tid": "Track00011",
+    "stem": "S06",
+    "class": 0,
+    "start": 12928,
+    "hist_frames": 2000
+  },
+  {
+    "split": "train",
+    "tid": "Track00011",
+    "stem": "S03",
+    "class": 0,
+    "start": 9473,
+    "hist_frames": 2000
+  },
+  {
+    "split": "train",
+    "tid": "Track00011",
+    "stem": "S07",
+    "class": 0,
+    "start": 9296,
+    "hist_frames": 2000
+  },
+  {
+    "split": "train",
+    "tid": "Track00011",
+    "stem": "S05",
+    "class": 0,
+    "start": 8154,
+    "hist_frames": 2000
+  },
+  {
+    "split": "train",
+    "tid": "Track00011",
+    "stem": "S04",
+    "class": 0,
+    "start": 6366,
+    "hist_frames": 2000
+  },
+  {
+    "split": "train",
+    "tid": "Track00011",
+    "stem": "S07",
+    "class": 0,
+    "start": 14842,
+    "hist_frames": 2000
+  },
+  {
+    "split": "train",
+    "tid": "Track00011",
+    "stem": "S07",
+    "class": 0,
+    "start": 14582,
+    "hist_frames": 2000
+  },
+  {
+    "split": "train",
+    "tid": "Track00011",
+    "stem": "S06",
+    "class": 0,
+    "start": 16444,
+    "hist_frames": 2000
+  },
+  {
+    "split": "train",
+    "tid": "Track00011",
+    "stem": "S05",
+    "class": 0,
+    "start": 17141,
+    "hist_frames": 2000
+  },
+  {
+    "split": "train",
+    "tid": "Track00011",
+    "stem": "S05",
+    "class": 0,
+    "start": 14256,
+    "hist_frames": 2000
+  },
+  {
+    "split": "train",
+    "tid": "Track00011",
+    "stem": "S06",
+    "class": 0,
+    "start": 8508,
+    "hist_frames": 2000
+  },
+  {
+    "split": "train",
+    "tid": "Track00011",
+    "stem": "S02",
+    "class": 1,
+    "start": 10326,
+    "hist_frames": 2000
+  },
+  {
+    "split": "train",
+    "tid": "Track00011",
+    "stem": "S02",
+    "class": 1,
+    "start": 9378,
+    "hist_frames": 2000
+  },
+  {
+    "split": "train",
+    "tid": "Track00011",
+    "stem": "S02",
+    "class": 1,
+    "start": 5371,
+    "hist_frames": 2000
+  },
+  {
+    "split": "train",
+    "tid": "Track00011",
+    "stem": "S02",
+    "class": 1,
+    "start": 5165,
+    "hist_frames": 2000
+  },
+  {
+    "split": "train",
+    "tid": "Track00011",
+    "stem": "S02",
+    "class": 1,
+    "start": 7620,
+    "hist_frames": 2000
+  },
+  {
+    "split": "train",
+    "tid": "Track00011",
+    "stem": "S02",
+    "class": 1,
+    "start": 6759,
+    "hist_frames": 2000
+  },
+  {
+    "split": "train",
+    "tid": "Track00011",
+    "stem": "S02",
+    "class": 1,
+    "start": 14557,
+    "hist_frames": 2000
+  },
+  {
+    "split": "train",
+    "tid": "Track00011",
+    "stem": "S02",
+    "class": 1,
+    "start": 13250,
+    "hist_frames": 2000
+  },
+  {
+    "split": "train",
+    "tid": "Track00011",
+    "stem": "S02",
+    "class": 1,
+    "start": 2067,
+    "hist_frames": 2000
+  },
+  {
+    "split": "train",
+    "tid": "Track00011",
+    "stem": "S02",
+    "class": 1,
+    "start": 8008,
+    "hist_frames": 2000
+  },
+  {
+    "split": "train",
+    "tid": "Track00011",
+    "stem": "S02",
+    "class": 1,
+    "start": 15907,
+    "hist_frames": 2000
+  },
+  {
+    "split": "train",
+    "tid": "Track00011",
+    "stem": "S02",
+    "class": 1,
+    "start": 7782,
+    "hist_frames": 2000
+  },
+  {
+    "split": "train",
+    "tid": "Track00011",
+    "stem": "S02",
+    "class": 1,
+    "start": 16815,
+    "hist_frames": 2000
+  },
+  {
+    "split": "train",
+    "tid": "Track00011",
+    "stem": "S02",
+    "class": 1,
+    "start": 17018,
+    "hist_frames": 2000
+  },
+  {
+    "split": "train",
+    "tid": "Track00011",
+    "stem": "S02",
+    "class": 1,
+    "start": 2105,
+    "hist_frames": 2000
+  },
+  {
+    "split": "train",
+    "tid": "Track00011",
+    "stem": "S02",
+    "class": 1,
+    "start": 855,
+    "hist_frames": 2000
+  },
+  {
+    "split": "train",
+    "tid": "Track00013",
+    "stem": "S05",
+    "class": 0,
+    "start": 4679,
+    "hist_frames": 2000
+  },
+  {
+    "split": "train",
+    "tid": "Track00013",
+    "stem": "S05",
+    "class": 0,
+    "start": 12302,
+    "hist_frames": 2000
+  },
+  {
+    "split": "train",
+    "tid": "Track00013",
+    "stem": "S05",
+    "class": 0,
+    "start": 5802,
+    "hist_frames": 2000
+  },
+  {
+    "split": "train",
+    "tid": "Track00013",
+    "stem": "S05",
+    "class": 0,
+    "start": 9875,
+    "hist_frames": 2000
+  },
+  {
+    "split": "train",
+    "tid": "Track00013",
+    "stem": "S05",
+    "class": 0,
+    "start": 16006,
+    "hist_frames": 2000
+  },
+  {
+    "split": "train",
+    "tid": "Track00013",
+    "stem": "S05",
+    "class": 0,
+    "start": 19696,
+    "hist_frames": 2000
+  },
+  {
+    "split": "train",
+    "tid": "Track00013",
+    "stem": "S05",
+    "class": 0,
+    "start": 8749,
+    "hist_frames": 2000
+  },
+  {
+    "split": "train",
+    "tid": "Track00013",
+    "stem": "S05",
+    "class": 0,
+    "start": 15466,
+    "hist_frames": 2000
+  },
+  {
+    "split": "train",
+    "tid": "Track00013",
+    "stem": "S05",
+    "class": 0,
+    "start": 10337,
+    "hist_frames": 2000
+  },
+  {
+    "split": "train",
+    "tid": "Track00013",
+    "stem": "S05",
+    "class": 0,
+    "start": 2160,
+    "hist_frames": 2000
+  },
+  {
+    "split": "train",
+    "tid": "Track00013",
+    "stem": "S05",
+    "class": 0,
+    "start": 7545,
+    "hist_frames": 2000
+  },
+  {
+    "split": "train",
+    "tid": "Track00013",
+    "stem": "S05",
+    "class": 0,
+    "start": 8183,
+    "hist_frames": 2000
+  },
+  {
+    "split": "train",
+    "tid": "Track00013",
+    "stem": "S05",
+    "class": 0,
+    "start": 8737,
+    "hist_frames": 2000
+  },
+  {
+    "split": "train",
+    "tid": "Track00013",
+    "stem": "S05",
+    "class": 0,
+    "start": 18395,
+    "hist_frames": 2000
+  },
+  {
+    "split": "train",
+    "tid": "Track00013",
+    "stem": "S05",
+    "class": 0,
+    "start": 4747,
+    "hist_frames": 2000
+  },
+  {
+    "split": "train",
+    "tid": "Track00013",
+    "stem": "S05",
+    "class": 0,
+    "start": 7139,
+    "hist_frames": 2000
+  },
+  {
+    "split": "train",
+    "tid": "Track00013",
+    "stem": "S03",
+    "class": 1,
+    "start": 18364,
+    "hist_frames": 2000
+  },
+  {
+    "split": "train",
+    "tid": "Track00013",
+    "stem": "S03",
+    "class": 1,
+    "start": 6948,
+    "hist_frames": 2000
+  },
+  {
+    "split": "train",
+    "tid": "Track00013",
+    "stem": "S03",
+    "class": 1,
+    "start": 13538,
+    "hist_frames": 2000
+  },
+  {
+    "split": "train",
+    "tid": "Track00013",
+    "stem": "S03",
+    "class": 1,
+    "start": 16988,
+    "hist_frames": 2000
+  },
+  {
+    "split": "train",
+    "tid": "Track00013",
+    "stem": "S03",
+    "class": 1,
+    "start": 6268,
+    "hist_frames": 2000
+  },
+  {
+    "split": "train",
+    "tid": "Track00013",
+    "stem": "S03",
+    "class": 1,
+    "start": 18132,
+    "hist_frames": 2000
+  },
+  {
+    "split": "train",
+    "tid": "Track00013",
+    "stem": "S03",
+    "class": 1,
+    "start": 578,
+    "hist_frames": 2000
+  },
+  {
+    "split": "train",
+    "tid": "Track00013",
+    "stem": "S03",
+    "class": 1,
+    "start": 14426,
+    "hist_frames": 2000
+  },
+  {
+    "split": "train",
+    "tid": "Track00013",
+    "stem": "S03",
+    "class": 1,
+    "start": 362,
+    "hist_frames": 2000
+  },
+  {
+    "split": "train",
+    "tid": "Track00013",
+    "stem": "S03",
+    "class": 1,
+    "start": 13839,
+    "hist_frames": 2000
+  },
+  {
+    "split": "train",
+    "tid": "Track00013",
+    "stem": "S03",
+    "class": 1,
+    "start": 13818,
+    "hist_frames": 2000
+  },
+  {
+    "split": "train",
+    "tid": "Track00013",
+    "stem": "S03",
+    "class": 1,
+    "start": 19100,
+    "hist_frames": 2000
+  },
+  {
+    "split": "train",
+    "tid": "Track00013",
+    "stem": "S03",
+    "class": 1,
+    "start": 19230,
+    "hist_frames": 2000
+  },
+  {
+    "split": "train",
+    "tid": "Track00013",
+    "stem": "S03",
+    "class": 1,
+    "start": 10009,
+    "hist_frames": 2000
+  },
+  {
+    "split": "train",
+    "tid": "Track00013",
+    "stem": "S03",
+    "class": 1,
+    "start": 19359,
+    "hist_frames": 2000
+  },
+  {
+    "split": "train",
+    "tid": "Track00013",
+    "stem": "S03",
+    "class": 1,
+    "start": 661,
+    "hist_frames": 2000
+  },
+  {
+    "split": "train",
+    "tid": "Track00014",
+    "stem": "S02",
+    "class": 0,
+    "start": 22878,
+    "hist_frames": 2000
+  },
+  {
+    "split": "train",
+    "tid": "Track00014",
+    "stem": "S02",
+    "class": 0,
+    "start": 14821,
+    "hist_frames": 2000
+  },
+  {
+    "split": "train",
+    "tid": "Track00014",
+    "stem": "S02",
+    "class": 0,
+    "start": 12950,
+    "hist_frames": 2000
+  },
+  {
+    "split": "train",
+    "tid": "Track00014",
+    "stem": "S02",
+    "class": 0,
+    "start": 6860,
+    "hist_frames": 2000
+  },
+  {
+    "split": "train",
+    "tid": "Track00014",
+    "stem": "S02",
+    "class": 0,
+    "start": 14133,
+    "hist_frames": 2000
+  },
+  {
+    "split": "train",
+    "tid": "Track00014",
+    "stem": "S02",
+    "class": 0,
+    "start": 3654,
+    "hist_frames": 2000
+  },
+  {
+    "split": "train",
+    "tid": "Track00014",
+    "stem": "S02",
+    "class": 0,
+    "start": 5832,
+    "hist_frames": 2000
+  },
+  {
+    "split": "train",
+    "tid": "Track00014",
+    "stem": "S02",
+    "class": 0,
+    "start": 19974,
+    "hist_frames": 2000
+  },
+  {
+    "split": "train",
+    "tid": "Track00014",
+    "stem": "S02",
+    "class": 0,
+    "start": 23623,
+    "hist_frames": 2000
+  },
+  {
+    "split": "train",
+    "tid": "Track00014",
+    "stem": "S02",
+    "class": 0,
+    "start": 5588,
+    "hist_frames": 2000
+  },
+  {
+    "split": "train",
+    "tid": "Track00014",
+    "stem": "S02",
+    "class": 0,
+    "start": 2073,
+    "hist_frames": 2000
+  },
+  {
+    "split": "train",
+    "tid": "Track00014",
+    "stem": "S02",
+    "class": 0,
+    "start": 1082,
+    "hist_frames": 2000
+  },
+  {
+    "split": "train",
+    "tid": "Track00014",
+    "stem": "S02",
+    "class": 0,
+    "start": 8789,
+    "hist_frames": 2000
+  },
+  {
+    "split": "train",
+    "tid": "Track00014",
+    "stem": "S02",
+    "class": 0,
+    "start": 11307,
+    "hist_frames": 2000
+  },
+  {
+    "split": "train",
+    "tid": "Track00014",
+    "stem": "S02",
+    "class": 0,
+    "start": 9000,
+    "hist_frames": 2000
+  },
+  {
+    "split": "train",
+    "tid": "Track00014",
+    "stem": "S02",
+    "class": 0,
+    "start": 1480,
+    "hist_frames": 2000
+  },
+  {
+    "split": "train",
+    "tid": "Track00014",
+    "stem": "S10",
+    "class": 1,
+    "start": 15768,
+    "hist_frames": 2000
+  },
+  {
+    "split": "train",
+    "tid": "Track00014",
+    "stem": "S05",
+    "class": 1,
+    "start": 23183,
+    "hist_frames": 2000
+  },
+  {
+    "split": "train",
+    "tid": "Track00014",
+    "stem": "S10",
+    "class": 1,
+    "start": 5983,
+    "hist_frames": 2000
+  },
+  {
+    "split": "train",
+    "tid": "Track00014",
+    "stem": "S05",
+    "class": 1,
+    "start": 20402,
+    "hist_frames": 2000
+  },
+  {
+    "split": "train",
+    "tid": "Track00014",
+    "stem": "S10",
+    "class": 1,
+    "start": 18877,
+    "hist_frames": 2000
+  },
+  {
+    "split": "train",
+    "tid": "Track00014",
+    "stem": "S05",
+    "class": 1,
+    "start": 9653,
+    "hist_frames": 2000
+  },
+  {
+    "split": "train",
+    "tid": "Track00014",
+    "stem": "S05",
+    "class": 1,
+    "start": 14602,
+    "hist_frames": 2000
+  },
+  {
+    "split": "train",
+    "tid": "Track00014",
+    "stem": "S10",
+    "class": 1,
+    "start": 5736,
+    "hist_frames": 2000
+  },
+  {
+    "split": "train",
+    "tid": "Track00014",
+    "stem": "S10",
+    "class": 1,
+    "start": 5283,
+    "hist_frames": 2000
+  },
+  {
+    "split": "train",
+    "tid": "Track00014",
+    "stem": "S10",
+    "class": 1,
+    "start": 21093,
+    "hist_frames": 2000
+  },
+  {
+    "split": "train",
+    "tid": "Track00014",
+    "stem": "S10",
+    "class": 1,
+    "start": 17112,
+    "hist_frames": 2000
+  },
+  {
+    "split": "train",
+    "tid": "Track00014",
+    "stem": "S05",
+    "class": 1,
+    "start": 9572,
+    "hist_frames": 2000
+  },
+  {
+    "split": "train",
+    "tid": "Track00014",
+    "stem": "S10",
+    "class": 1,
+    "start": 20592,
+    "hist_frames": 2000
+  },
+  {
+    "split": "train",
+    "tid": "Track00014",
+    "stem": "S05",
+    "class": 1,
+    "start": 6079,
+    "hist_frames": 2000
+  },
+  {
+    "split": "train",
+    "tid": "Track00014",
+    "stem": "S05",
+    "class": 1,
+    "start": 21381,
+    "hist_frames": 2000
+  },
+  {
+    "split": "train",
+    "tid": "Track00014",
+    "stem": "S10",
+    "class": 1,
+    "start": 20609,
+    "hist_frames": 2000
+  },
+  {
+    "split": "train",
+    "tid": "Track00016",
+    "stem": "S15",
+    "class": 0,
+    "start": 16374,
+    "hist_frames": 2000
+  },
+  {
+    "split": "train",
+    "tid": "Track00016",
+    "stem": "S02",
+    "class": 0,
+    "start": 13919,
+    "hist_frames": 2000
+  },
+  {
+    "split": "train",
+    "tid": "Track00016",
+    "stem": "S02",
+    "class": 0,
+    "start": 14245,
+    "hist_frames": 2000
+  },
+  {
+    "split": "train",
+    "tid": "Track00016",
+    "stem": "S15",
+    "class": 0,
+    "start": 11110,
+    "hist_frames": 2000
+  },
+  {
+    "split": "train",
+    "tid": "Track00016",
+    "stem": "S15",
+    "class": 0,
+    "start": 9398,
+    "hist_frames": 2000
+  },
+  {
+    "split": "train",
+    "tid": "Track00016",
+    "stem": "S02",
+    "class": 0,
+    "start": 2620,
+    "hist_frames": 2000
+  },
+  {
+    "split": "train",
+    "tid": "Track00016",
+    "stem": "S15",
+    "class": 0,
+    "start": 13729,
+    "hist_frames": 2000
+  },
+  {
+    "split": "train",
+    "tid": "Track00016",
+    "stem": "S15",
+    "class": 0,
+    "start": 10990,
+    "hist_frames": 2000
+  },
+  {
+    "split": "train",
+    "tid": "Track00016",
+    "stem": "S15",
+    "class": 0,
+    "start": 1245,
+    "hist_frames": 2000
+  },
+  {
+    "split": "train",
+    "tid": "Track00016",
+    "stem": "S15",
+    "class": 0,
+    "start": 13379,
+    "hist_frames": 2000
+  },
+  {
+    "split": "train",
+    "tid": "Track00016",
+    "stem": "S03",
+    "class": 0,
+    "start": 17181,
+    "hist_frames": 2000
+  },
+  {
+    "split": "train",
+    "tid": "Track00016",
+    "stem": "S02",
+    "class": 0,
+    "start": 13298,
+    "hist_frames": 2000
+  },
+  {
+    "split": "train",
+    "tid": "Track00016",
+    "stem": "S02",
+    "class": 0,
+    "start": 18201,
+    "hist_frames": 2000
+  },
+  {
+    "split": "train",
+    "tid": "Track00016",
+    "stem": "S15",
+    "class": 0,
+    "start": 10853,
+    "hist_frames": 2000
+  },
+  {
+    "split": "train",
+    "tid": "Track00016",
+    "stem": "S15",
+    "class": 0,
+    "start": 16978,
+    "hist_frames": 2000
+  },
+  {
+    "split": "train",
+    "tid": "Track00016",
+    "stem": "S15",
+    "class": 0,
+    "start": 6229,
+    "hist_frames": 2000
+  },
+  {
+    "split": "train",
+    "tid": "Track00016",
+    "stem": "S00",
+    "class": 1,
+    "start": 12989,
+    "hist_frames": 2000
+  },
+  {
+    "split": "train",
+    "tid": "Track00016",
+    "stem": "S00",
+    "class": 1,
+    "start": 10418,
+    "hist_frames": 2000
+  },
+  {
+    "split": "train",
+    "tid": "Track00016",
+    "stem": "S00",
+    "class": 1,
+    "start": 2374,
+    "hist_frames": 2000
+  },
+  {
+    "split": "train",
+    "tid": "Track00016",
+    "stem": "S10",
+    "class": 1,
+    "start": 15791,
+    "hist_frames": 2000
+  },
+  {
+    "split": "train",
+    "tid": "Track00016",
+    "stem": "S10",
+    "class": 1,
+    "start": 2501,
+    "hist_frames": 2000
+  },
+  {
+    "split": "train",
+    "tid": "Track00016",
+    "stem": "S00",
+    "class": 1,
+    "start": 14767,
+    "hist_frames": 2000
+  },
+  {
+    "split": "train",
+    "tid": "Track00016",
+    "stem": "S00",
+    "class": 1,
+    "start": 11565,
+    "hist_frames": 2000
+  },
+  {
+    "split": "train",
+    "tid": "Track00016",
+    "stem": "S00",
+    "class": 1,
+    "start": 7087,
+    "hist_frames": 2000
+  },
+  {
+    "split": "train",
+    "tid": "Track00016",
+    "stem": "S00",
+    "class": 1,
+    "start": 14611,
+    "hist_frames": 2000
+  },
+  {
+    "split": "train",
+    "tid": "Track00016",
+    "stem": "S00",
+    "class": 1,
+    "start": 1359,
+    "hist_frames": 2000
+  },
+  {
+    "split": "train",
+    "tid": "Track00016",
+    "stem": "S10",
+    "class": 1,
+    "start": 16457,
+    "hist_frames": 2000
+  },
+  {
+    "split": "train",
+    "tid": "Track00016",
+    "stem": "S10",
+    "class": 1,
+    "start": 10172,
+    "hist_frames": 2000
+  },
+  {
+    "split": "train",
+    "tid": "Track00016",
+    "stem": "S00",
+    "class": 1,
+    "start": 11056,
+    "hist_frames": 2000
+  },
+  {
+    "split": "train",
+    "tid": "Track00016",
+    "stem": "S10",
+    "class": 1,
+    "start": 6963,
+    "hist_frames": 2000
+  },
+  {
+    "split": "train",
+    "tid": "Track00016",
+    "stem": "S00",
+    "class": 1,
+    "start": 16993,
+    "hist_frames": 2000
+  },
+  {
+    "split": "train",
+    "tid": "Track00016",
+    "stem": "S00",
+    "class": 1,
+    "start": 3225,
+    "hist_frames": 2000
+  },
+  {
+    "split": "train",
+    "tid": "Track00017",
+    "stem": "S06",
+    "class": 0,
+    "start": 551,
+    "hist_frames": 2000
+  },
+  {
+    "split": "train",
+    "tid": "Track00017",
+    "stem": "S03",
+    "class": 0,
+    "start": 2756,
+    "hist_frames": 2000
+  },
+  {
+    "split": "train",
+    "tid": "Track00017",
+    "stem": "S03",
+    "class": 0,
+    "start": 27602,
+    "hist_frames": 2000
+  },
+  {
+    "split": "train",
+    "tid": "Track00017",
+    "stem": "S06",
+    "class": 0,
+    "start": 18270,
+    "hist_frames": 2000
+  },
+  {
+    "split": "train",
+    "tid": "Track00017",
+    "stem": "S09",
+    "class": 0,
+    "start": 11319,
+    "hist_frames": 2000
+  },
+  {
+    "split": "train",
+    "tid": "Track00017",
+    "stem": "S09",
+    "class": 0,
+    "start": 22301,
+    "hist_frames": 2000
+  },
+  {
+    "split": "train",
+    "tid": "Track00017",
+    "stem": "S09",
+    "class": 0,
+    "start": 26737,
+    "hist_frames": 2000
+  },
+  {
+    "split": "train",
+    "tid": "Track00017",
+    "stem": "S06",
+    "class": 0,
+    "start": 19978,
+    "hist_frames": 2000
+  },
+  {
+    "split": "train",
+    "tid": "Track00017",
+    "stem": "S03",
+    "class": 0,
+    "start": 12808,
+    "hist_frames": 2000
+  },
+  {
+    "split": "train",
+    "tid": "Track00017",
+    "stem": "S06",
+    "class": 0,
+    "start": 2869,
+    "hist_frames": 2000
+  },
+  {
+    "split": "train",
+    "tid": "Track00017",
+    "stem": "S03",
+    "class": 0,
+    "start": 2579,
+    "hist_frames": 2000
+  },
+  {
+    "split": "train",
+    "tid": "Track00017",
+    "stem": "S06",
+    "class": 0,
+    "start": 21224,
+    "hist_frames": 2000
+  },
+  {
+    "split": "train",
+    "tid": "Track00017",
+    "stem": "S06",
+    "class": 0,
+    "start": 11559,
+    "hist_frames": 2000
+  },
+  {
+    "split": "train",
+    "tid": "Track00017",
+    "stem": "S06",
+    "class": 0,
+    "start": 11634,
+    "hist_frames": 2000
+  },
+  {
+    "split": "train",
+    "tid": "Track00017",
+    "stem": "S09",
+    "class": 0,
+    "start": 3114,
+    "hist_frames": 2000
+  },
+  {
+    "split": "train",
+    "tid": "Track00017",
+    "stem": "S03",
+    "class": 0,
+    "start": 4235,
+    "hist_frames": 2000
+  },
+  {
+    "split": "train",
+    "tid": "Track00017",
+    "stem": "S08",
+    "class": 1,
+    "start": 14783,
+    "hist_frames": 2000
+  },
+  {
+    "split": "train",
+    "tid": "Track00017",
+    "stem": "S08",
+    "class": 1,
+    "start": 23116,
+    "hist_frames": 2000
+  },
+  {
+    "split": "train",
+    "tid": "Track00017",
+    "stem": "S08",
+    "class": 1,
+    "start": 3159,
+    "hist_frames": 2000
+  },
+  {
+    "split": "train",
+    "tid": "Track00017",
+    "stem": "S08",
+    "class": 1,
+    "start": 8724,
+    "hist_frames": 2000
+  },
+  {
+    "split": "train",
+    "tid": "Track00017",
+    "stem": "S08",
+    "class": 1,
+    "start": 1035,
+    "hist_frames": 2000
+  },
+  {
+    "split": "train",
+    "tid": "Track00017",
+    "stem": "S08",
+    "class": 1,
+    "start": 18357,
+    "hist_frames": 2000
+  },
+  {
+    "split": "train",
+    "tid": "Track00017",
+    "stem": "S08",
+    "class": 1,
+    "start": 19603,
+    "hist_frames": 2000
+  },
+  {
+    "split": "train",
+    "tid": "Track00017",
+    "stem": "S08",
+    "class": 1,
+    "start": 16486,
+    "hist_frames": 2000
+  },
+  {
+    "split": "train",
+    "tid": "Track00017",
+    "stem": "S08",
+    "class": 1,
+    "start": 22090,
+    "hist_frames": 2000
+  },
+  {
+    "split": "train",
+    "tid": "Track00017",
+    "stem": "S08",
+    "class": 1,
+    "start": 27485,
+    "hist_frames": 2000
+  },
+  {
+    "split": "train",
+    "tid": "Track00017",
+    "stem": "S08",
+    "class": 1,
+    "start": 13778,
+    "hist_frames": 2000
+  },
+  {
+    "split": "train",
+    "tid": "Track00017",
+    "stem": "S08",
+    "class": 1,
+    "start": 6290,
+    "hist_frames": 2000
+  },
+  {
+    "split": "train",
+    "tid": "Track00017",
+    "stem": "S08",
+    "class": 1,
+    "start": 20463,
+    "hist_frames": 2000
+  },
+  {
+    "split": "train",
+    "tid": "Track00017",
+    "stem": "S08",
+    "class": 1,
+    "start": 23220,
+    "hist_frames": 2000
+  },
+  {
+    "split": "train",
+    "tid": "Track00017",
+    "stem": "S08",
+    "class": 1,
+    "start": 5610,
+    "hist_frames": 2000
+  },
+  {
+    "split": "train",
+    "tid": "Track00017",
+    "stem": "S08",
+    "class": 1,
+    "start": 22970,
+    "hist_frames": 2000
+  },
+  {
+    "split": "train",
+    "tid": "Track00018",
+    "stem": "S14",
+    "class": 0,
+    "start": 21468,
+    "hist_frames": 2000
+  },
+  {
+    "split": "train",
+    "tid": "Track00018",
+    "stem": "S11",
+    "class": 0,
+    "start": 12430,
+    "hist_frames": 2000
+  },
+  {
+    "split": "train",
+    "tid": "Track00018",
+    "stem": "S14",
+    "class": 0,
+    "start": 23479,
+    "hist_frames": 2000
+  },
+  {
+    "split": "train",
+    "tid": "Track00018",
+    "stem": "S14",
+    "class": 0,
+    "start": 10000,
+    "hist_frames": 2000
+  },
+  {
+    "split": "train",
+    "tid": "Track00018",
+    "stem": "S14",
+    "class": 0,
+    "start": 8511,
+    "hist_frames": 2000
+  },
+  {
+    "split": "train",
+    "tid": "Track00018",
+    "stem": "S11",
+    "class": 0,
+    "start": 11723,
+    "hist_frames": 2000
+  },
+  {
+    "split": "train",
+    "tid": "Track00018",
+    "stem": "S11",
+    "class": 0,
+    "start": 22796,
+    "hist_frames": 2000
+  },
+  {
+    "split": "train",
+    "tid": "Track00018",
+    "stem": "S14",
+    "class": 0,
+    "start": 20206,
+    "hist_frames": 2000
+  },
+  {
+    "split": "train",
+    "tid": "Track00018",
+    "stem": "S14",
+    "class": 0,
+    "start": 8155,
+    "hist_frames": 2000
+  },
+  {
+    "split": "train",
+    "tid": "Track00018",
+    "stem": "S14",
+    "class": 0,
+    "start": 5494,
+    "hist_frames": 2000
+  },
+  {
+    "split": "train",
+    "tid": "Track00018",
+    "stem": "S11",
+    "class": 0,
+    "start": 19774,
+    "hist_frames": 2000
+  },
+  {
+    "split": "train",
+    "tid": "Track00018",
+    "stem": "S14",
+    "class": 0,
+    "start": 1918,
+    "hist_frames": 2000
+  },
+  {
+    "split": "train",
+    "tid": "Track00018",
+    "stem": "S14",
+    "class": 0,
+    "start": 13747,
+    "hist_frames": 2000
+  },
+  {
+    "split": "train",
+    "tid": "Track00018",
+    "stem": "S14",
+    "class": 0,
+    "start": 1631,
+    "hist_frames": 2000
+  },
+  {
+    "split": "train",
+    "tid": "Track00018",
+    "stem": "S14",
+    "class": 0,
+    "start": 20889,
+    "hist_frames": 2000
+  },
+  {
+    "split": "train",
+    "tid": "Track00018",
+    "stem": "S11",
+    "class": 0,
+    "start": 16609,
+    "hist_frames": 2000
+  },
+  {
+    "split": "train",
+    "tid": "Track00018",
+    "stem": "S07",
+    "class": 1,
+    "start": 6464,
+    "hist_frames": 2000
+  },
+  {
+    "split": "train",
+    "tid": "Track00018",
+    "stem": "S09",
+    "class": 1,
+    "start": 10044,
+    "hist_frames": 2000
+  },
+  {
+    "split": "train",
+    "tid": "Track00018",
+    "stem": "S07",
+    "class": 1,
+    "start": 15594,
+    "hist_frames": 2000
+  },
+  {
+    "split": "train",
+    "tid": "Track00018",
+    "stem": "S09",
+    "class": 1,
+    "start": 12708,
+    "hist_frames": 2000
+  },
+  {
+    "split": "train",
+    "tid": "Track00018",
+    "stem": "S09",
+    "class": 1,
+    "start": 22162,
+    "hist_frames": 2000
+  },
+  {
+    "split": "train",
+    "tid": "Track00018",
+    "stem": "S09",
+    "class": 1,
+    "start": 26293,
+    "hist_frames": 2000
+  },
+  {
+    "split": "train",
+    "tid": "Track00018",
+    "stem": "S08",
+    "class": 1,
+    "start": 10362,
+    "hist_frames": 2000
+  },
+  {
+    "split": "train",
+    "tid": "Track00018",
+    "stem": "S09",
+    "class": 1,
+    "start": 12597,
+    "hist_frames": 2000
+  },
+  {
+    "split": "train",
+    "tid": "Track00018",
+    "stem": "S08",
+    "class": 1,
+    "start": 8939,
+    "hist_frames": 2000
+  },
+  {
+    "split": "train",
+    "tid": "Track00018",
+    "stem": "S08",
+    "class": 1,
+    "start": 21283,
+    "hist_frames": 2000
+  },
+  {
+    "split": "train",
+    "tid": "Track00018",
+    "stem": "S09",
+    "class": 1,
+    "start": 1841,
+    "hist_frames": 2000
+  },
+  {
+    "split": "train",
+    "tid": "Track00018",
+    "stem": "S09",
+    "class": 1,
+    "start": 20700,
+    "hist_frames": 2000
+  },
+  {
+    "split": "train",
+    "tid": "Track00018",
+    "stem": "S09",
+    "class": 1,
+    "start": 10961,
+    "hist_frames": 2000
+  },
+  {
+    "split": "train",
+    "tid": "Track00018",
+    "stem": "S08",
+    "class": 1,
+    "start": 6389,
+    "hist_frames": 2000
+  },
+  {
+    "split": "train",
+    "tid": "Track00018",
+    "stem": "S08",
+    "class": 1,
+    "start": 3106,
+    "hist_frames": 2000
+  },
+  {
+    "split": "train",
+    "tid": "Track00018",
+    "stem": "S08",
+    "class": 1,
+    "start": 20400,
+    "hist_frames": 2000
+  },
+  {
+    "split": "train",
+    "tid": "Track00019",
+    "stem": "S10",
+    "class": 0,
+    "start": 11947,
+    "hist_frames": 2000
+  },
+  {
+    "split": "train",
+    "tid": "Track00019",
+    "stem": "S10",
+    "class": 0,
+    "start": 9714,
+    "hist_frames": 2000
+  },
+  {
+    "split": "train",
+    "tid": "Track00019",
+    "stem": "S10",
+    "class": 0,
+    "start": 13388,
+    "hist_frames": 2000
+  },
+  {
+    "split": "train",
+    "tid": "Track00019",
+    "stem": "S10",
+    "class": 0,
+    "start": 8419,
+    "hist_frames": 2000
+  },
+  {
+    "split": "train",
+    "tid": "Track00019",
+    "stem": "S09",
+    "class": 0,
+    "start": 14886,
+    "hist_frames": 2000
+  },
+  {
+    "split": "train",
+    "tid": "Track00019",
+    "stem": "S10",
+    "class": 0,
+    "start": 6583,
+    "hist_frames": 2000
+  },
+  {
+    "split": "train",
+    "tid": "Track00019",
+    "stem": "S09",
+    "class": 0,
+    "start": 2038,
+    "hist_frames": 2000
+  },
+  {
+    "split": "train",
+    "tid": "Track00019",
+    "stem": "S10",
+    "class": 0,
+    "start": 18611,
+    "hist_frames": 2000
+  },
+  {
+    "split": "train",
+    "tid": "Track00019",
+    "stem": "S10",
+    "class": 0,
+    "start": 19197,
+    "hist_frames": 2000
+  },
+  {
+    "split": "train",
+    "tid": "Track00019",
+    "stem": "S09",
+    "class": 0,
+    "start": 7767,
+    "hist_frames": 2000
+  },
+  {
+    "split": "train",
+    "tid": "Track00019",
+    "stem": "S10",
+    "class": 0,
+    "start": 9976,
+    "hist_frames": 2000
+  },
+  {
+    "split": "train",
+    "tid": "Track00019",
+    "stem": "S10",
+    "class": 0,
+    "start": 13469,
+    "hist_frames": 2000
+  },
+  {
+    "split": "train",
+    "tid": "Track00019",
+    "stem": "S10",
+    "class": 0,
+    "start": 7318,
+    "hist_frames": 2000
+  },
+  {
+    "split": "train",
+    "tid": "Track00019",
+    "stem": "S10",
+    "class": 0,
+    "start": 18194,
+    "hist_frames": 2000
+  },
+  {
+    "split": "train",
+    "tid": "Track00019",
+    "stem": "S10",
+    "class": 0,
+    "start": 10281,
+    "hist_frames": 2000
+  },
+  {
+    "split": "train",
+    "tid": "Track00019",
+    "stem": "S09",
+    "class": 0,
+    "start": 20493,
+    "hist_frames": 2000
+  },
+  {
+    "split": "train",
+    "tid": "Track00019",
+    "stem": "S01",
+    "class": 1,
+    "start": 18354,
+    "hist_frames": 2000
+  },
+  {
+    "split": "train",
+    "tid": "Track00019",
+    "stem": "S12",
+    "class": 1,
+    "start": 5776,
+    "hist_frames": 2000
+  },
+  {
+    "split": "train",
+    "tid": "Track00019",
+    "stem": "S12",
+    "class": 1,
+    "start": 14730,
+    "hist_frames": 2000
+  },
+  {
+    "split": "train",
+    "tid": "Track00019",
+    "stem": "S12",
+    "class": 1,
+    "start": 9067,
+    "hist_frames": 2000
+  },
+  {
+    "split": "train",
+    "tid": "Track00019",
+    "stem": "S12",
+    "class": 1,
+    "start": 2978,
+    "hist_frames": 2000
+  },
+  {
+    "split": "train",
+    "tid": "Track00019",
+    "stem": "S01",
+    "class": 1,
+    "start": 17130,
+    "hist_frames": 2000
+  },
+  {
+    "split": "train",
+    "tid": "Track00019",
+    "stem": "S12",
+    "class": 1,
+    "start": 16064,
+    "hist_frames": 2000
+  },
+  {
+    "split": "train",
+    "tid": "Track00019",
+    "stem": "S01",
+    "class": 1,
+    "start": 1900,
+    "hist_frames": 2000
+  },
+  {
+    "split": "train",
+    "tid": "Track00019",
+    "stem": "S12",
+    "class": 1,
+    "start": 6943,
+    "hist_frames": 2000
+  },
+  {
+    "split": "train",
+    "tid": "Track00019",
+    "stem": "S12",
+    "class": 1,
+    "start": 4346,
+    "hist_frames": 2000
+  },
+  {
+    "split": "train",
+    "tid": "Track00019",
+    "stem": "S12",
+    "class": 1,
+    "start": 20283,
+    "hist_frames": 2000
+  },
+  {
+    "split": "train",
+    "tid": "Track00019",
+    "stem": "S01",
+    "class": 1,
+    "start": 6204,
+    "hist_frames": 2000
+  },
+  {
+    "split": "train",
+    "tid": "Track00019",
+    "stem": "S01",
+    "class": 1,
+    "start": 9488,
+    "hist_frames": 2000
+  },
+  {
+    "split": "train",
+    "tid": "Track00019",
+    "stem": "S12",
+    "class": 1,
+    "start": 9551,
+    "hist_frames": 2000
+  },
+  {
+    "split": "train",
+    "tid": "Track00019",
+    "stem": "S01",
+    "class": 1,
+    "start": 18985,
+    "hist_frames": 2000
+  },
+  {
+    "split": "train",
+    "tid": "Track00019",
+    "stem": "S12",
+    "class": 1,
+    "start": 15388,
+    "hist_frames": 2000
+  },
+  {
+    "split": "val",
+    "tid": "Track00010",
+    "stem": "S02",
+    "class": 0,
+    "start": 8773,
+    "hist_frames": 2000
+  },
+  {
+    "split": "val",
+    "tid": "Track00010",
+    "stem": "S02",
+    "class": 0,
+    "start": 6408,
+    "hist_frames": 2000
+  },
+  {
+    "split": "val",
+    "tid": "Track00010",
+    "stem": "S01",
+    "class": 0,
+    "start": 15632,
+    "hist_frames": 2000
+  },
+  {
+    "split": "val",
+    "tid": "Track00010",
+    "stem": "S02",
+    "class": 0,
+    "start": 11808,
+    "hist_frames": 2000
+  },
+  {
+    "split": "val",
+    "tid": "Track00010",
+    "stem": "S02",
+    "class": 0,
+    "start": 3489,
+    "hist_frames": 2000
+  },
+  {
+    "split": "val",
+    "tid": "Track00010",
+    "stem": "S01",
+    "class": 0,
+    "start": 6739,
+    "hist_frames": 2000
+  },
+  {
+    "split": "val",
+    "tid": "Track00010",
+    "stem": "S02",
+    "class": 0,
+    "start": 7269,
+    "hist_frames": 2000
+  },
+  {
+    "split": "val",
+    "tid": "Track00010",
+    "stem": "S02",
+    "class": 0,
+    "start": 9979,
+    "hist_frames": 2000
+  },
+  {
+    "split": "val",
+    "tid": "Track00010",
+    "stem": "S05",
+    "class": 1,
+    "start": 10775,
+    "hist_frames": 2000
+  },
+  {
+    "split": "val",
+    "tid": "Track00010",
+    "stem": "S05",
+    "class": 1,
+    "start": 12483,
+    "hist_frames": 2000
+  },
+  {
+    "split": "val",
+    "tid": "Track00010",
+    "stem": "S05",
+    "class": 1,
+    "start": 14083,
+    "hist_frames": 2000
+  },
+  {
+    "split": "val",
+    "tid": "Track00010",
+    "stem": "S05",
+    "class": 1,
+    "start": 13015,
+    "hist_frames": 2000
+  },
+  {
+    "split": "val",
+    "tid": "Track00010",
+    "stem": "S05",
+    "class": 1,
+    "start": 10443,
+    "hist_frames": 2000
+  },
+  {
+    "split": "val",
+    "tid": "Track00010",
+    "stem": "S05",
+    "class": 1,
+    "start": 11371,
+    "hist_frames": 2000
+  },
+  {
+    "split": "val",
+    "tid": "Track00010",
+    "stem": "S05",
+    "class": 1,
+    "start": 14570,
+    "hist_frames": 2000
+  },
+  {
+    "split": "val",
+    "tid": "Track00010",
+    "stem": "S05",
+    "class": 1,
+    "start": 479,
+    "hist_frames": 2000
+  },
+  {
+    "split": "val",
+    "tid": "Track00012",
+    "stem": "S01",
+    "class": 0,
+    "start": 3109,
+    "hist_frames": 2000
+  },
+  {
+    "split": "val",
+    "tid": "Track00012",
+    "stem": "S02",
+    "class": 0,
+    "start": 5010,
+    "hist_frames": 2000
+  },
+  {
+    "split": "val",
+    "tid": "Track00012",
+    "stem": "S02",
+    "class": 0,
+    "start": 17684,
+    "hist_frames": 2000
+  },
+  {
+    "split": "val",
+    "tid": "Track00012",
+    "stem": "S01",
+    "class": 0,
+    "start": 11830,
+    "hist_frames": 2000
+  },
+  {
+    "split": "val",
+    "tid": "Track00012",
+    "stem": "S02",
+    "class": 0,
+    "start": 6664,
+    "hist_frames": 2000
+  },
+  {
+    "split": "val",
+    "tid": "Track00012",
+    "stem": "S02",
+    "class": 0,
+    "start": 5295,
+    "hist_frames": 2000
+  },
+  {
+    "split": "val",
+    "tid": "Track00012",
+    "stem": "S02",
+    "class": 0,
+    "start": 12604,
+    "hist_frames": 2000
+  },
+  {
+    "split": "val",
+    "tid": "Track00012",
+    "stem": "S02",
+    "class": 0,
+    "start": 16528,
+    "hist_frames": 2000
+  },
+  {
+    "split": "val",
+    "tid": "Track00012",
+    "stem": "S04",
+    "class": 1,
+    "start": 23976,
+    "hist_frames": 2000
+  },
+  {
+    "split": "val",
+    "tid": "Track00012",
+    "stem": "S04",
+    "class": 1,
+    "start": 12958,
+    "hist_frames": 2000
+  },
+  {
+    "split": "val",
+    "tid": "Track00012",
+    "stem": "S04",
+    "class": 1,
+    "start": 594,
+    "hist_frames": 2000
+  },
+  {
+    "split": "val",
+    "tid": "Track00012",
+    "stem": "S04",
+    "class": 1,
+    "start": 15286,
+    "hist_frames": 2000
+  },
+  {
+    "split": "val",
+    "tid": "Track00012",
+    "stem": "S03",
+    "class": 1,
+    "start": 14921,
+    "hist_frames": 2000
+  },
+  {
+    "split": "val",
+    "tid": "Track00012",
+    "stem": "S04",
+    "class": 1,
+    "start": 9781,
+    "hist_frames": 2000
+  },
+  {
+    "split": "val",
+    "tid": "Track00012",
+    "stem": "S03",
+    "class": 1,
+    "start": 6845,
+    "hist_frames": 2000
+  },
+  {
+    "split": "val",
+    "tid": "Track00012",
+    "stem": "S03",
+    "class": 1,
+    "start": 14423,
+    "hist_frames": 2000
+  },
+  {
+    "split": "test",
+    "tid": "Track00005",
+    "stem": "S13",
+    "class": 0,
+    "start": 15647,
+    "hist_frames": 2000
+  },
+  {
+    "split": "test",
+    "tid": "Track00005",
+    "stem": "S13",
+    "class": 0,
+    "start": 21836,
+    "hist_frames": 2000
+  },
+  {
+    "split": "test",
+    "tid": "Track00005",
+    "stem": "S08",
+    "class": 0,
+    "start": 8573,
+    "hist_frames": 2000
+  },
+  {
+    "split": "test",
+    "tid": "Track00005",
+    "stem": "S13",
+    "class": 0,
+    "start": 10845,
+    "hist_frames": 2000
+  },
+  {
+    "split": "test",
+    "tid": "Track00005",
+    "stem": "S13",
+    "class": 0,
+    "start": 3510,
+    "hist_frames": 2000
+  },
+  {
+    "split": "test",
+    "tid": "Track00005",
+    "stem": "S13",
+    "class": 0,
+    "start": 13236,
+    "hist_frames": 2000
+  },
+  {
+    "split": "test",
+    "tid": "Track00005",
+    "stem": "S13",
+    "class": 0,
+    "start": 9907,
+    "hist_frames": 2000
+  },
+  {
+    "split": "test",
+    "tid": "Track00005",
+    "stem": "S01",
+    "class": 0,
+    "start": 6101,
+    "hist_frames": 2000
+  },
+  {
+    "split": "test",
+    "tid": "Track00005",
+    "stem": "S02",
+    "class": 1,
+    "start": 21927,
+    "hist_frames": 2000
+  },
+  {
+    "split": "test",
+    "tid": "Track00005",
+    "stem": "S06",
+    "class": 1,
+    "start": 20401,
+    "hist_frames": 2000
+  },
+  {
+    "split": "test",
+    "tid": "Track00005",
+    "stem": "S02",
+    "class": 1,
+    "start": 4914,
+    "hist_frames": 2000
+  },
+  {
+    "split": "test",
+    "tid": "Track00005",
+    "stem": "S06",
+    "class": 1,
+    "start": 20133,
+    "hist_frames": 2000
+  },
+  {
+    "split": "test",
+    "tid": "Track00005",
+    "stem": "S02",
+    "class": 1,
+    "start": 14366,
+    "hist_frames": 2000
+  },
+  {
+    "split": "test",
+    "tid": "Track00005",
+    "stem": "S02",
+    "class": 1,
+    "start": 241,
+    "hist_frames": 2000
+  },
+  {
+    "split": "test",
+    "tid": "Track00005",
+    "stem": "S02",
+    "class": 1,
+    "start": 401,
+    "hist_frames": 2000
+  },
+  {
+    "split": "test",
+    "tid": "Track00005",
+    "stem": "S06",
+    "class": 1,
+    "start": 9377,
+    "hist_frames": 2000
+  },
+  {
+    "split": "test",
+    "tid": "Track00006",
+    "stem": "S11",
+    "class": 0,
+    "start": 7080,
+    "hist_frames": 2000
+  },
+  {
+    "split": "test",
+    "tid": "Track00006",
+    "stem": "S11",
+    "class": 0,
+    "start": 22099,
+    "hist_frames": 2000
+  },
+  {
+    "split": "test",
+    "tid": "Track00006",
+    "stem": "S11",
+    "class": 0,
+    "start": 1031,
+    "hist_frames": 2000
+  },
+  {
+    "split": "test",
+    "tid": "Track00006",
+    "stem": "S11",
+    "class": 0,
+    "start": 10644,
+    "hist_frames": 2000
+  },
+  {
+    "split": "test",
+    "tid": "Track00006",
+    "stem": "S11",
+    "class": 0,
+    "start": 410,
+    "hist_frames": 2000
+  },
+  {
+    "split": "test",
+    "tid": "Track00006",
+    "stem": "S10",
+    "class": 0,
+    "start": 10964,
+    "hist_frames": 2000
+  },
+  {
+    "split": "test",
+    "tid": "Track00006",
+    "stem": "S11",
+    "class": 0,
+    "start": 12367,
+    "hist_frames": 2000
+  },
+  {
+    "split": "test",
+    "tid": "Track00006",
+    "stem": "S11",
+    "class": 0,
+    "start": 10178,
+    "hist_frames": 2000
+  },
+  {
+    "split": "test",
+    "tid": "Track00006",
+    "stem": "S01",
+    "class": 1,
+    "start": 22440,
+    "hist_frames": 2000
+  },
+  {
+    "split": "test",
+    "tid": "Track00006",
+    "stem": "S01",
+    "class": 1,
+    "start": 21578,
+    "hist_frames": 2000
+  },
+  {
+    "split": "test",
+    "tid": "Track00006",
+    "stem": "S01",
+    "class": 1,
+    "start": 21992,
+    "hist_frames": 2000
+  },
+  {
+    "split": "test",
+    "tid": "Track00006",
+    "stem": "S01",
+    "class": 1,
+    "start": 12268,
+    "hist_frames": 2000
+  },
+  {
+    "split": "test",
+    "tid": "Track00006",
+    "stem": "S01",
+    "class": 1,
+    "start": 574,
+    "hist_frames": 2000
+  },
+  {
+    "split": "test",
+    "tid": "Track00006",
+    "stem": "S01",
+    "class": 1,
+    "start": 9843,
+    "hist_frames": 2000
+  },
+  {
+    "split": "test",
+    "tid": "Track00006",
+    "stem": "S01",
+    "class": 1,
+    "start": 21637,
+    "hist_frames": 2000
+  },
+  {
+    "split": "test",
+    "tid": "Track00006",
+    "stem": "S01",
+    "class": 1,
+    "start": 20524,
+    "hist_frames": 2000
+  },
+  {
+    "split": "test",
+    "tid": "Track00015",
+    "stem": "S01",
+    "class": 0,
+    "start": 19594,
+    "hist_frames": 2000
+  },
+  {
+    "split": "test",
+    "tid": "Track00015",
+    "stem": "S01",
+    "class": 0,
+    "start": 3366,
+    "hist_frames": 2000
+  },
+  {
+    "split": "test",
+    "tid": "Track00015",
+    "stem": "S01",
+    "class": 0,
+    "start": 17619,
+    "hist_frames": 2000
+  },
+  {
+    "split": "test",
+    "tid": "Track00015",
+    "stem": "S01",
+    "class": 0,
+    "start": 13429,
+    "hist_frames": 2000
+  },
+  {
+    "split": "test",
+    "tid": "Track00015",
+    "stem": "S01",
+    "class": 0,
+    "start": 14551,
+    "hist_frames": 2000
+  },
+  {
+    "split": "test",
+    "tid": "Track00015",
+    "stem": "S01",
+    "class": 0,
+    "start": 21731,
+    "hist_frames": 2000
+  },
+  {
+    "split": "test",
+    "tid": "Track00015",
+    "stem": "S01",
+    "class": 0,
+    "start": 3376,
+    "hist_frames": 2000
+  },
+  {
+    "split": "test",
+    "tid": "Track00015",
+    "stem": "S01",
+    "class": 0,
+    "start": 10285,
+    "hist_frames": 2000
+  },
+  {
+    "split": "test",
+    "tid": "Track00015",
+    "stem": "S00",
+    "class": 1,
+    "start": 3942,
+    "hist_frames": 2000
+  },
+  {
+    "split": "test",
+    "tid": "Track00015",
+    "stem": "S00",
+    "class": 1,
+    "start": 11845,
+    "hist_frames": 2000
+  },
+  {
+    "split": "test",
+    "tid": "Track00015",
+    "stem": "S00",
+    "class": 1,
+    "start": 15886,
+    "hist_frames": 2000
+  },
+  {
+    "split": "test",
+    "tid": "Track00015",
+    "stem": "S00",
+    "class": 1,
+    "start": 16305,
+    "hist_frames": 2000
+  },
+  {
+    "split": "test",
+    "tid": "Track00015",
+    "stem": "S00",
+    "class": 1,
+    "start": 4376,
+    "hist_frames": 2000
+  },
+  {
+    "split": "test",
+    "tid": "Track00015",
+    "stem": "S00",
+    "class": 1,
+    "start": 2719,
+    "hist_frames": 2000
+  },
+  {
+    "split": "test",
+    "tid": "Track00015",
+    "stem": "S00",
+    "class": 1,
+    "start": 11382,
+    "hist_frames": 2000
+  },
+  {
+    "split": "test",
+    "tid": "Track00015",
+    "stem": "S00",
+    "class": 1,
+    "start": 5434,
+    "hist_frames": 2000
+  },
+  {
+    "split": "test",
+    "tid": "Track00020",
+    "stem": "S04",
+    "class": 0,
+    "start": 7310,
+    "hist_frames": 2000
+  },
+  {
+    "split": "test",
+    "tid": "Track00020",
+    "stem": "S04",
+    "class": 0,
+    "start": 28217,
+    "hist_frames": 2000
+  },
+  {
+    "split": "test",
+    "tid": "Track00020",
+    "stem": "S04",
+    "class": 0,
+    "start": 12053,
+    "hist_frames": 2000
+  },
+  {
+    "split": "test",
+    "tid": "Track00020",
+    "stem": "S04",
+    "class": 0,
+    "start": 8947,
+    "hist_frames": 2000
+  },
+  {
+    "split": "test",
+    "tid": "Track00020",
+    "stem": "S04",
+    "class": 0,
+    "start": 25207,
+    "hist_frames": 2000
+  },
+  {
+    "split": "test",
+    "tid": "Track00020",
+    "stem": "S04",
+    "class": 0,
+    "start": 7374,
+    "hist_frames": 2000
+  },
+  {
+    "split": "test",
+    "tid": "Track00020",
+    "stem": "S04",
+    "class": 0,
+    "start": 31586,
+    "hist_frames": 2000
+  },
+  {
+    "split": "test",
+    "tid": "Track00020",
+    "stem": "S04",
+    "class": 0,
+    "start": 10838,
+    "hist_frames": 2000
+  },
+  {
+    "split": "test",
+    "tid": "Track00020",
+    "stem": "S03",
+    "class": 1,
+    "start": 15679,
+    "hist_frames": 2000
+  },
+  {
+    "split": "test",
+    "tid": "Track00020",
+    "stem": "S03",
+    "class": 1,
+    "start": 12818,
+    "hist_frames": 2000
+  },
+  {
+    "split": "test",
+    "tid": "Track00020",
+    "stem": "S06",
+    "class": 1,
+    "start": 18595,
+    "hist_frames": 2000
+  },
+  {
+    "split": "test",
+    "tid": "Track00020",
+    "stem": "S03",
+    "class": 1,
+    "start": 20326,
+    "hist_frames": 2000
+  },
+  {
+    "split": "test",
+    "tid": "Track00020",
+    "stem": "S06",
+    "class": 1,
+    "start": 26402,
+    "hist_frames": 2000
+  },
+  {
+    "split": "test",
+    "tid": "Track00020",
+    "stem": "S03",
+    "class": 1,
+    "start": 11485,
+    "hist_frames": 2000
+  },
+  {
+    "split": "test",
+    "tid": "Track00020",
+    "stem": "S03",
+    "class": 1,
+    "start": 29659,
+    "hist_frames": 2000
+  },
+  {
+    "split": "test",
+    "tid": "Track00020",
+    "stem": "S03",
+    "class": 1,
+    "start": 22439,
+    "hist_frames": 2000
+  }
+]

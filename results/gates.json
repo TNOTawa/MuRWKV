@@ -13,18 +13,19 @@
   },
   "GATE 3": {
     "status": "PASS",
-    "evidence": "results/gate3_overfit_v2: 1-song overfit (Track00001, 21.87M R0, BF16, 4000 steps). Teacher-forced acc 100%, EOS acc 1.0; GENERATIVE transcription: token match 99.8%, 0 truncation, 0 boundary errors, onset F1 0.988 (continuous) / 0.991 (reset), offset F1 0.916/0.917, instrument F1 0.988/0.991. Listening MIDIs in artifacts/listening/Track00001/."
+    "evidence": "results/gate3_overfit_v2: 1-song overfit (Track00001, 21.87M R0, BF16, 4000 steps). Teacher-forced acc 100%, EOS acc 1.0; GENERATIVE transcription: token match 99.8%, 0 truncation, 0 boundary errors, onset F1 0.988 (continuous) / 0.991 (reset), offset F1 0.916/0.917, instrument F1 0.988/0.991. SCOPE: memorized training track (not generalization). Listening MIDIs in artifacts/listening/Track00001/."
   },
   "GATE 4": {
     "status": "PASS",
-    "evidence": "results/gate4_overfit_v2: 10 tracks (split-safe: excludes valid/test tracks), 4500 steps, final loss 0.0024, token acc 100%, EOS acc 1.0, 0 truncation. Held-out sanity (Track00005/15, never trained): onset F1 ~0.01 (expected for a memorizing model; documented as the generalization gap). Train-track continuity: continuous F1 0.579 vs reset 0.081 (Track00008: 0.991 vs 0.063)."
+    "evidence": "results/gate4_overfit_v2: 10 tracks (split-safe: excludes valid/test tracks), 4500 steps, final loss 0.0024, token acc 100%, EOS acc 1.0, 0 truncation. Held-out sanity (Track00005/15, never trained): onset F1 ~0.01 (expected for a memorizing model; documented as the generalization gap). Train-track continuity (MEMORIZED sequences): continuous F1 0.579 vs reset 0.081 (Track00008: 0.991 vs 0.063) \u2014 not evidence for generalization-level continuity (Level 4 not established)."
   },
   "GATE 5": {
     "status": "PASS",
-    "evidence": "results/gate5_probe: controlled 2-class instrument-history task (guitar vs piano stem history, 2 neutral identical chunks, bit-identical observations). continuous val acc 1.0 vs reset 0.483 (chance). State-distance analysis: inter-class state distance 43.2 (0 neutrals) -> 15.9 -> 3.5 (2 neutrals) -> 0.41 (4 neutrals); classification stays 100% at 2 neutrals. Probe init deviation (slow-decay w0 bias) documented in code; without it the task is unlearnable (vanishing remote-history gradient - measured)."
+    "evidence": "results/gate5_probe: controlled 2-class history task (guitar vs piano stem history, 2 neutral identical chunks, bit-identical observations). continuous val acc 1.0 vs reset 0.483 (chance). State-distance analysis: inter-class state distance 43.2 (0 neutrals) -> 15.9 -> 3.5 (2 neutrals) -> 0.41 (4 neutrals); classification stays 100% at 2 neutrals. PROBE INIT DEVIATION (slow-decay w0 bias) documented; without it the task is unlearnable at official init (measured). SCOPE: one song per class, stems[0] unverified against metadata, sample-level train/val split -> demonstrates remote acoustic SOURCE/track identity retention; instrument-level cross-track generalization NOT established (leak-free G5-v2 ready: src/murwkv/eval/memory_probe_v2.py)."
   },
   "GATE 6": {
     "status": "PASS",
-    "evidence": "results/gate4_overfit_v2/eval/{valid,test,train}: held-out (4 tracks) onset F1 0.007-0.019 both modes, 0 truncation, 0 boundary errors, RTF 0.35-0.75, inference VRAM ~0.13GB (fixed recurrent state size 6*8*64*64*4B = 786KB/layer group + buffers). Continuous-vs-reset: valid/test equivalent at near-zero F1; on train tracks continuous 0.579 vs reset 0.081."
-  }
+    "evidence": "results/gate4_overfit_v2/eval/{valid,test,train}: held-out (4 tracks) onset F1 0.007-0.019 both modes, 0 truncation, 0 boundary errors, RTF 0.35-0.75, inference VRAM ~0.13GB (fixed recurrent state size 6*8*64*64*4B = 786KB/layer group + buffers). Continuous-vs-reset: valid/test equivalent at near-zero F1; memorized train tracks only: continuous 0.579 vs reset 0.081 (Level 4 not established)."
+  },
+  "_revision_note": "Post-review revision (round 1): G3 numbers relabeled as one-song memorized training track; G4/G6 continuous-vs-reset relabeled as memorized-train-sequence evidence only (Level 4 not established); G5 relabeled as remote acoustic SOURCE/track identity retention (instrument-level cross-track generalization NOT established; leak-free G5-v2 designed and code-ready); environment provenance switched to cgroup v2 quota. Original numeric evidence unchanged."
 }

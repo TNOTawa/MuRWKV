@@ -1,43 +1,38 @@
 {
-  "timestamp": "2026-08-27 02:35:26 CST",
+  "timestamp": "2026-08-27 20:27:52 CST",
   "hostname": "autodl-container-gzw4qpf8tl-c978a258",
   "os": "Linux-5.15.0-78-generic-x86_64-with-glibc2.35",
   "python": "3.12.3",
-  "cpu_cores": 128,
-  "ram_gb": 791.2,
+  "compute": {
+    "cgroup_version": "v2",
+    "cpu_quota_cores": 0.5,
+    "memory_limit_gb": 2.1,
+    "cpu_quota_source": "/sys/fs/cgroup/cpu.max",
+    "memory_source": "/sys/fs/cgroup/memory.max",
+    "host_cpu_count": 128,
+    "host_ram_gb": 791.2
+  },
+  "cpu_cores": 0.5,
+  "ram_gb": 2.1,
   "gpu": {
-    "name": "NVIDIA GeForce RTX 5090",
-    "capability": [
-      12,
-      0
-    ],
-    "arch_list": [
-      "sm_70",
-      "sm_75",
-      "sm_80",
-      "sm_86",
-      "sm_90",
-      "sm_100",
-      "sm_120"
-    ],
-    "bf16_supported": true,
-    "total_vram_gb": 33.7
+    "available": false,
+    "name": null
   },
   "torch": "2.8.0+cu128",
   "cuda_runtime": "12.8",
   "disk_/": {
     "total_gb": 32.2,
-    "free_gb": 30.7
+    "free_gb": 19.2
   },
   "disk_/root/autodl-tmp": {
     "total_gb": 805.3,
-    "free_gb": 805.1
+    "free_gb": 560.2
   },
-  "bf16_matmul_ok": true,
+  "bf16_matmul_ok": false,
   "rwkv7_cuda_kernel": {
-    "available": true,
-    "import_error": null,
-    "fwd_smoke": true
+    "available": false,
+    "import_error": "IndexError('list index out of range')",
+    "fwd_smoke": false
   },
   "packages": {
     "torch": "2.8.0+cu128",
@@ -49,7 +44,7 @@
     "huggingface_hub": "1.28.0",
     "matplotlib": "3.10.5"
   },
-  "git_commit": "da74d65322c6081f517c53ac5bbb76944444cc82",
+  "git_commit": "6c437c142651f984773208ea1d3c480c8a9ba373",
   "git_branch": "main",
   "secrets_recorded": false
 }

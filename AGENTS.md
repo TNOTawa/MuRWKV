@@ -50,15 +50,18 @@
 - **Purpose:** answer whether a random-init, attention-free RWKV-7 can learn Audio→MIDI
   from log-Mel directly and maintain musical state across 5s chunks without resets.
 - **Main entry point:** `src/murwkv/training/train.py` (train), `src/murwkv/eval/eval_heldout.py` (evaluate),
-  `src/murwkv/eval/infer.py` (streaming transcription).
+  `src/murwkv/eval/infer.py` (streaming transcription), `src/murwkv/eval/memory_probe_v2.py`
+  (Gate 5-v2 leak-free memory probe: frozen AMT ckpt + linear ridge, track-level split).
 - **Architecture map:** `src/murwkv/model/rwkv7.py` (RWKV-7 core, official math/init;
   vendored official clampw CUDA kernel in `src/murwkv/cuda/`), `src/murwkv/model/murwkv_model.py`
   (unified audio+MIDI stream model), `src/murwkv/tokenizer.py` (MT3_FULL_PLUS, tie protocol),
-  `src/murwkv/data/babyslakh.py` (dataset). See `REPORT_10H.md` at the end of the run.
+  `src/murwkv/data/babyslakh.py` (dataset). See `REPORT_10H.md` at the end of the run
+  (incl. the post-review Erratum: G5 scope, Level-4 claim, environment provenance).
 - **Build/setup:** `pip install -r requirements.txt`; no build step (CUDA kernel auto-compiles
   on first import; needs ninja).
 - **Fast relevant tests:** `tests/test_tokenizer.py`, `tests/test_rwkv7_parity.py` (Gate 2),
-  `tests/test_train_smoke.py`, `tests/test_gate1_data.py <babyslakh_root>` (Gate 1).
+  `tests/test_train_smoke.py`, `tests/test_gate1_data.py <babyslakh_root>` (Gate 1),
+  `tests/test_probe_v2.py [babyslakh_root] [amt_ckpt]` (Gate 5-v2 design contract; CPU-safe).
 - **Full QA command:** `python tests/qa.py` — runs every test in `tests/` that is runnable
   on the current machine (needs CUDA for parity/smoke; Gate1 needs extracted BabySlakh).
 - **Release/build artifact:** listening MIDI artifacts under `artifacts/listening/<track>/`;

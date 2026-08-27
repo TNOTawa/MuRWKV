@@ -34,14 +34,22 @@ the audio history it has heard.
    Fixed train/valid/test splits are saved in every experiment dir; 10 training
    songs excluded all held-out tracks.
 5. **Level reached in the 10h run:** **Level 2 (pipeline + audio state) with
-   strong Level-1 evidence and a partial Level-4 signal** — see REPORT.
-   G0–G6 all PASS. Held-out note F1 ≈ 0.01 (10-song memorizer; generalization
-   needs Slakh-scale data — documented as the Level-3 gap).
+   strong Level-1 evidence** — the "partial Level-4 signal" wording was withdrawn
+   post-review: the continuous-vs-reset gap exists only on memorized train
+   sequences (held-out ≈ F1 0.01 in both modes), so *generalization-level*
+   continuity (Level 4) is **not yet established**. G0–G6 all PASS. Held-out
+   note F1 ≈ 0.01 (10-song memorizer; generalization needs Slakh-scale data —
+   documented as the Level-3 gap).
 6. **Continuous vs reset:**
-   * memory probe: continuous 100% vs reset 48% (chance) — the state carries
-     remote acoustic identity through 2 identical neutral chunks;
-   * train tracks: continuous onset F1 0.579 vs reset 0.081 (Track00008:
-     0.991 vs 0.063), fewer instrument switches/flicker with continuous.
+   * memory probe (G5, corrected scope): continuous 100% vs reset 48% (chance) —
+     the state carries **remote acoustic source/track identity** through 2
+     identical neutral chunks; instrument-level cross-track generalization was
+     NOT established by G5 and is the target of the leak-free **G5-v2**
+     (`src/murwkv/eval/memory_probe_v2.py`, frozen G4 AMT + linear probe,
+     track-level split, metadata-verified stems; ready to run);
+   * memorized train tracks: continuous onset F1 0.579 vs reset 0.081
+     (Track00008: 0.991 vs 0.063), fewer instrument switches/flicker with
+     continuous — memorized-sequence evidence only (see REPORT erratum).
 7. **Listening MIDI:** `artifacts/listening/<track>/` — `gt.mid`,
    `murwkv_continuous.mid`, `murwkv_reset.mid`, `muscriptor.mid` (baseline).
    Open them in any DAW/MuseScore.
@@ -63,7 +71,8 @@ src/murwkv/data/babyslakh.py     BabySlakh dataset (mel cache, chunk windows)
 src/murwkv/training/train.py     trainer (official param groups/LR/BF16)
 src/murwkv/eval/infer.py         true-recurrent streaming transcriber
 src/murwkv/eval/eval_heldout.py  Gate-6 evaluation (continuous vs reset)
-src/murwkv/eval/memory_probe.py  Gate-5 controlled audio-memory probe
-tests/                           QA: parity, tokenizer, alignment, gate1, smoke
-scripts/                         plots, downloads, baseline, environment record
+src/murwkv/eval/memory_probe.py  Gate-5 controlled audio-memory probe (v1, as-run scope: source identity)
+src/murwkv/eval/memory_probe_v2.py  Gate-5-v2 leak-free probe: frozen AMT ckpt + linear ridge, track-level split
+tests/                           QA: parity, tokenizer, alignment, gate1, smoke, probe-v2
+scripts/                         plots, downloads, baseline, environment record (cgroup quota)
 ```

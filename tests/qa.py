@@ -15,6 +15,7 @@ ROOT = os.path.dirname(HERE)
 
 TESTS = [
     "test_tokenizer.py",
+    "test_probe_v2.py",  # G5-v2 design contract; needs data for 2 checks, data+ckpt for the smoke
     "test_rwkv7_parity.py",  # requires CUDA
     "test_train_smoke.py",  # requires CUDA
     "test_gate1_data.py",  # requires extracted BabySlakh
@@ -54,6 +55,8 @@ if __name__ == "__main__":
         cmd = [sys.executable, os.path.join(HERE, t)]
         if t == "test_gate1_data.py":
             cmd.append(args.babyslakh_root)
+        if t == "test_probe_v2.py":
+            cmd += [args.babyslakh_root, os.path.join(ROOT, "results", "gate4_overfit_v2", "final.pt")]
         r = subprocess.run(cmd, env=env, capture_output=True, text=True, timeout=1800)
         print(r.stdout[-1200:], end="")
         if r.returncode != 0:
