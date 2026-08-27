@@ -257,7 +257,8 @@ python -m murwkv.eval.memory_probe_v2 --exp results/gate5_probe_v2 \
 
 ## Final Git / HF State
 
-- **Git:** all work is committed locally on `main` (18 commits, see `git log`).
+- **Git:** all work is committed locally on `main` (31 commits incl. the post-review
+  revision, see `git log`).
   **Push to GitHub was not possible in this run**: the fine-grained PAT
   (`github_pat_*`, user TNOTawa) lacks `Contents: write` — verified via the
   GitHub API (`403 Resource not accessible by personal access token`), so both
