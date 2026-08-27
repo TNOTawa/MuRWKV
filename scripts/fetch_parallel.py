@@ -34,7 +34,7 @@ def fetch_segment(url, start, end, out, max_time=300):
     if os.path.exists(out) and os.path.getsize(out) == end - start + 1:
         return True
     expected = end - start + 1
-    for attempt in range(12):
+    for attempt in range(16):
         # --speed-limit/--speed-time abort stalled connections (a worker stuck
         # 15 minutes on a dead connection kills aggregate throughput)
         cmd = [
@@ -53,7 +53,7 @@ def fetch_segment(url, start, end, out, max_time=300):
 def main():
     ap = argparse.ArgumentParser()
     ap.add_argument("url"); ap.add_argument("out")
-    ap.add_argument("--md5", default=""); ap.add_argument("--workers", type=int, default=64); ap.add_argument("--seg-mb", type=int, default=64); ap.add_argument("--max-time", type=int, default=300)
+    ap.add_argument("--md5", default=""); ap.add_argument("--workers", type=int, default=32); ap.add_argument("--seg-mb", type=int, default=64); ap.add_argument("--max-time", type=int, default=300)
     a = ap.parse_args()
     total = probe(a.url)
     print(f"size={total}", flush=True)
