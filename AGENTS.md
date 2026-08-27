@@ -63,6 +63,9 @@
   on the current machine (needs CUDA for parity/smoke; Gate1 needs extracted BabySlakh).
 - **Release/build artifact:** listening MIDI artifacts under `artifacts/listening/<track>/`;
   checkpoints in `results/<exp>/` (+ private HF repo if writable).
+- **Network:** for large remote fetches, `source /etc/network_turbo` (AutoDL
+  academic proxy) first — measured ~35-48 MB/s vs ~2-4 MB/s direct
+  (see docs/DATA.md).
 - **Critical data/compatibility notes:** BabySlakh 16k (Zenodo 4603870, CC-BY-4.0) lives on
   the data disk (`/root/autodl-tmp/data`), never in git. No pretrained weights may be loaded
   for MuRWKV (random init only). Token truncation of target chunks is a pipeline bug
