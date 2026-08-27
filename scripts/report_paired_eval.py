@@ -124,6 +124,7 @@ def main():
             "mean_delta": float(delta.mean()), "median_delta": float(np.median(delta)),
             "ci95_delta": [round(lo, 4), round(hi, 4)],
             "n_tracks_delta_positive": npos,
+            "lower_is_better": m == "n_inst_switches",
             "duration_quartiles": bins,
         }
         if m in ("onset_f1", "offset_f1", "inst_f1"):
