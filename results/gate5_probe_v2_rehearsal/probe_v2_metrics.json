@@ -1,0 +1,502 @@
+{
+  "args": {
+    "exp": "results/gate5_probe_v2_rehearsal",
+    "data_root": "/root/autodl-tmp/data/babyslakh/babyslakh_16k",
+    "splits": false,
+    "ckpt": "results/gate4_overfit_v2/final.pt",
+    "g4_trained_tracks": [
+      "Track00001",
+      "Track00002",
+      "Track00003",
+      "Track00004",
+      "Track00007",
+      "Track00008",
+      "Track00009",
+      "Track00010",
+      "Track00011",
+      "Track00012"
+    ],
+    "hist_chunks": 2,
+    "samples_train": 2,
+    "samples_val": 2,
+    "samples_test": 4,
+    "n_test": 4,
+    "n_val": 2,
+    "split_seed": 42,
+    "seed_data": 1234,
+    "device": "cpu",
+    "fp32": true,
+    "mlp": false,
+    "max_tracks": [
+      2,
+      1,
+      2
+    ],
+    "prepare_only": false,
+    "mel_cache": "/root/autodl-tmp/data/probe_v2_mel_rehearsal",
+    "mel_max_seconds": 15.0
+  },
+  "neutral_sha": "2bd2d93d442d2e3e",
+  "arms": [
+    "continuous",
+    "lead1",
+    "reset",
+    "history"
+  ],
+  "split": {
+    "train": [
+      "Track00001",
+      "Track00002"
+    ],
+    "val": [
+      "Track00010"
+    ],
+    "test": [
+      "Track00005",
+      "Track00006"
+    ]
+  },
+  "n_samples": {
+    "train": 8,
+    "val": 4,
+    "test": 16
+  },
+  "probes": {
+    "continuous": {
+      "feature_set": "h_last+S_last",
+      "dims": 33280,
+      "ridge_rows": [
+        {
+          "lam": 0.0001,
+          "train_acc": 1.0,
+          "val_acc": 1.0,
+          "test_acc": 0.3125
+        },
+        {
+          "lam": 0.01,
+          "train_acc": 1.0,
+          "val_acc": 1.0,
+          "test_acc": 0.3125
+        },
+        {
+          "lam": 1.0,
+          "train_acc": 1.0,
+          "val_acc": 1.0,
+          "test_acc": 0.3125
+        },
+        {
+          "lam": 100.0,
+          "train_acc": 1.0,
+          "val_acc": 1.0,
+          "test_acc": 0.3125
+        }
+      ],
+      "best": {
+        "lam": 0.0001,
+        "train_acc": 1.0,
+        "val_acc": 1.0,
+        "test_acc": 0.3125
+      },
+      "acc_ci": {
+        "train": {
+          "acc": 1.0,
+          "k": 8,
+          "n": 8,
+          "ci95": [
+            0.6756,
+            1.0
+          ]
+        },
+        "val": {
+          "acc": 1.0,
+          "k": 4,
+          "n": 4,
+          "ci95": [
+            0.5101,
+            1.0
+          ]
+        },
+        "test": {
+          "acc": 0.3125,
+          "k": 5,
+          "n": 16,
+          "ci95": [
+            0.1416,
+            0.556
+          ]
+        }
+      }
+    },
+    "continuous_stats": {
+      "feature_set": "per-head stats + h_last",
+      "dims": 536,
+      "ridge_rows": [
+        {
+          "lam": 0.0001,
+          "train_acc": 1.0,
+          "val_acc": 0.5,
+          "test_acc": 0.25
+        },
+        {
+          "lam": 0.01,
+          "train_acc": 1.0,
+          "val_acc": 0.5,
+          "test_acc": 0.25
+        },
+        {
+          "lam": 1.0,
+          "train_acc": 1.0,
+          "val_acc": 0.5,
+          "test_acc": 0.25
+        },
+        {
+          "lam": 100.0,
+          "train_acc": 1.0,
+          "val_acc": 1.0,
+          "test_acc": 0.25
+        }
+      ],
+      "best": {
+        "lam": 100.0,
+        "train_acc": 1.0,
+        "val_acc": 1.0,
+        "test_acc": 0.25
+      }
+    },
+    "lead1": {
+      "feature_set": "h_last+S_last",
+      "dims": 33280,
+      "ridge_rows": [
+        {
+          "lam": 0.0001,
+          "train_acc": 1.0,
+          "val_acc": 0.5,
+          "test_acc": 0.4375
+        },
+        {
+          "lam": 0.01,
+          "train_acc": 1.0,
+          "val_acc": 0.5,
+          "test_acc": 0.4375
+        },
+        {
+          "lam": 1.0,
+          "train_acc": 1.0,
+          "val_acc": 0.5,
+          "test_acc": 0.4375
+        },
+        {
+          "lam": 100.0,
+          "train_acc": 1.0,
+          "val_acc": 0.5,
+          "test_acc": 0.4375
+        }
+      ],
+      "best": {
+        "lam": 0.0001,
+        "train_acc": 1.0,
+        "val_acc": 0.5,
+        "test_acc": 0.4375
+      },
+      "acc_ci": {
+        "train": {
+          "acc": 1.0,
+          "k": 8,
+          "n": 8,
+          "ci95": [
+            0.6756,
+            1.0
+          ]
+        },
+        "val": {
+          "acc": 0.5,
+          "k": 2,
+          "n": 4,
+          "ci95": [
+            0.15,
+            0.85
+          ]
+        },
+        "test": {
+          "acc": 0.4375,
+          "k": 7,
+          "n": 16,
+          "ci95": [
+            0.231,
+            0.6682
+          ]
+        }
+      }
+    },
+    "lead1_stats": {
+      "feature_set": "per-head stats + h_last",
+      "dims": 536,
+      "ridge_rows": [
+        {
+          "lam": 0.0001,
+          "train_acc": 1.0,
+          "val_acc": 0.5,
+          "test_acc": 0.4375
+        },
+        {
+          "lam": 0.01,
+          "train_acc": 1.0,
+          "val_acc": 0.5,
+          "test_acc": 0.4375
+        },
+        {
+          "lam": 1.0,
+          "train_acc": 1.0,
+          "val_acc": 0.5,
+          "test_acc": 0.4375
+        },
+        {
+          "lam": 100.0,
+          "train_acc": 0.875,
+          "val_acc": 0.75,
+          "test_acc": 0.375
+        }
+      ],
+      "best": {
+        "lam": 100.0,
+        "train_acc": 0.875,
+        "val_acc": 0.75,
+        "test_acc": 0.375
+      }
+    },
+    "reset": {
+      "feature_set": "h_last+S_last",
+      "dims": 33280,
+      "ridge_rows": [
+        {
+          "lam": 0.0001,
+          "train_acc": 1.0,
+          "val_acc": 0.5,
+          "test_acc": 0.375
+        },
+        {
+          "lam": 0.01,
+          "train_acc": 1.0,
+          "val_acc": 0.5,
+          "test_acc": 0.375
+        },
+        {
+          "lam": 1.0,
+          "train_acc": 1.0,
+          "val_acc": 0.5,
+          "test_acc": 0.375
+        },
+        {
+          "lam": 100.0,
+          "train_acc": 1.0,
+          "val_acc": 0.5,
+          "test_acc": 0.375
+        }
+      ],
+      "best": {
+        "lam": 0.0001,
+        "train_acc": 1.0,
+        "val_acc": 0.5,
+        "test_acc": 0.375
+      },
+      "acc_ci": {
+        "train": {
+          "acc": 1.0,
+          "k": 8,
+          "n": 8,
+          "ci95": [
+            0.6756,
+            1.0
+          ]
+        },
+        "val": {
+          "acc": 0.5,
+          "k": 2,
+          "n": 4,
+          "ci95": [
+            0.15,
+            0.85
+          ]
+        },
+        "test": {
+          "acc": 0.375,
+          "k": 6,
+          "n": 16,
+          "ci95": [
+            0.1848,
+            0.6136
+          ]
+        }
+      }
+    },
+    "reset_stats": {
+      "feature_set": "per-head stats + h_last",
+      "dims": 536,
+      "ridge_rows": [
+        {
+          "lam": 0.0001,
+          "train_acc": 1.0,
+          "val_acc": 0.5,
+          "test_acc": 0.375
+        },
+        {
+          "lam": 0.01,
+          "train_acc": 1.0,
+          "val_acc": 0.5,
+          "test_acc": 0.375
+        },
+        {
+          "lam": 1.0,
+          "train_acc": 1.0,
+          "val_acc": 0.5,
+          "test_acc": 0.375
+        },
+        {
+          "lam": 100.0,
+          "train_acc": 0.875,
+          "val_acc": 0.5,
+          "test_acc": 0.375
+        }
+      ],
+      "best": {
+        "lam": 0.0001,
+        "train_acc": 1.0,
+        "val_acc": 0.5,
+        "test_acc": 0.375
+      }
+    },
+    "history": {
+      "feature_set": "h_last+S_last",
+      "dims": 33280,
+      "ridge_rows": [
+        {
+          "lam": 0.0001,
+          "train_acc": 1.0,
+          "val_acc": 1.0,
+          "test_acc": 0.25
+        },
+        {
+          "lam": 0.01,
+          "train_acc": 1.0,
+          "val_acc": 1.0,
+          "test_acc": 0.25
+        },
+        {
+          "lam": 1.0,
+          "train_acc": 1.0,
+          "val_acc": 1.0,
+          "test_acc": 0.25
+        },
+        {
+          "lam": 100.0,
+          "train_acc": 1.0,
+          "val_acc": 1.0,
+          "test_acc": 0.25
+        }
+      ],
+      "best": {
+        "lam": 0.0001,
+        "train_acc": 1.0,
+        "val_acc": 1.0,
+        "test_acc": 0.25
+      },
+      "acc_ci": {
+        "train": {
+          "acc": 1.0,
+          "k": 8,
+          "n": 8,
+          "ci95": [
+            0.6756,
+            1.0
+          ]
+        },
+        "val": {
+          "acc": 1.0,
+          "k": 4,
+          "n": 4,
+          "ci95": [
+            0.5101,
+            1.0
+          ]
+        },
+        "test": {
+          "acc": 0.25,
+          "k": 4,
+          "n": 16,
+          "ci95": [
+            0.1018,
+            0.495
+          ]
+        }
+      }
+    },
+    "history_stats": {
+      "feature_set": "per-head stats + h_last",
+      "dims": 536,
+      "ridge_rows": [
+        {
+          "lam": 0.0001,
+          "train_acc": 1.0,
+          "val_acc": 1.0,
+          "test_acc": 0.375
+        },
+        {
+          "lam": 0.01,
+          "train_acc": 1.0,
+          "val_acc": 1.0,
+          "test_acc": 0.375
+        },
+        {
+          "lam": 1.0,
+          "train_acc": 1.0,
+          "val_acc": 1.0,
+          "test_acc": 0.375
+        },
+        {
+          "lam": 100.0,
+          "train_acc": 1.0,
+          "val_acc": 1.0,
+          "test_acc": 0.25
+        }
+      ],
+      "best": {
+        "lam": 0.0001,
+        "train_acc": 1.0,
+        "val_acc": 1.0,
+        "test_acc": 0.375
+      }
+    }
+  },
+  "state_distance": [
+    {
+      "n_neutral": 0,
+      "dist": 12.752209663391113,
+      "nA": 189.6276397705078,
+      "nB": 177.0042724609375
+    },
+    {
+      "n_neutral": 1,
+      "dist": 4.758890628814697,
+      "nA": 343.1698303222656,
+      "nB": 345.0975036621094
+    },
+    {
+      "n_neutral": 2,
+      "dist": 3.1314926147460938,
+      "nA": 415.4510803222656,
+      "nB": 416.8040466308594
+    },
+    {
+      "n_neutral": 3,
+      "dist": 2.43170428276062,
+      "nA": 457.3518371582031,
+      "nB": 459.0049743652344
+    },
+    {
+      "n_neutral": 4,
+      "dist": 1.7672195434570312,
+      "nA": 489.0476379394531,
+      "nB": 489.9498291015625
+    }
+  ]
+}

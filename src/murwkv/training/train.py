@@ -78,19 +78,40 @@ def run(args):
     np.random.seed(args.seed)
     os.makedirs(args.exp, exist_ok=True)
 
-    bs = BabySlakh(args.data_root)
+    bs = BabySlakh(args.data_root, splits=args.splits)
     split_path = os.path.join(args.exp, "split.json")
-    if not os.path.exists(split_path):
+    if args.splits:
+        # Slakh2100-style corpus: respect the corpus's OWN split directories.
+        # Never rebuild a random split over all tracks (that would mix the
+        # corpus validation/test songs into training).
+        if not os.path.exists(split_path):
+            splits = {
+                "train": bs.tracks_of("train"),
+                "valid": bs.tracks_of("validation"),
+                "test": bs.tracks_of("test"),
+            }
+            write_split_json(split_path, splits)
+        else:
+            splits = json.load(open(split_path))
+    elif not os.path.exists(split_path):
         splits = build_splits(bs, seed=args.seed)
         write_split_json(split_path, splits)
     else:
         splits = json.load(open(split_path))
     track_ids = args.tracks or splits["train"]
-    print(f"[data] tracks: {track_ids}")
+    print(f"[data] tracks[{len(track_ids)}]: {track_ids[:5]}...")
+    assert track_ids, "empty track list — check --data-root / --splits / --tracks"
 
     stats = {"truncated_chunks": 0, "tracks": 0, "chunks": 0, "tokens": 0, "shortened": 0, "clipped_overlaps": 0}
-    mel_cache = os.path.join(os.path.dirname(args.data_root) if not args.mel_cache else args.mel_cache, "mel_cache")
-    ds = BabySlakhDataset(bs, track_ids, n_units=args.units, mel_cache_dir=mel_cache, token_stats=stats)
+    if args.mel_cache:
+        mel_cache = args.mel_cache
+    else:
+        # corpus-scoped cache: track ids collide across corpora (Track00001 in
+        # BabySlakh AND Slakh), so the default must not be shared
+        mel_cache = os.path.join(os.path.dirname(args.data_root),
+                                 f"mel_cache_{os.path.basename(args.data_root.rstrip('/'))}")
+    ds = BabySlakhDataset(bs, track_ids, n_units=args.units, mel_cache_dir=mel_cache,
+                          token_stats=stats, max_tokens_per_chunk=args.max_tokens_per_chunk)
     assert stats["truncated_chunks"] == 0, f"PIPELINE BUG: {stats['truncated_chunks']} truncated chunks"
     print(f"[data] windows={len(ds)} stats={stats}")
 
@@ -179,8 +200,13 @@ def main():
     ap = argparse.ArgumentParser()
     ap.add_argument("--exp", required=True)
     ap.add_argument("--data-root", default="/root/autodl-tmp/data/babyslakh/babyslakh_16k")
+    ap.add_argument("--splits", action="store_true",
+                    help="Slakh2100-style <data-root>/{train,validation,test}/Track* layout; "
+                         "default track set = corpus train split (never merges val/test into training)")
     ap.add_argument("--tracks", nargs="*", default=None)
     ap.add_argument("--units", type=int, default=4)
+    ap.add_argument("--max-tokens-per-chunk", type=int, default=2048,
+                    help="tokenizer cap; Slakh2100 chunks reach ~2.3k tokens -> use 4096 there")
     ap.add_argument("--steps", type=int, default=2000)
     ap.add_argument("--n-layer", type=int, default=6)
     ap.add_argument("--n-embd", type=int, default=512)

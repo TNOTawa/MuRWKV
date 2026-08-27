@@ -230,14 +230,14 @@ def extract_features(model: MuRWKV, mel_seq: torch.Tensor, arms: list[str],
 
 
 def feats_to_np(h: torch.Tensor, S: torch.Tensor) -> np.ndarray:
-    return np.concatenate([h.numpy(), S.numpy()]).astype(np.float32)
+    return np.concatenate([h.detach().cpu().numpy(), S.detach().cpu().numpy()]).astype(np.float32)
 
 
 def stats_feats(h: torch.Tensor, S: torch.Tensor, H: int, N: int) -> np.ndarray:
     """Per-head summary stats of the last-layer state + h_last (robust low-dim)."""
-    S = S.reshape(H, N, N)
-    stats = np.stack([S.mean(axis=(1, 2)), S.std(axis=(1, 2)), np.abs(S).max(axis=(1, 2))]).reshape(-1)
-    return np.concatenate([h.numpy(), stats]).astype(np.float32)
+    S = S.detach().reshape(H, N, N)
+    stats = torch.stack([S.mean(dim=(1, 2)), S.std(dim=(1, 2)), S.amax(dim=(1, 2))]).reshape(-1)
+    return np.concatenate([h.detach().cpu().numpy(), stats.cpu().numpy()]).astype(np.float32)
 
 
 # ---------------------------------------------------------------------------
@@ -334,24 +334,33 @@ def state_distance_after(model: MuRWKV, mel_hist: torch.Tensor, neutral: torch.T
 # ---------------------------------------------------------------------------
 
 
-def build_mel_cache(bs: BabySlakh, samples: list[dict], cache_dir: str, stem_paths: dict) -> dict:
+def build_mel_cache(bs: BabySlakh, samples: list[dict], cache_dir: str, stem_paths: dict,
+                    max_seconds: float = 0.0) -> dict:
     """Log-mel per (track, stem), cached fp16 npz on the data disk (dataset
-    convention). Returns {(tid, stem): mel (F, 512) fp32}."""
+    convention). Returns {(tid, stem): mel (F, 512) fp32}.
+
+    max_seconds > 0: read only the first `max_seconds` of each stem (memory
+    bound for constrained containers — the samples' windows lie inside that
+    prefix when generated with stem_frames capped the same way).
+    """
     os.makedirs(cache_dir, exist_ok=True)
     frontend = LogMelFrontend(sample_rate=16000, n_fft=2048, hop_length=160, n_mels=512)
     cache: dict = {}
     keys = sorted({(s["tid"], s["stem"]) for s in samples})
+    suffix = f"_cap{int(max_seconds)}s" if max_seconds > 0 else ""
     for tid, sid in keys:
-        p = os.path.join(cache_dir, f"{tid}_{sid}.npz")
+        p = os.path.join(cache_dir, f"{tid}_{sid}{suffix}.npz")
         if os.path.exists(p):
             cache[(tid, sid)] = np.load(p)["mel"].astype(np.float32)
             continue
-        wav, sr = sf.read(stem_paths[(tid, sid)], dtype="float32")
+        frames = None if max_seconds <= 0 else int(max_seconds * 16000)
+        wav, sr = sf.read(stem_paths[(tid, sid)], dtype="float32", frames=frames)
         assert sr == 16000, f"{tid}/{sid}: sr {sr}"
         if wav.ndim > 1:
             wav = wav.mean(1)
         with torch.no_grad():
             mel = frontend(torch.from_numpy(wav).unsqueeze(0)).squeeze(0).numpy()
+        del wav
         np.savez(p, mel=mel.astype(np.float16))
         cache[(tid, sid)] = mel
     return cache
@@ -366,12 +375,15 @@ def run(args):
     coverage = {}
     stem_paths: dict = {}
     stem_frames: dict = {}
+    max_mel = int(args.mel_max_seconds * 100) if args.mel_max_seconds > 0 else None
     for tid in track_ids:
         for p in bs.stems(tid):
             sid = os.path.splitext(os.path.basename(p))[0]
             stem_paths[(tid, sid)] = p
-            # stem length in MEL frames (16kHz audio, hop=160 -> 100 fps)
-            stem_frames[(tid, sid)] = sf.info(p).frames // 160
+            # stem length in MEL frames (16kHz audio, hop=160 -> 100 fps);
+            # capped when --mel-max-seconds bounds the read (constrained boxes)
+            n_mel = sf.info(p).frames // 160
+            stem_frames[(tid, sid)] = n_mel if max_mel is None else min(n_mel, max_mel)
     for cls in INST_CLASSES.values():
         n = 0
         for tid in track_ids:
@@ -386,6 +398,12 @@ def run(args):
     splits = build_probe_split(track_ids, seed=args.split_seed, n_test=args.n_test,
                                n_val=args.n_val, force_test=force_test)
     assert_no_track_overlap(splits)
+    if args.max_tracks:
+        # DEV/REHEARSAL ONLY: cap how many tracks per split participate
+        # (train,val,test). Keeps track-level separation; recorded in args.
+        mt = {"train": args.max_tracks[0], "val": args.max_tracks[1], "test": args.max_tracks[2]}
+        splits = {k: sorted(v[: mt[k]]) for k, v in splits.items()}
+        print(f"[g5v2] DEV max-tracks applied: {mt}", flush=True)
     print("[g5v2] split:", {k: len(v) for k, v in splits.items()}, flush=True)
     # ---- samples ----
     all_samples = []
@@ -422,7 +440,8 @@ def run(args):
           f"({model.cfg.n_layer}L × {model.cfg.n_embd}), official learned decay, no w0 bias", flush=True)
 
     # ---- feature extraction ----
-    mel_cache = build_mel_cache(bs, all_samples, args.mel_cache, stem_paths)
+    mel_cache = build_mel_cache(bs, all_samples, args.mel_cache, stem_paths,
+                                max_seconds=args.mel_max_seconds)
     feats_dir = os.path.join(args.exp, "feats")
     os.makedirs(feats_dir, exist_ok=True)
     arms = ["continuous", "lead1", "reset", "history"]
@@ -435,6 +454,8 @@ def run(args):
     for sp, samples in by_split.items():
         for s in samples:
             mel = mel_cache[(s["tid"], s["stem"])]
+            assert len(mel) >= s["start"] + hist_frames, \
+                f"{s['tid']}/{s['stem']}: mel {len(mel)} < window end {s['start'] + hist_frames}"
             hist = torch.from_numpy(mel[s["start"]: s["start"] + hist_frames].astype(np.float32))
             neutral_t = torch.from_numpy(neutral)
             seq = torch.cat([hist, neutral_t, neutral_t], 0)
@@ -549,9 +570,15 @@ def main():
     ap.add_argument("--device", default="cuda")
     ap.add_argument("--fp32", action="store_true", help="run the model in fp32 (CPU smoke)")
     ap.add_argument("--mlp", action="store_true", help="also run the MLP sensitivity check")
+    ap.add_argument("--max-tracks", type=int, nargs=3, default=None, metavar=("TRAIN", "VAL", "TEST"),
+                    help="DEV/REHEARSAL ONLY: cap tracks per split (keeps track-level separation; "
+                         "the official run must NOT use this)")
     ap.add_argument("--prepare-only", action="store_true",
                     help="build/verify data artifacts (split, stems, samples) and exit — no model needed")
     ap.add_argument("--mel-cache", default="/root/autodl-tmp/data/probe_v2_mel")
+    ap.add_argument("--mel-max-seconds", type=float, default=0.0,
+                    help=">0: read only the first N seconds of each stem (memory bound for "
+                         "constrained containers; sample windows are capped to the same prefix)")
     args = ap.parse_args()
     run(args)
 

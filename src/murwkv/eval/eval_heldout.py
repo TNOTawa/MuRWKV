@@ -30,13 +30,15 @@ def main():
     ap.add_argument("--exp", required=True)
     ap.add_argument("--ckpt", required=True)
     ap.add_argument("--data-root", default="/root/autodl-tmp/data/babyslakh/babyslakh_16k")
+    ap.add_argument("--splits", action="store_true",
+                    help="Slakh2100-style <data-root>/{train,validation,test}/Track* layout")
     ap.add_argument("--split", default="valid", choices=["valid", "test", "train"])
     ap.add_argument("--mode", default="both", choices=["continuous", "reset", "both"])
     ap.add_argument("--tracks", nargs="*", default=None)
     ap.add_argument("--max-tokens", type=int, default=2048)
     args = ap.parse_args()
 
-    bs = BabySlakh(args.data_root)
+    bs = BabySlakh(args.data_root, splits=args.splits)
     if args.tracks:
         track_ids = args.tracks
     else:

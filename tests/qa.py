@@ -16,6 +16,7 @@ ROOT = os.path.dirname(HERE)
 TESTS = [
     "test_tokenizer.py",
     "test_probe_v2.py",  # G5-v2 design contract; needs data for 2 checks, data+ckpt for the smoke
+    "test_gate1_slakh.py",  # Slakh2100-16k corpus index + subset + pipeline (requires Slakh root)
     "test_rwkv7_parity.py",  # requires CUDA
     "test_train_smoke.py",  # requires CUDA
     "test_gate1_data.py",  # requires extracted BabySlakh
@@ -25,6 +26,7 @@ if __name__ == "__main__":
     ap = argparse.ArgumentParser()
     ap.add_argument("--no-cuda", action="store_true")
     ap.add_argument("--babyslakh-root", default="/root/autodl-tmp/data/babyslakh/babyslakh_16k")
+    ap.add_argument("--slakh-root", default="/root/autodl-tmp/data/slakh2100_16k_from_flac")
     args = ap.parse_args()
 
     cuda_ok = not args.no_cuda
@@ -38,6 +40,7 @@ if __name__ == "__main__":
     data_ok = os.path.isdir(args.babyslakh_root) and any(
         d.startswith("Track") for d in os.listdir(args.babyslakh_root)
     )
+    slakh_ok = os.path.isdir(args.slakh_root) and os.path.isdir(os.path.join(args.slakh_root, "train"))
 
     env = dict(os.environ)
     env["PYTHONPATH"] = os.path.join(ROOT, "src") + os.pathsep + env.get("PYTHONPATH", "")
@@ -52,9 +55,14 @@ if __name__ == "__main__":
         if t == "test_gate1_data.py" and not data_ok:
             print(f"SKIP {t} (no BabySlakh at {args.babyslakh_root})")
             continue
+        if t == "test_gate1_slakh.py" and not slakh_ok:
+            print(f"SKIP {t} (no Slakh 16k corpus at {args.slakh_root})")
+            continue
         cmd = [sys.executable, os.path.join(HERE, t)]
         if t == "test_gate1_data.py":
             cmd.append(args.babyslakh_root)
+        if t == "test_gate1_slakh.py":
+            cmd.append(args.slakh_root)
         if t == "test_probe_v2.py":
             cmd += [args.babyslakh_root, os.path.join(ROOT, "results", "gate4_overfit_v2", "final.pt")]
         r = subprocess.run(cmd, env=env, capture_output=True, text=True, timeout=1800)

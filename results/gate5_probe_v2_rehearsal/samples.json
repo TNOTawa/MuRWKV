@@ -1,0 +1,226 @@
+[
+  {
+    "split": "train",
+    "tid": "Track00001",
+    "stem": "S07",
+    "class": 0,
+    "start": 59,
+    "hist_frames": 1000
+  },
+  {
+    "split": "train",
+    "tid": "Track00001",
+    "stem": "S00",
+    "class": 0,
+    "start": 46,
+    "hist_frames": 1000
+  },
+  {
+    "split": "train",
+    "tid": "Track00001",
+    "stem": "S02",
+    "class": 1,
+    "start": 343,
+    "hist_frames": 1000
+  },
+  {
+    "split": "train",
+    "tid": "Track00001",
+    "stem": "S02",
+    "class": 1,
+    "start": 50,
+    "hist_frames": 1000
+  },
+  {
+    "split": "train",
+    "tid": "Track00002",
+    "stem": "S08",
+    "class": 0,
+    "start": 121,
+    "hist_frames": 1000
+  },
+  {
+    "split": "train",
+    "tid": "Track00002",
+    "stem": "S08",
+    "class": 0,
+    "start": 15,
+    "hist_frames": 1000
+  },
+  {
+    "split": "train",
+    "tid": "Track00002",
+    "stem": "S06",
+    "class": 1,
+    "start": 177,
+    "hist_frames": 1000
+  },
+  {
+    "split": "train",
+    "tid": "Track00002",
+    "stem": "S06",
+    "class": 1,
+    "start": 315,
+    "hist_frames": 1000
+  },
+  {
+    "split": "val",
+    "tid": "Track00010",
+    "stem": "S02",
+    "class": 0,
+    "start": 274,
+    "hist_frames": 1000
+  },
+  {
+    "split": "val",
+    "tid": "Track00010",
+    "stem": "S02",
+    "class": 0,
+    "start": 200,
+    "hist_frames": 1000
+  },
+  {
+    "split": "val",
+    "tid": "Track00010",
+    "stem": "S05",
+    "class": 1,
+    "start": 488,
+    "hist_frames": 1000
+  },
+  {
+    "split": "val",
+    "tid": "Track00010",
+    "stem": "S05",
+    "class": 1,
+    "start": 369,
+    "hist_frames": 1000
+  },
+  {
+    "split": "test",
+    "tid": "Track00005",
+    "stem": "S13",
+    "class": 0,
+    "start": 244,
+    "hist_frames": 1000
+  },
+  {
+    "split": "test",
+    "tid": "Track00005",
+    "stem": "S13",
+    "class": 0,
+    "start": 341,
+    "hist_frames": 1000
+  },
+  {
+    "split": "test",
+    "tid": "Track00005",
+    "stem": "S08",
+    "class": 0,
+    "start": 133,
+    "hist_frames": 1000
+  },
+  {
+    "split": "test",
+    "tid": "Track00005",
+    "stem": "S13",
+    "class": 0,
+    "start": 169,
+    "hist_frames": 1000
+  },
+  {
+    "split": "test",
+    "tid": "Track00005",
+    "stem": "S02",
+    "class": 1,
+    "start": 436,
+    "hist_frames": 1000
+  },
+  {
+    "split": "test",
+    "tid": "Track00005",
+    "stem": "S06",
+    "class": 1,
+    "start": 299,
+    "hist_frames": 1000
+  },
+  {
+    "split": "test",
+    "tid": "Track00005",
+    "stem": "S06",
+    "class": 1,
+    "start": 9,
+    "hist_frames": 1000
+  },
+  {
+    "split": "test",
+    "tid": "Track00005",
+    "stem": "S02",
+    "class": 1,
+    "start": 21,
+    "hist_frames": 1000
+  },
+  {
+    "split": "test",
+    "tid": "Track00006",
+    "stem": "S11",
+    "class": 0,
+    "start": 227,
+    "hist_frames": 1000
+  },
+  {
+    "split": "test",
+    "tid": "Track00006",
+    "stem": "S11",
+    "class": 0,
+    "start": 88,
+    "hist_frames": 1000
+  },
+  {
+    "split": "test",
+    "tid": "Track00006",
+    "stem": "S06",
+    "class": 0,
+    "start": 356,
+    "hist_frames": 1000
+  },
+  {
+    "split": "test",
+    "tid": "Track00006",
+    "stem": "S10",
+    "class": 0,
+    "start": 379,
+    "hist_frames": 1000
+  },
+  {
+    "split": "test",
+    "tid": "Track00006",
+    "stem": "S01",
+    "class": 1,
+    "start": 224,
+    "hist_frames": 1000
+  },
+  {
+    "split": "test",
+    "tid": "Track00006",
+    "stem": "S01",
+    "class": 1,
+    "start": 3,
+    "hist_frames": 1000
+  },
+  {
+    "split": "test",
+    "tid": "Track00006",
+    "stem": "S01",
+    "class": 1,
+    "start": 6,
+    "hist_frames": 1000
+  },
+  {
+    "split": "test",
+    "tid": "Track00006",
+    "stem": "S01",
+    "class": 1,
+    "start": 146,
+    "hist_frames": 1000
+  }
+]

@@ -1,0 +1,188 @@
+{
+  "split": {
+    "train": [
+      "Track00001",
+      "Track00002"
+    ],
+    "val": [
+      "Track00010"
+    ],
+    "test": [
+      "Track00005",
+      "Track00006"
+    ]
+  },
+  "g4_trained_tracks": [
+    "Track00001",
+    "Track00002",
+    "Track00003",
+    "Track00004",
+    "Track00007",
+    "Track00008",
+    "Track00009",
+    "Track00010",
+    "Track00011",
+    "Track00012"
+  ],
+  "instrument_coverage": {
+    "Guitar": 20,
+    "Piano": 20
+  },
+  "stems_by_class": {
+    "Track00001/Guitar": [
+      "S00",
+      "S07",
+      "S08"
+    ],
+    "Track00001/Piano": [
+      "S02"
+    ],
+    "Track00002/Guitar": [
+      "S08"
+    ],
+    "Track00002/Piano": [
+      "S06"
+    ],
+    "Track00003/Guitar": [
+      "S02",
+      "S03",
+      "S04",
+      "S07",
+      "S08"
+    ],
+    "Track00003/Piano": [
+      "S00"
+    ],
+    "Track00004/Guitar": [
+      "S04"
+    ],
+    "Track00004/Piano": [
+      "S06",
+      "S07"
+    ],
+    "Track00005/Guitar": [
+      "S01",
+      "S08",
+      "S13"
+    ],
+    "Track00005/Piano": [
+      "S02",
+      "S06"
+    ],
+    "Track00006/Guitar": [
+      "S06",
+      "S10",
+      "S11"
+    ],
+    "Track00006/Piano": [
+      "S01"
+    ],
+    "Track00007/Guitar": [
+      "S04",
+      "S07"
+    ],
+    "Track00007/Piano": [
+      "S01",
+      "S03",
+      "S08"
+    ],
+    "Track00008/Guitar": [
+      "S03"
+    ],
+    "Track00008/Piano": [
+      "S02",
+      "S05"
+    ],
+    "Track00009/Guitar": [
+      "S12"
+    ],
+    "Track00009/Piano": [
+      "S00"
+    ],
+    "Track00010/Guitar": [
+      "S01",
+      "S02"
+    ],
+    "Track00010/Piano": [
+      "S05"
+    ],
+    "Track00011/Guitar": [
+      "S03",
+      "S04",
+      "S05",
+      "S06",
+      "S07"
+    ],
+    "Track00011/Piano": [
+      "S02"
+    ],
+    "Track00012/Guitar": [
+      "S01",
+      "S02"
+    ],
+    "Track00012/Piano": [
+      "S03",
+      "S04"
+    ],
+    "Track00013/Guitar": [
+      "S05"
+    ],
+    "Track00013/Piano": [
+      "S03"
+    ],
+    "Track00014/Guitar": [
+      "S02"
+    ],
+    "Track00014/Piano": [
+      "S05",
+      "S10"
+    ],
+    "Track00015/Guitar": [
+      "S01"
+    ],
+    "Track00015/Piano": [
+      "S00"
+    ],
+    "Track00016/Guitar": [
+      "S02",
+      "S03",
+      "S15"
+    ],
+    "Track00016/Piano": [
+      "S00",
+      "S10"
+    ],
+    "Track00017/Guitar": [
+      "S03",
+      "S06",
+      "S09"
+    ],
+    "Track00017/Piano": [
+      "S08"
+    ],
+    "Track00018/Guitar": [
+      "S11",
+      "S14"
+    ],
+    "Track00018/Piano": [
+      "S07",
+      "S08",
+      "S09"
+    ],
+    "Track00019/Guitar": [
+      "S09",
+      "S10"
+    ],
+    "Track00019/Piano": [
+      "S01",
+      "S12"
+    ],
+    "Track00020/Guitar": [
+      "S04"
+    ],
+    "Track00020/Piano": [
+      "S03",
+      "S06"
+    ]
+  }
+}
