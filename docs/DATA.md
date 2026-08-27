@@ -33,12 +33,13 @@ mirror side and excluded (`results/splits/slakh2100_flac_excluded.json`).
 4. BabySlakh stays the debug corpus; gate tests reference it.
 ## Network measurements (2026-08-27, server -> hf-mirror, xet/AWS-backed files)
 
-Measured ceilings for the 307 GB tar (choihy/slakh2100_yourmt3_16k):
-per-connection 0.2-0.6 MB/s with 1.5-10 s TTFB (mirror resolver quotas);
-aggregate ~2-4 MB/s regardless of 8/16/32/64 workers or range sizes
-(20 MB - 1 GB); HTTP/2 multiplexing, direct cas-bridge signed URLs,
-hf_xet protocol, and alternative mirrors (sukaka.top, hf-mirror.org,
-us.aws.cdn.hf.co) all measured slower or unreachable. => an IP-level
-bandwidth wall (~2-4 MB/s) to AWS us-east from this machine; the 307 GB
-tar needs ~1-2 days, not 10 h. The 16k+MIDI corpus above is the
-training-critical asset and is already complete.
+Direct (no proxy) ceilings: per-connection 0.2-0.6 MB/s (mirror resolver
+quotas), aggregate ~2-4 MB/s regardless of concurrency/range size; xet
+protocol, direct cas-bridge URLs and alternative mirrors all slower or
+unreachable. => IP-level wall to AWS us-east.
+
+**Fix: AutoDL academic accelerator** (`/etc/network_turbo`, internal proxy
+http://172.20.0.113:12798): `source /etc/network_turbo` before downloads
+→ **~4-5 MB/s per connection and ~48 MB/s aggregate** (measured 2026-08-27).
+Use it for all large remote fetches. The 307 GB tar downloads in ~2 h this
+way.
