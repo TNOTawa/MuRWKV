@@ -5,7 +5,7 @@
 | BabySlakh 16k | `babyslakh/babyslakh_16k/` | 1.7 GB | 20 tracks: 16k mono mix + stems + `all_src.mid` + metadata.yaml | R0 gates (done) |
 | Slakh2100 FLAC-redux | `slakh2100_flac_redux/data/{train,validation,test}/Track*` | 18.7 GB | original Slakh2100: `mix.flac` (44.1 kHz mono) + `all_src.mid` per track; 1289/270/151 tracks | full-corpus AMT training |
 | Slakh2100-16k (resampled from FLAC-redux) | `slakh2100_16k_from_flac/{train,validation,test}/Track*/mix.wav` (+ `all_src.mid`) | 13.7 GB | 44.1k → 16 kHz mono via `resample_poly(160, 441)`; 1709 tracks, verified 16 kHz decode-clean | **preferred MuRWKV full-corpus training input** (original MIDI → MT3_FULL_PLUS incl. ties) |
-| Slakh2100-16k (YourMT3+ preprocessed) | `slakh_yourmt3_16k/slakh2100_yourmt3_16k.tar` | 307 GB | 16 kHz mixes + YourMT3+ note metadata (NO original MIDI) | YourMT3-style training / source-sep; indexed by `yourmt3_indexes/` |
+| Slakh2100-16k (YourMT3+ preprocessed) | `slakh_yourmt3_16k/slakh2100_yourmt3_16k.tar` | 307 GB | **DOWNLOADED + VERIFIED 2026-08-27**: 307,170,324,480 B exact, 1145/1145 shards, 90,631 members (19,628 .wav: mixes AND stems); 16 kHz audio + YourMT3+ note metadata (NO original MIDI) | YourMT3-style training / source-sep; indexed by `yourmt3_indexes/`; extract on demand (disk has 141 GB free) |
 | yourmt3 indexes | `slakh_yourmt3_16k/yourmt3_indexes/` | 7 MB | per-split file lists (JSON dict) | corpus indexing |
 | MuScriptor medium/small baseline | `muscriptor_medium/`, `muscriptor_small/` | 1.2 + 0.4 GB | gated HF checkpoints | baseline only (isolated venv) |
 
