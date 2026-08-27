@@ -6,8 +6,8 @@
 **/*.pem
 **/*.key
 
-# data (large, never commit)
-data/
+# data (large, never commit) — root-anchored so the src/murwkv/data/ package is tracked
+/data/
 *.tar.gz
 *.flac
 *.wav

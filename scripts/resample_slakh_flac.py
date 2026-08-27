@@ -45,7 +45,14 @@ def main():
                 done += 1
                 continue
             flac = os.path.join(src_t, "mix.flac")
-            wav, sr = sf.read(flac, dtype="float32", always_2d=True)
+            try:
+                wav, sr = sf.read(flac, dtype="float32", always_2d=True)
+            except Exception as e:
+                print(f"SKIP (bad/corrupt file): {flac}: {e}", file=sys.stderr, flush=True)
+                with open(os.path.join(dst_t, ".badflac"), "w") as f:
+                    f.write(str(e))
+                done += 1
+                continue
             wav = wav.mean(axis=1)
             # 44100 -> 16000: ratio 160/441 (integer polyphase factors)
             wav16 = resample_poly(wav, up=160, down=441, axis=0)
