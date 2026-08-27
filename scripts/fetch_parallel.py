@@ -30,15 +30,22 @@ def probe(url):
     return total
 
 
-def fetch_segment(url, start, end, out):
+def fetch_segment(url, start, end, out, max_time=300):
     if os.path.exists(out) and os.path.getsize(out) == end - start + 1:
         return True
-    for attempt in range(8):
-        cmd = ["curl", "-sL", "--max-time", "900", "-r", f"{start}-{end}", "-o", out, url]
-        p = subprocess.run(cmd, capture_output=True)
-        if os.path.exists(out) and os.path.getsize(out) == end - start + 1:
+    expected = end - start + 1
+    for attempt in range(12):
+        # --speed-limit/--speed-time abort stalled connections (a worker stuck
+        # 15 minutes on a dead connection kills aggregate throughput)
+        cmd = [
+            "curl", "-sL", "--connect-timeout", "30", "--max-time", str(max_time),
+            "--speed-limit", "16384", "--speed-time", "90",
+            "-r", f"{start}-{end}", "-o", out, url,
+        ]
+        subprocess.run(cmd, capture_output=True)
+        if os.path.exists(out) and os.path.getsize(out) == expected:
             return True
-        time.sleep(3)
+        time.sleep(2 + attempt)
     print(f"FAILED segment {start}", file=sys.stderr)
     return False
 
@@ -46,7 +53,7 @@ def fetch_segment(url, start, end, out):
 def main():
     ap = argparse.ArgumentParser()
     ap.add_argument("url"); ap.add_argument("out")
-    ap.add_argument("--md5", default=""); ap.add_argument("--workers", type=int, default=24); ap.add_argument("--seg-mb", type=int, default=6)
+    ap.add_argument("--md5", default=""); ap.add_argument("--workers", type=int, default=64); ap.add_argument("--seg-mb", type=int, default=64); ap.add_argument("--max-time", type=int, default=300)
     a = ap.parse_args()
     total = probe(a.url)
     print(f"size={total}", flush=True)
