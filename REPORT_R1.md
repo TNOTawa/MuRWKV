@@ -120,3 +120,26 @@ scheduled-sampling ablation) are recorded for round 2.
   torch.compile path verified on a real track (0 truncation, sane tokens).
 - Nothing was rerun "because results were bad": the single re-run of eval was
   caused by the test-pool protocol fix + compile enablement.
+
+## 6. Wrap-up / repository state (2026-08-28)
+
+- All R1 artifacts are committed and **pushed to origin/main** (tip
+  `3e61650`; fast-forward from `21ea80e` — no history was rewritten on the
+  remote). The earlier session's repeated push failures were caused by 558 MB
+  of feature caches in the four unpushed commits.
+- Repository hygiene: derived G5-v2 feature caches
+  (`results/gate5_probe_v2/feats/*.npz`, 558 MB) were dropped from those
+  unpushed commits (they never reached origin) and `*.npz` is now gitignored.
+  A sha256 manifest is committed at
+  `results/gate5_probe_v2/feats/manifest.json`.
+- The caches were **regenerated on this machine during wrap-up** with the
+  identical command (frozen G4 ckpt + BabySlakh, bf16, RTX 5090, 2438 s):
+  all 12 files bit-identical (sha256 match) and the regenerated
+  `probe_v2_metrics.json` byte-identical to the committed record — the
+  committed G5-v2 numbers are independently reproducible, and the corrected-arm
+  result is confirmed deterministic across reruns.
+- Eval shard intermediates (`slakh_r1_eval0/1/2`) removed: their 120 per-track
+  records are byte-identical to the committed merged files (0 mismatches).
+- Full QA gate (`python tests/qa.py`, GPU present): **QA PASS** — tokenizer,
+  probe-v2 (6 checks), Slakh gate-1 (5), Gate-2 parity, trainer smoke,
+  BabySlakh gate-1.

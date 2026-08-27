@@ -55,8 +55,10 @@
 - **Architecture map:** `src/murwkv/model/rwkv7.py` (RWKV-7 core, official math/init;
   vendored official clampw CUDA kernel in `src/murwkv/cuda/`), `src/murwkv/model/murwkv_model.py`
   (unified audio+MIDI stream model), `src/murwkv/tokenizer.py` (MT3_FULL_PLUS, tie protocol),
-  `src/murwkv/data/babyslakh.py` (dataset). See `REPORT_10H.md` at the end of the run
-  (incl. the post-review Erratum: G5 scope, Level-4 claim, environment provenance).
+  `src/murwkv/data/babyslakh.py` (dataset). See `REPORT_10H.md` (10h run, incl. the
+  post-review Erratum: G5 scope, Level-4 claim, environment provenance) and
+  `REPORT_R1.md` (Slakh2100 generalization round: G5-v2 official, R1 training,
+  paired held-out verdicts — Level 3 not reached, Level 4 no evidence).
 - **Build/setup:** `pip install -r requirements.txt`; no build step (CUDA kernel auto-compiles
   on first import; needs ninja).
 - **Fast relevant tests:** `tests/test_tokenizer.py`, `tests/test_rwkv7_parity.py` (Gate 2),
@@ -74,6 +76,9 @@
   for MuRWKV (random init only). Token truncation of target chunks is a pipeline bug
   (must be 0 in official runs). Continuous inference requires the lead-in protocol
   (conv carry 2 frames + shift lead 1 frame + state carry) verified in Gate 2.
+  Derived `*.npz` caches (probe features, mel) are gitignored — regenerable via the
+  probe/train commands; committed sha256 manifests document expected content
+  (e.g. `results/gate5_probe_v2/feats/manifest.json`).
 
 ## Completion
 
