@@ -7,11 +7,26 @@ from concurrent.futures import ThreadPoolExecutor
 
 
 def probe(url):
-    r = subprocess.run(["curl", "-sIL", url], capture_output=True, text=True, timeout=60)
+    """Get the real total size. Follows redirects (xet/cas-bridge) and parses
+    the final Content-Range of a 1-byte ranged GET; some mirrors return an
+    HTML error/redirect page for HEAD and for non-ranged probes."""
+    r = subprocess.run(
+        ["curl", "-sL", "-D", "-", "-o", "/dev/null", "-r", "0-0", url],
+        capture_output=True, text=True, timeout=120,
+    )
+    ranges = [
+        line.split("/")[1].strip()
+        for line in r.stdout.splitlines()
+        if line.lower().startswith("content-range:")
+    ]
+    sizes = [int(v) for v in ranges if v.isdigit()]
+    if sizes:
+        return max(sizes)
+    r = subprocess.run(["curl", "-sIL", url], capture_output=True, text=True, timeout=120)
     total = 0
     for line in r.stdout.splitlines():
         if line.lower().startswith("content-length:"):
-            total = int(line.split(":")[1].strip())
+            total = max(total, int(line.split(":")[1].strip()))
     return total
 
 
