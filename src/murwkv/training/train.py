@@ -216,11 +216,14 @@ def run(args):
             if step >= args.steps:
                 break
             it = ds[idx]
+            t0 = time.time()
             batch = collate_bucket([it], pad_to=args.pad_to)
             mel = batch["mel"].cuda().bfloat16()
             is_audio = batch["is_audio"].cuda()
             midi_id = batch["midi_id"].cuda()
             T = is_audio.shape[1]
+            torch.cuda.synchronize()
+            t1 = time.time()
             use_kernel = KERNEL_AVAILABLE and T % 16 == 0
             assert T % 16 == 0, "batch L must be padded to a multiple of 16 for the kernel"
             # ---- R2 lever A: noisy history (scheduled-sampling proxy) ----
@@ -260,6 +263,8 @@ def run(args):
                 step += 1
                 continue
             loss.backward()
+            torch.cuda.synchronize()
+            t2 = time.time()
             gnorm = torch.nn.utils.clip_grad_norm_(model.parameters(), args.grad_clip)
             lr = sched.lr(step)
             for g in opt.param_groups:
@@ -271,7 +276,10 @@ def run(args):
             if step % args.log_every == 0 or step == 1:
                 dt = time.time() - t_last
                 t_last = time.time()
-                tbl = f"[step {step}/{args.steps}] loss {float(loss):.4f} acc {float(acc)*100:.1f}% gnorm {float(gnorm):.3f} lr {lr:.2e} tok {n_tok} {dt:.1f}s/step"
+                passes = (T + 2046) // 2047 if args.carry_seg else 1
+                tbl = (f"[step {step}/{args.steps}] loss {float(loss):.4f} acc {float(acc)*100:.1f}% "
+                       f"gnorm {float(gnorm):.3f} lr {lr:.2e} tok {n_tok} {dt:.1f}s/step "
+                       f"[data {(t1-t0)*1e3:.0f}ms fwd {((t2-t1))*1e3:.0f}ms bwd+opt {max(0.0, (dt-(t2-t0)))*1e3:.0f}ms T={T} passes={passes}]")
                 print(tbl, flush=True)
             if step % args.save_every == 0:
                 ckpt = {
