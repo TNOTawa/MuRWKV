@@ -1,5 +1,8 @@
 # MuRWKV — Pure RWKV-7 Automatic Music Transcription
 
+> **AI-assisted research project** — developed through autonomous/interactive
+> AI-assisted coding and research workflows; see [`AI_NOTICE.md`](AI_NOTICE.md).
+
 **From-scratch research program: R0 10-hour run → R1 Slakh generalization → R2 exposure/state-carry round.**
 Reports: [`REPORT_10H.md`](REPORT_10H.md) (R0) · [`REPORT_R1.md`](REPORT_R1.md) (R1) · [`REPORT_R2.md`](REPORT_R2.md) (R2, latest).
 Gate ledger: [`results/gates.json`](results/gates.json).
@@ -108,8 +111,14 @@ the audio history it has heard.
    Open them in any DAW/MuseScore.
 8. **Checkpoints:** `results/gate3_overfit_v2/final.pt` (1-song overfit),
    `results/gate4_overfit_v2/final.pt` (10-song overfit) — also on the private
-   HF repo **`TNOT/MuRWKV-R0`** (`murwkv_r0_gate4.pt`, 43.8 MB, bf16:
-   `hf download TNOT/MuRWKV-R0 murwkv_r0_gate4.pt --include murwkv_r0_gate4.pt`).
+   HF repo **`TNOT/MuRWKV`** (`murwkv_r0_gate4.pt`, 43.8 MB, bf16:
+   `hf download TNOT/MuRWKV murwkv_r0_gate4.pt --include murwkv_r0_gate4.pt`).
+   **All R1/R2 checkpoints are mirrored into the same private repo** — 25
+   `.pt` files (~3.2 GB) from `results/slakh_r1/`, `results/slakh_r1_calib/`
+   and `results/slakh_r2_carry/`, with the full SHA-256 manifest in the HF
+   repo's README and the key hashes in
+   [`REPORT_R2.md`](REPORT_R2.md) §Checkpoint persistence:
+   `hf download TNOT/MuRWKV r2_carry/best_val.pt --include r2_carry/best_val.pt`.
    The R0-era GitHub push blocker (token without write scope) was resolved:
    everything through the R1 wrap-up is on GitHub — see `REPORT_10H.md`
    §Final Git/HF State and `REPORT_R1.md` §6.
@@ -130,3 +139,13 @@ src/murwkv/eval/memory_probe_v2.py  Gate-5-v2 leak-free probe: frozen AMT ckpt +
 tests/                           QA: parity, tokenizer, alignment, gate1, smoke, probe-v2
 scripts/                         plots, downloads, baseline, environment record (cgroup quota)
 ```
+
+## License & AI notice
+
+- **License:** [Apache-2.0](LICENSE) — MuRWKV original code. The vendored
+  RWKV-7 CUDA kernel is Apache-2.0 from
+  [BlinkDL/RWKV-LM](https://github.com/BlinkDL/RWKV-LM); full provenance and
+  licenses of all third-party code/data: [`THIRD_PARTY.md`](THIRD_PARTY.md).
+- **AI-assisted research project:** developed primarily through autonomous
+  and interactive AI-assisted coding and research workflows — see
+  [`AI_NOTICE.md`](AI_NOTICE.md).

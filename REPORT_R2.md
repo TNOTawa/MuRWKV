@@ -267,3 +267,33 @@ explained by a teacher-forced val gain.
 - Val criterion untouched: teacher-forced, R1 windows (4 units), clean
   inputs — never corrupted, never carry-mode (train/val asymmetry is the
   design, matching R1's criterion for comparability).
+
+## Checkpoint persistence
+
+All R1/R2 model weights are preserved on the private HF model repo
+**`TNOT/MuRWKV`** (renamed from `TNOT/MuRWKV-R0`, content preserved),
+mirrored 1:1 from `results/slakh_r1/`, `results/slakh_r1_calib/` and
+`results/slakh_r2_carry/` — 25 `.pt` files, ~3.2 GB. The full SHA-256
+manifest (all 25 files) is in the HF repo's `README.md`; key artifacts:
+
+| Round | HF path | Step | SHA-256 |
+|---|---|---|---|
+| R1 | `r1/best_val.pt` | 6000 | `6a88a5dc3a6abaa2b3749b325ded70dcfc60ecf615a570afb133e0c14ed05aa5` |
+| R1 | `r1/final.pt` | 12000 | `bc658ed84ddbe31827896effa6eec4c68775b7b60d14b02759e4742ad04b86a2` |
+| R1 | `r1/latest.pt` | 12000 | `34418bc845c6d47ae63b614c052beff8028025db5c4af5b8eb3bb45554cd6f92` |
+| R1 calib | `r1_calib/best_val.pt` | 200 | `d3e9037dba8c90df3b47c258917fa73470d45bc95e576ef159adf9e3d66b6ebe` |
+| R1 calib | `r1_calib/final.pt` | 200 | `404b0133557b3adea275a8c86b922b5812dcb6494c11f94013e1c38987ef47d6` |
+| R2 | `r2_carry/best_val.pt` | 4000 | `88e710b1b43a4c5e15d5bbd0a0ed17151d34145f2ecab78f27a70edb8404573d` |
+| R2 | `r2_carry/final.pt` | 5000 | `011ddcf6fb32b8e375a773211b8d18bdac9380f263f52cfe373273d2cd5b4a0d` |
+| R2 | `r2_carry/latest.pt` | 5000 | `5d5284cad789a3721db521ed85b6ee5cb4b044a33e3ff2a63ea9dbdfd7003cf7` |
+
+Download (private repo; `huggingface-cli login` first):
+
+```bash
+hf download TNOT/MuRWKV r2_carry/best_val.pt --include r2_carry/best_val.pt
+```
+
+Note: `r2_carry/final.pt` and `r2_carry/latest.pt` differ at the byte level
+(sha256 above; a "bit-identical" statement in §Evaluation wall referred to
+the val-diagnostic run's pair, not to this repo's `results/slakh_r2_carry/`
+files).

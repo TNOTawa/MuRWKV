@@ -71,7 +71,8 @@
 - **Full QA command:** `python tests/qa.py` — runs every test in `tests/` that is runnable
   on the current machine (needs CUDA for parity/smoke; Gate1 needs extracted BabySlakh).
 - **Release/build artifact:** listening MIDI artifacts under `artifacts/listening/<track>/`;
-  checkpoints in `results/<exp>/` (+ private HF repo if writable).
+  checkpoints in `results/<exp>/` (gitignored; mirrored to private HF repo
+  `TNOT/MuRWKV` — REPORT_R2.md §Checkpoint persistence).
 - **Network:** for large remote fetches, `source /etc/network_turbo` (AutoDL
   academic proxy) first — measured ~35-48 MB/s vs ~2-4 MB/s direct
   (see docs/DATA.md).

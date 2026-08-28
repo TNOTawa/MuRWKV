@@ -9,11 +9,11 @@ pretrained weights (all model parameters are randomly initialized).
 |---|---|---|---|
 | BlinkDL/RWKV-LM | `658042ca30222715c1d3ab662a3c556824dc6618` | Apache-2.0 | RWKV-7 "Goose" math, init, optimizer groups, LR schedule; official clampw CUDA kernel (`RWKV-v7/train_temp/cuda/rwkv7_clampw.{cu,cpp}`) vendored in `src/murwkv/cuda/` with attribution. |
 | Jiayu-Xiong/AudioRWKV | `034146707e9cae0bfee2b9a347ff8bbfbb2f6f0e` | BSD-3-Clause | Reference only (audio frontend ideas; no code copied). |
-| muscriptor/muscriptor | `e34b397bf0584e67bfd81dc591c390e6dcb03350` | LICENSE file absent → **no code copied**; tokenizer (MT3_FULL_PLUS groups, tie/open-note protocol, vocab layout) and log-mel conventions studied from public source and reimplemented independently in `src/murwkv/tokenizer.py`. |
+| muscriptor/muscriptor | `e34b397bf0584e67bfd81dc591c390e6dcb03350` | MIT (LICENSE present at the pinned commit) | Reference for tokenizer/event semantics and log-Mel conventions; no code copied / independently reimplemented in `src/murwkv/tokenizer.py`. |
 
 RWKV-7 CUDA kernel files vendored under `src/murwkv/cuda/` are copied verbatim
 from RWKV-LM (Apache-2.0). Everything else in this repo is original code
-written for MuRWKV (MIT).
+written for MuRWKV (Apache-2.0, see `LICENSE`).
 
 ## Data
 
@@ -28,6 +28,6 @@ from the Lakh MIDI corpus with public-domain soundfonts). Slakh2100-16k (via
 ## Tokenizer provenance
 
 MT3 vocabulary semantics: magenta/mt3 (Apache-2.0). MT3_FULL_PLUS group map
-definition: muscriptor (license unclear — independent reimplementation).
-The Slakh MIDI program → MT3_FULL_PLUS group mapping is defined in
+definition: muscriptor (MIT at the pinned commit `e34b397…` — independent
+reimplementation). The Slakh MIDI program → MT3_FULL_PLUS group mapping is defined in
 `src/murwkv/tokenizer.py` (`GROUP_PROGRAM_MAP`).

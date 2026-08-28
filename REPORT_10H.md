@@ -265,9 +265,11 @@ python -m murwkv.eval.memory_probe_v2 --exp results/gate5_probe_v2 \
   direct and proxy pushes are denied regardless of network path. The repository
   commits remain on the instance's persistent disk; a token with write scope is
   required to publish (one `git push origin main` after granting write).
-- **HF:** private model repo **`TNOT/MuRWKV-R0`** (private; the token's account
-  is `TNOT`, so the requested `TNOTawa` namespace was not creatable — recorded):
-  `murwkv_r0_gate4.pt` (model state only, 43.8 MB, bf16) + `config.json`.
+- **HF:** private model repo **`TNOT/MuRWKV`** (renamed from `TNOT/MuRWKV-R0`;
+  the token's account is `TNOT`, so the requested `TNOTawa` namespace was not
+  creatable — recorded): `murwkv_r0_gate4.pt` (model state only, 43.8 MB,
+  bf16) + `config.json`. R1/R2 checkpoints were later mirrored into the same
+  repo (see REPORT_R2.md §Checkpoint persistence).
 - **Local checkpoints (persistent):** `results/gate3_overfit_v2/final.pt`,
   `results/gate4_overfit_v2/final.pt` (+ resumable `ckpt_*.pt` and `latest.pt`),
   all configs/metrics/plots alongside.
