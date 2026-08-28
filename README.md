@@ -25,6 +25,15 @@ Gate ledger: [`results/gates.json`](results/gates.json).
   diagnostic (run before the test opened) that caught a concrete
   teacher-forced ↔ free-running decoupling: two checkpoints tied on val loss
   (1.3994 vs 1.4010) differ by +0.017 F1 free-running.
+- **Offline postmortem (CPU-only, no artifacts regenerated):**
+  [`R2_POSTMORTEM.md`](R2_POSTMORTEM.md). The remaining error is pitched
+  content selection — 81 % of GT notes have no predicted candidate; drums
+  recall 9.8 % vs pitched 0.75 %; no boundary/truncation/grammar issue
+  remains. Honest headline: F1 ≈ 0.02–0.04 (official float matcher drops
+  pairs sitting exactly on the 50 ms tick boundary). No TF-family criterion
+  selects for free-running quality — checkpoint choice needs a
+  pre-registered free-running signal. Ranked next-round options:
+  [`NEXT_OPTIONS.md`](NEXT_OPTIONS.md).
 
 ## Latest status — R1
 
