@@ -1,0 +1,50 @@
+{
+  "best_continuous": {
+    "n_tracks": 6,
+    "onset_f1_micro": 0.0323,
+    "onset_f1_macro": 0.0399,
+    "offset_f1_micro": 0.0296,
+    "inst_f1_micro": 0.0323,
+    "n_pred": 26612,
+    "n_gt": 38006,
+    "truncated": 2,
+    "boundary_errors": 0,
+    "inst_switches": 28
+  },
+  "best_reset": {
+    "n_tracks": 6,
+    "onset_f1_micro": 0.027,
+    "onset_f1_macro": 0.0291,
+    "offset_f1_micro": 0.0209,
+    "inst_f1_micro": 0.027,
+    "n_pred": 125277,
+    "n_gt": 38006,
+    "truncated": 20,
+    "boundary_errors": 0,
+    "inst_switches": 176
+  },
+  "final_continuous": {
+    "n_tracks": 6,
+    "onset_f1_micro": 0.0493,
+    "onset_f1_macro": 0.0551,
+    "offset_f1_micro": 0.0453,
+    "inst_f1_micro": 0.0493,
+    "n_pred": 31476,
+    "n_gt": 38006,
+    "truncated": 0,
+    "boundary_errors": 0,
+    "inst_switches": 23
+  },
+  "final_reset": {
+    "n_tracks": 6,
+    "onset_f1_micro": 0.0267,
+    "onset_f1_macro": 0.0313,
+    "offset_f1_micro": 0.0179,
+    "inst_f1_micro": 0.0267,
+    "n_pred": 118449,
+    "n_gt": 38006,
+    "truncated": 29,
+    "boundary_errors": 0,
+    "inst_switches": 119
+  }
+}

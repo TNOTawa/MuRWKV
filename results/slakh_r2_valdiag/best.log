@@ -1,0 +1,18 @@
+/root/miniconda3/lib/python3.12/site-packages/pretty_midi/pretty_midi.py:122: RuntimeWarning: Tempo, Key or Time signature change events found on non-zero tracks.  This is not a valid type 0 or type 1 MIDI file.  Tempo, Key or Time Signature may be wrong.
+  warnings.warn(
+tracks: ['Track00038', 'Track00050', 'Track00075', 'Track00111', 'Track00148', 'Track00224']
+loaded 21.87M params from results/slakh_r2_carry/best_val.pt
+[Track00038 continuous] notes 6329->2491 onsetF1 0.025 offF1 0.025 instF1 0.025 bnd 0 trunc 0 20s
+[Track00038 reset] notes 6329->17689 onsetF1 0.038 offF1 0.022 instF1 0.038 bnd 0 trunc 4 57s
+[Track00050 continuous] notes 7124->2462 onsetF1 0.097 offF1 0.084 instF1 0.097 bnd 0 trunc 0 22s
+[Track00050 reset] notes 7124->23650 onsetF1 0.027 offF1 0.017 instF1 0.027 bnd 0 trunc 1 78s
+[Track00075 continuous] notes 6034->3731 onsetF1 0.011 offF1 0.011 instF1 0.011 bnd 0 trunc 0 24s
+[Track00075 reset] notes 6034->21603 onsetF1 0.011 offF1 0.011 instF1 0.011 bnd 0 trunc 5 74s
+[Track00111 continuous] notes 6194->8569 onsetF1 0.001 offF1 0.001 instF1 0.001 bnd 0 trunc 2 30s
+[Track00111 reset] notes 6194->25767 onsetF1 0.023 offF1 0.023 instF1 0.023 bnd 0 trunc 2 244s
+[Track00148 continuous] notes 4237->2262 onsetF1 0.090 offF1 0.090 instF1 0.090 bnd 0 trunc 0 38s
+[Track00148 reset] notes 4237->15933 onsetF1 0.063 offF1 0.063 instF1 0.063 bnd 0 trunc 1 167s
+[Track00224 continuous] notes 8088->7097 onsetF1 0.015 offF1 0.012 instF1 0.015 bnd 0 trunc 0 104s
+[Track00224 reset] notes 8088->20635 onsetF1 0.013 offF1 0.003 instF1 0.013 bnd 0 trunc 7 198s
+[continuous] AGG: {'tracks': 6, 'n_gt': 38006, 'n_pred': 26612, 'onset_p': 0.0392, 'onset_r': 0.0275, 'onset_f1': 0.0323, 'offset_f1': 0.0, 'inst_f1': 0.0323, 'boundary_errors': 0, 'truncated_chunks': 0}
+[reset] AGG: {'tracks': 6, 'n_gt': 38006, 'n_pred': 125277, 'onset_p': 0.0176, 'onset_r': 0.058, 'onset_f1': 0.027, 'offset_f1': 0.0, 'inst_f1': 0.027, 'boundary_errors': 0, 'truncated_chunks': 0}
