@@ -1,0 +1,14 @@
+paired tracks: 60 (R1 vs R2, split test)
+[continuous] onset_f1: R2 0.0230 vs R1 0.0100  delta +0.0130 [+0.0076,+0.0187] pos 43/60
+[continuous] offset_f1: R2 0.0164 vs R1 0.0063  delta +0.0101 [+0.0055,+0.0148] pos 40/60
+[continuous] inst_f1: R2 0.0230 vs R1 0.0100  delta +0.0130 [+0.0076,+0.0187] pos 43/60
+[continuous] n_inst_switches: R2 3.4167 vs R1 8.5000  delta -5.0833 [-7.0837,-3.1500] pos 11/60
+[continuous] n_pred_ratio: R2 0.9740 vs R1 2.5146  delta -1.5406 [-2.0066,-1.0910] pos 7/60
+[continuous] totals: trunc 1246->2 bnd 845->0 switches 510->205
+[reset] onset_f1: R2 0.0227 vs R1 0.0262  delta -0.0035 [-0.0065,-0.0004] pos 23/60
+[reset] offset_f1: R2 0.0151 vs R1 0.0175  delta -0.0024 [-0.0046,-0.0001] pos 29/60
+[reset] inst_f1: R2 0.0227 vs R1 0.0262  delta -0.0035 [-0.0065,-0.0004] pos 23/60
+[reset] n_inst_switches: R2 36.5000 vs R1 41.0500  delta -4.5500 [-6.9833,-2.0500] pos 12/60
+[reset] n_pred_ratio: R2 3.5164 vs R1 4.9512  delta -1.4348 [-1.6546,-1.2224] pos 1/60
+[reset] totals: trunc 441->141 bnd 0->0 switches 2463->2190
+[written] results/slakh_r2_carry/eval/r1_vs_r2.json

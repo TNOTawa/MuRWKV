@@ -56,9 +56,13 @@
   vendored official clampw CUDA kernel in `src/murwkv/cuda/`), `src/murwkv/model/murwkv_model.py`
   (unified audio+MIDI stream model), `src/murwkv/tokenizer.py` (MT3_FULL_PLUS, tie protocol),
   `src/murwkv/data/babyslakh.py` (dataset). See `REPORT_10H.md` (10h run, incl. the
-  post-review Erratum: G5 scope, Level-4 claim, environment provenance) and
+  post-review Erratum: G5 scope, Level-4 claim, environment provenance),
   `REPORT_R1.md` (Slakh2100 generalization round: G5-v2 official, R1 training,
-  paired held-out verdicts — Level 3 not reached, Level 4 no evidence).
+  paired held-out verdicts — Level 3 not reached, Level 4 no evidence) and
+  `REPORT_R2.md` (exposure/state-carry round: noisy history + detached
+  cross-window carry training; continuous-mode collapse eliminated
+  (onset F1 0.010→0.023, trunc 1246→2, bnd 845→0); continuous/reset now tied —
+  Level 3 still not reached).
 - **Build/setup:** `pip install -r requirements.txt`; no build step (CUDA kernel auto-compiles
   on first import; needs ninja).
 - **Fast relevant tests:** `tests/test_tokenizer.py`, `tests/test_rwkv7_parity.py` (Gate 2),

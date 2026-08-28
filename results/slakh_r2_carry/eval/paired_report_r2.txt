@@ -1,0 +1,8 @@
+[paired] onset_f1: cont 0.0230 vs reset 0.0227 delta +0.0003 [-0.0040,+0.0046] positive 28/60
+[paired] offset_f1: cont 0.0164 vs reset 0.0151 delta +0.0013 [-0.0017,+0.0043] positive 29/60
+[paired] inst_f1: cont 0.0230 vs reset 0.0227 delta +0.0003 [-0.0040,+0.0046] positive 28/60
+[paired] n_inst_switches: cont 3.4167 vs reset 36.5000 delta -33.0833 [-36.1667,-30.0500] positive 0/60
+[paired] n_pred_ratio: cont 0.9740 vs reset 3.5164 delta -2.5424 [-2.8420,-2.2466] positive 1/60
+[paired] rtf: cont 0.2802 vs reset 0.9004 delta -0.6201 [-0.7322,-0.5142] positive 3/60
+[paired] wrote results/slakh_r2_carry/eval/paired_report.json
+[paired] Level-4 verdict (onset F1): positive trend, not established

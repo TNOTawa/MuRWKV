@@ -154,11 +154,40 @@ deterministic; worker count cannot alter outputs). Checkpoint:
 
 ### 5.1 R2 best_val: continuous vs reset (60 tracks)
 
-PENDING_POOL_TABLE
+Pooled (n=60 sealed tracks, protocol identical to R1):
+
+| metric | continuous | reset | paired Δ (cont − reset) | 95% CI | tracks Δ>0 |
+|---|---|---|---|---|---|
+| onset F1 | **0.0230** | 0.0227 | **+0.0003** | [−0.0040, +0.0046] | 28/60 |
+| offset F1 | 0.0164 | 0.0151 | +0.0013 | [−0.0017, +0.0043] | 29/60 |
+| instrument F1 | 0.0230 | 0.0227 | +0.0003 | [−0.0040, +0.0046] | 28/60 |
+| pred/GT note ratio | **0.974** | 3.516 | −2.542 | [−2.842, −2.247] | 1/60 |
+| instrument switches | **3.42** | 36.50 | −33.08 | [−36.17, −30.05] | 0/60 |
+| truncated chunks (total) | **2** | 141 | — | — | — |
+| boundary errors (total) | **0** | 0 | — | — | — |
+
+Protocol verdict (per the R1 rule: mean Δ>0 AND CI excludes 0 → established):
+onset F1 Δ = +0.0003 with CI crossing zero → **"positive trend, not
+established"**. The headline is the sign flip plus the hygiene columns: in
+R1 the continuous arm was the *broken* one (F1 0.010 vs reset 0.026, CI
+significantly negative, 1,246 truncations, 845 boundary errors, pred ratio
+2.51); in R2 the continuous arm is statistically **tied** with reset while
+being the calm, protocol-clean arm (ratio 0.97 ≈ exact note budget, 2
+truncations, 0 boundary errors).
 
 ### 5.2 Cross-round paired comparison: R1 best_val vs R2 best_val
 
-PENDING_CROSS_TABLE
+Same 60 tracks, per-track paired deltas, 10k bootstrap, seed 0
+(`results/slakh_r2_carry/eval/r1_vs_r2.json`):
+
+| comparison | metric | R1 | R2 | Δ | 95% CI | tracks improved |
+|---|---|---|---|---|---|---|
+| **continuous** | onset F1 | 0.0100 | **0.0230** | **+0.0130** | **[+0.0076, +0.0187]** | **43/60** |
+| continuous | offset F1 | 0.0063 | 0.0164 | +0.0101 | [+0.0055, +0.0148] | 40/60 |
+| continuous | pred/GT ratio | 2.51 | 0.97 | −1.54 | [−2.01, −1.09] | 7/60 (lower better) |
+| continuous | totals | trunc 1246, bnd 845, sw 510 | **trunc 2, bnd 0, sw 205** | — | — | — |
+| reset | onset F1 | 0.0262 | 0.0227 | −0.0035 | [−0.0065, −0.0004] | 23/60 |
+| reset | totals | trunc 441, bnd 0, sw 2463 | trunc 141, bnd 0, sw 2190 | — | — | — |
 
 ### 5.3 R2 latest (step 5000) — deliberately NOT evaluated on test
 
@@ -172,25 +201,57 @@ the pool is opened.
 
 ### 5.4 Verdict on the round's core question
 
-PENDING_VERDICT
+**Yes at mechanism level, no at product level.** The question R2 was built
+to answer — "does exposure/state-distribution matching alleviate the R1
+continuous-mode collapse without touching the architecture?" —
+
+- **Alleviated (significant, CI-positive):** the continuous arm improves
+  onset F1 0.0100 → 0.0230 (Δ +0.0130, 95% CI [+0.0076, +0.0187], 43/60
+  tracks), and its failure signature is eliminated: truncated chunks
+  1246 → 2, boundary errors 845 → 0, note ratio 2.51 → 0.97, switches
+  8.5 → 3.4. The sticky-attractor behavior REPORT_R1 §4 documented no
+  longer occurs on the sealed pool.
+- **Continuous ≥ reset now holds as a trend, not yet established:** the
+  paired Δ moved from significantly negative (R1 −0.0162, CI
+  [−0.0206, −0.0120]) to +0.0003 (CI [−0.0040, +0.0046]). Level 4 stays
+  "positive trend, not established" — the arms are tied, not ordered.
+- **Cost, where expected:** the reset arm (which never exercises carried
+  state) is slightly worse (−0.0035, CI [−0.0065, −0.0004]); optimization
+  pressure went to the carried-state regime. The val diagnostic (§4) shows
+  the same assignment: continuous is the calm/accurate arm on val tracks.
+- **Level 3 remains NOT PASS:** absolute onset F1 0.023 vs the ~0.24
+  data-scale baseline reference. Exposure matching was the reviewer's
+  explicitly-first lever; data scale is the deferred next one, and this
+  round's result is consistent with capacity/data — not state handling —
+  being the remaining bottleneck.
+
+Confounds, stated: levers A+B were applied together (documented in §1;
+ablation deferred); 5,000 steps vs R1's 12,000 optimizer steps at ~4×
+tokens/step (≈1.7× R1's total token exposure); single seed; teacher-forced
+val is near-identical between rounds' best checkpoints (1.3300 vs 1.3994 —
+R2 slightly worse on the R1 criterion), so the free-running gain is not
+explained by a teacher-forced val gain.
 
 ## 6. Budget ledger and protocol audit
 
-- Account GPU budget ≈ 4 h from 09:58. Training consumed none of it (the
-  5,000-step run had finished at 09:57:41 before the budget directive;
-  total run wall ≈ 24 min stepping ≈ 0.287 s/step + tokenization).
-- Evaluation wall: val-diagnostic best_val 10:04–10:28; val-diagnostic
-  latest/final 10:25–10:38 (final.pt ≡ latest.pt verified); official-test
-  pool (best_val) 10:11:47–PENDING_T1. A first pool attempt (5×12-track
-  shards) lost all workers to an environment-side process kill at ~10:40
-  (no OOM: cgroup `oom_kill 0`; 19/120 track-modes were lost — per-track
-  JSONs are written at worker exit) and was relaunched at 10:49 with a
-  self-healing driver (30 shards × 2 tracks, completion-checked, retried;
-  `scripts/run_r2_eval_pool.sh`). Test pool for `latest`: **not run** (§5.3
-  protocol decision). Report/wrap-up + commit: 30–45 min reserved; remaining
-  time left as failure buffer. No new training, no new experiments, no
-  protocol changes (rule compliance: this round ends with a complete
-  conclusion from a fully-evaluated single-checkpoint test pool).
+- Budget context (recorded by the round driver): ≈4 h of GPU budget from
+  09:58. Training consumed none of it (the 5,000-step run had finished at
+  09:57:41; total run wall ≈ 24 min stepping ≈ 0.287 s/step + tokenization).
+- Evaluation wall: val-diagnostic best_val completed 10:50; official-test
+  pool (best_val) 10:11:47 first attempt, final wave finished 12:16. A
+  first pool attempt (5×12-track shards) lost all workers to a
+  supervisor-side process kill at ~10:40 — **ordered by the session owner,
+  because observation item 1 (val-only free-running diagnostic of BOTH
+  candidate checkpoints) had to be on record before the test pool opened**;
+  no OOM (cgroup `oom_kill 0`). It was relaunched as a completion-checked
+  dynamic pool (2-track workers, retry on loss;
+  `scripts/run_r2_eval_pool.sh`). The final/latest val diagnostic finished
+  at 11:55, overlapping the pool's wall-clock; neither diagnostic influenced
+  checkpoint selection (best_val was fixed by val loss at train time) and
+  the latest checkpoint was never evaluated on test (§5.3). Test pool for
+  `latest`: **not run**. No new training, no new experiments, no protocol
+  changes: this round ends with a complete conclusion from a
+  fully-evaluated single-checkpoint test pool.
 - Checkpoint hygiene: `best_val.pt` (4000), `latest.pt`/`final.pt` (5000),
   `ckpt_00{1..5}000.pt` preserved in `results/slakh_r2_carry/` (gitignored);
   eval JSONs, paired reports, plots, listening MIDIs and logs committed.

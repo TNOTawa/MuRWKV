@@ -1,8 +1,30 @@
 # MuRWKV — Pure RWKV-7 Automatic Music Transcription
 
-**From-scratch research program: R0 10-hour run → R1 Slakh generalization round.**
-Reports: [`REPORT_10H.md`](REPORT_10H.md) (R0) · [`REPORT_R1.md`](REPORT_R1.md) (R1, latest).
+**From-scratch research program: R0 10-hour run → R1 Slakh generalization → R2 exposure/state-carry round.**
+Reports: [`REPORT_10H.md`](REPORT_10H.md) (R0) · [`REPORT_R1.md`](REPORT_R1.md) (R1) · [`REPORT_R2.md`](REPORT_R2.md) (R2, latest).
 Gate ledger: [`results/gates.json`](results/gates.json).
+
+## Latest status — R2 (exposure / state-carry round)
+
+- **Question:** can the reviewer's two architecture-neutral levers — noisy
+  MIDI history (scheduled-sampling proxy, p≤0.15) + cross-window detached
+  state-carry training (80 s windows in ~2048-token passes) — fix R1's
+  free-running continuous-mode collapse without touching the architecture?
+- **Answer: yes at mechanism level.** On the sealed 60-track test
+  (same protocol/manifest as R1, best_val = step 4000 by val loss only):
+  continuous onset F1 **0.0100 → 0.0230** (paired Δ **+0.0130**, 95% CI
+  **[+0.0076, +0.0187]**, 43/60 tracks), truncated chunks **1246 → 2**,
+  boundary errors **845 → 0**, pred/GT ratio **2.51 → 0.97**.
+- **Continuous vs reset is now tied** (Δ +0.0003, CI crosses 0) instead of
+  significantly negative — Level 4 stays "positive trend, not established";
+  the sticky-attractor failure mode is gone.
+- **Level 3 still NOT PASS** (absolute F1 ~0.023; data scale is the
+  deferred next lever). Val criterion held at R1's protocol; test pool spent
+  once (single selected checkpoint); official run 5,000/5,000 updates, 0 NaN.
+- Details: [`REPORT_R2.md`](REPORT_R2.md) — incl. a val-only free-running
+  diagnostic (run before the test opened) that caught a concrete
+  teacher-forced ↔ free-running decoupling: two checkpoints tied on val loss
+  (1.3994 vs 1.4010) differ by +0.017 F1 free-running.
 
 ## Latest status — R1
 
