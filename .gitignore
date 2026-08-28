@@ -3,6 +3,9 @@
 *.env
 **/credentials*
 **/*token*
+# exception: postmortem analysis script (contains no secrets; tokenizer.py
+# stays tracked the same way - already-tracked files ignore ignore rules)
+!scripts/r2_postmortem/token_probe.py
 **/*.pem
 **/*.key
 
