@@ -1,0 +1,320 @@
+{
+  "r2_continuous_note_zero": {
+    "definition": "chunk with >=20 GT notes and ZERO matched notes",
+    "n_tracks_with_signals": 46,
+    "pooled_transitions": {
+      "p_bad_given_bad": 0.7516218721037998,
+      "p_bad_given_good": 0.18256130790190736,
+      "persistence_ratio": 4.117092941225292,
+      "null_mean": 0.9997626044362375,
+      "null_p95": 1.080548483451276,
+      "perm_p_value": 0.0004997501249375312
+    },
+    "persistence_ratio_track_mean": Infinity,
+    "persistence_ratio_track_median": 3.000612244897959,
+    "n_tracks_infinite_ratio": 1,
+    "hazard": [
+      {
+        "k": 1,
+        "n": 268,
+        "p_next_bad": 0.5261194029850746
+      },
+      {
+        "k": 2,
+        "n": 141,
+        "p_next_bad": 0.6879432624113475
+      },
+      {
+        "k": 3,
+        "n": 97,
+        "p_next_bad": 0.7628865979381443
+      },
+      {
+        "k": 4,
+        "n": 74,
+        "p_next_bad": 0.8783783783783784
+      },
+      {
+        "k": 5,
+        "n": 65,
+        "p_next_bad": 0.7538461538461538
+      },
+      {
+        "k": 6,
+        "n": 49,
+        "p_next_bad": 0.7959183673469388
+      },
+      {
+        "k": 7,
+        "n": 39,
+        "p_next_bad": 0.8717948717948718
+      },
+      {
+        "k": 8,
+        "n": 34,
+        "p_next_bad": 0.8823529411764706
+      }
+    ],
+    "run_stats_mean": {
+      "p_bad": 0.4308481529549803,
+      "n_runs": 5.826086956521739,
+      "mean_run_len": 6.065359338728902,
+      "max_run_len": 12.58695652173913,
+      "expected_run_len_independence": 2.604678687058753,
+      "frac_chunks_in_runs_ge3": 0.34386608638936833
+    },
+    "p_bad_mean": 0.4308481529549803,
+    "empty_pred_chunk_rate": 0.030612244897959183
+  },
+  "r2_reset_note_zero": {
+    "definition": "chunk with >=20 GT notes and ZERO matched notes",
+    "n_tracks_with_signals": 55,
+    "pooled_transitions": {
+      "p_bad_given_bad": 0.5604395604395604,
+      "p_bad_given_good": 0.13793103448275862,
+      "persistence_ratio": 4.063186813186813,
+      "null_mean": 0.9984562678602237,
+      "null_p95": 1.1270542391579053,
+      "perm_p_value": 0.0004997501249375312
+    },
+    "persistence_ratio_track_mean": 4.138783069553466,
+    "persistence_ratio_track_median": 2.4338624338624335,
+    "n_tracks_infinite_ratio": 0,
+    "hazard": [
+      {
+        "k": 1,
+        "n": 320,
+        "p_next_bad": 0.475
+      },
+      {
+        "k": 2,
+        "n": 152,
+        "p_next_bad": 0.5855263157894737
+      },
+      {
+        "k": 3,
+        "n": 89,
+        "p_next_bad": 0.6292134831460674
+      },
+      {
+        "k": 4,
+        "n": 56,
+        "p_next_bad": 0.625
+      },
+      {
+        "k": 5,
+        "n": 35,
+        "p_next_bad": 0.6285714285714286
+      },
+      {
+        "k": 6,
+        "n": 22,
+        "p_next_bad": 0.7272727272727273
+      },
+      {
+        "k": 7,
+        "n": 16,
+        "p_next_bad": 0.8125
+      },
+      {
+        "k": 8,
+        "n": 13,
+        "p_next_bad": 0.5384615384615384
+      }
+    ],
+    "run_stats_mean": {
+      "p_bad": 0.23657998475700243,
+      "n_runs": 5.818181818181818,
+      "mean_run_len": 2.1405490350410132,
+      "max_run_len": 4.418181818181818,
+      "expected_run_len_independence": 1.4265215862972465,
+      "frac_chunks_in_runs_ge3": 0.13880358901706416
+    },
+    "p_bad_mean": 0.23657998475700243,
+    "empty_pred_chunk_rate": 0.028205969170219745
+  },
+  "r2_continuous_note_rel": {
+    "definition": "chunk note-F1 below the track's own median chunk F1",
+    "n_tracks_with_signals": 40,
+    "pooled_transitions": {
+      "p_bad_given_bad": 0.6097318768619663,
+      "p_bad_given_good": 0.34144222415291053,
+      "persistence_ratio": 1.785754173710237,
+      "null_mean": 0.9999904744121905,
+      "null_p95": 1.0790623437201516,
+      "perm_p_value": 0.0004997501249375312
+    },
+    "persistence_ratio_track_mean": 2.6845208510766683,
+    "persistence_ratio_track_median": 1.981470588235294,
+    "n_tracks_infinite_ratio": 0,
+    "hazard": [
+      {
+        "k": 1,
+        "n": 393,
+        "p_next_bad": 0.5139949109414759
+      },
+      {
+        "k": 2,
+        "n": 202,
+        "p_next_bad": 0.5594059405940595
+      },
+      {
+        "k": 3,
+        "n": 113,
+        "p_next_bad": 0.7168141592920354
+      },
+      {
+        "k": 4,
+        "n": 81,
+        "p_next_bad": 0.6419753086419753
+      },
+      {
+        "k": 5,
+        "n": 52,
+        "p_next_bad": 0.6538461538461539
+      },
+      {
+        "k": 6,
+        "n": 34,
+        "p_next_bad": 0.7941176470588235
+      },
+      {
+        "k": 7,
+        "n": 27,
+        "p_next_bad": 0.8518518518518519
+      },
+      {
+        "k": 8,
+        "n": 23,
+        "p_next_bad": 0.6521739130434783
+      }
+    ],
+    "run_stats_mean": {
+      "p_bad": 0.46527300458145904,
+      "n_runs": 9.825,
+      "mean_run_len": 3.1093472499722496,
+      "max_run_len": 8.65,
+      "expected_run_len_independence": 1.8722549254171184,
+      "frac_chunks_in_runs_ge3": 0.2931254558753603
+    },
+    "p_bad_mean": 0.46527300458145904
+  },
+  "r2_reset_note_rel": {
+    "definition": "chunk note-F1 below the track's own median chunk F1",
+    "n_tracks_with_signals": 53,
+    "pooled_transitions": {
+      "p_bad_given_bad": 0.5888059701492537,
+      "p_bad_given_good": 0.365142478462558,
+      "persistence_ratio": 1.6125375843107512,
+      "null_mean": 1.000511208749753,
+      "null_p95": 1.0679915591295135,
+      "perm_p_value": 0.0004997501249375312
+    },
+    "persistence_ratio_track_mean": 1.7832221113146598,
+    "persistence_ratio_track_median": 1.6541353383458648,
+    "n_tracks_infinite_ratio": 0,
+    "hazard": [
+      {
+        "k": 1,
+        "n": 551,
+        "p_next_bad": 0.5372050816696915
+      },
+      {
+        "k": 2,
+        "n": 296,
+        "p_next_bad": 0.6081081081081081
+      },
+      {
+        "k": 3,
+        "n": 180,
+        "p_next_bad": 0.5833333333333334
+      },
+      {
+        "k": 4,
+        "n": 105,
+        "p_next_bad": 0.6571428571428571
+      },
+      {
+        "k": 5,
+        "n": 69,
+        "p_next_bad": 0.7681159420289855
+      },
+      {
+        "k": 6,
+        "n": 53,
+        "p_next_bad": 0.5283018867924528
+      },
+      {
+        "k": 7,
+        "n": 28,
+        "p_next_bad": 0.5714285714285714
+      },
+      {
+        "k": 8,
+        "n": 16,
+        "p_next_bad": 1.0
+      }
+    ],
+    "run_stats_mean": {
+      "p_bad": 0.46905039229915635,
+      "n_runs": 10.39622641509434,
+      "mean_run_len": 2.5741082169772516,
+      "max_run_len": 6.943396226415095,
+      "expected_run_len_independence": 1.8849505766907335,
+      "frac_chunks_in_runs_ge3": 0.29351114370571474
+    },
+    "p_bad_mean": 0.46905039229915635
+  },
+  "r1_continuous_token": {
+    "definition": "tokens >= 95% of 4096 cap or <= 20 tokens",
+    "n_tracks": 52,
+    "rate": 0.4599229961498075,
+    "pooled_transitions": {
+      "p_bad_given_bad": 0.9322162985529322,
+      "p_bad_given_good": 0.057679844458846406,
+      "persistence_ratio": 16.161907288395216,
+      "null_mean": 1.0014738854437155,
+      "null_p95": 1.067763088032282,
+      "perm_p_value": 0.0004997501249375312
+    }
+  },
+  "r1_reset_token": {
+    "definition": "tokens >= 95% of 4096 cap or <= 20 tokens",
+    "n_tracks": 60,
+    "rate": 0.19969278033794163,
+    "pooled_transitions": {
+      "p_bad_given_bad": 0.3066255778120185,
+      "p_bad_given_good": 0.1727447216890595,
+      "persistence_ratio": 1.7750214004451292,
+      "null_mean": 0.9983158710773603,
+      "null_p95": 1.141847902215022,
+      "perm_p_value": 0.0004997501249375312
+    }
+  },
+  "r2_continuous_token": {
+    "definition": "tokens >= 95% of 4096 cap or <= 20 tokens",
+    "n_tracks": 34,
+    "rate": 0.06896551724137931,
+    "pooled_transitions": {
+      "p_bad_given_bad": 0.7,
+      "p_bad_given_good": 0.021664766248574687,
+      "persistence_ratio": 32.310526315789474,
+      "null_mean": 1.0037644391730705,
+      "null_p95": 1.6283819628647216,
+      "perm_p_value": 0.0004997501249375312
+    }
+  },
+  "r2_reset_token": {
+    "definition": "tokens >= 95% of 4096 cap or <= 20 tokens",
+    "n_tracks": 60,
+    "rate": 0.12073732718894009,
+    "pooled_transitions": {
+      "p_bad_given_bad": 0.33163265306122447,
+      "p_bad_given_good": 0.09154437456324249,
+      "persistence_ratio": 3.622643713974139,
+      "null_mean": 1.0013537831277806,
+      "null_p95": 1.26040028863317,
+      "perm_p_value": 0.0004997501249375312
+    }
+  }
+}

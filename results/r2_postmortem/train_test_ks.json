@@ -1,0 +1,38 @@
+{
+  "n_notes": {
+    "ks_stat": 0.0917,
+    "ks_p": 0.88209
+  },
+  "density_notes_per_s": {
+    "ks_stat": 0.1917,
+    "ks_p": 0.10135
+  },
+  "polyphony_mean": {
+    "ks_stat": 0.075,
+    "ks_p": 0.97519
+  },
+  "drum_share": {
+    "ks_stat": 0.1167,
+    "ks_p": 0.63597
+  },
+  "median_dur_s": {
+    "ks_stat": 0.1,
+    "ks_p": 0.8088
+  },
+  "n_groups": {
+    "ks_stat": 0.0667,
+    "ks_p": 0.9932
+  },
+  "tokens_total": {
+    "ks_stat": 0.1083,
+    "ks_p": 0.72466
+  },
+  "tokens_per_note": {
+    "ks_stat": 0.1917,
+    "ks_p": 0.10135
+  },
+  "duration_s": {
+    "ks_stat": 0.3083,
+    "ks_p": 0.00086
+  }
+}

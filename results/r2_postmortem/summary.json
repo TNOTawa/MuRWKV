@@ -1,0 +1,933 @@
+{
+  "meta": {
+    "round": "R2 postmortem (offline, CPU-only)",
+    "question": "why did R2 eliminate the R1 free-running collapse yet keep very low held-out F1?",
+    "inputs": [
+      "results/slakh_r1/eval/test/*.json (official R1 per-track rows)",
+      "results/slakh_r2_carry/eval/test/*.json (official R2 per-track rows)",
+      "artifacts/listening/<track>/*.mid (R2 best_val note-level predictions, provenance-verified)",
+      "results/slakh_r2_valdiag/ (free-running 4000-vs-5000 on 6 fixed val tracks)",
+      "results/slakh_r{1,2}_carry/metrics.{csv,json} (training logs)",
+      "results/slakh_r2_carry/split.json (frozen 120/20/60 manifest)"
+    ],
+    "not_modified": "no R1/R2 original result files were touched; all outputs are new under results/r2_postmortem/",
+    "honesty_notes": [
+      "no human listening occurred; the case audit is a scripted structural audit of note arrays",
+      "matching recomputation uses integer ticks; the official float comparison drops pairs sitting exactly at the 50 ms boundary (quantified in provenance_check.csv)"
+    ]
+  },
+  "official_offline_recomputed": {
+    "r1_continuous": {
+      "pooled_f1": 0.009764426821808453,
+      "p": 0.0070940489025134185,
+      "r": 0.015658786930968095,
+      "n_pred": 781923,
+      "matched": 5547,
+      "truncated": 1246,
+      "boundary_errors": 845
+    },
+    "r2_continuous": {
+      "pooled_f1": 0.026444945872147643,
+      "p": 0.027453363310445403,
+      "r": 0.025507986066022663,
+      "n_pred": 329140,
+      "matched": 9036,
+      "truncated": 2,
+      "boundary_errors": 0
+    },
+    "shapley": {
+      "P1": 0.0070940489025134185,
+      "P2": 0.027453363310445403,
+      "R1": 0.015658786930968095,
+      "R2": 0.025507986066022663,
+      "f1_1": 0.009764426821808453,
+      "f1_2": 0.02644494587214764,
+      "d_f1": 0.01668051905033919,
+      "p_effect": 0.012761192807879377,
+      "r_effect": 0.00391932624245981,
+      "n_pred_1": 781923,
+      "n_pred_2": 329140,
+      "n_gt": 354242,
+      "trunc_1": 1246,
+      "trunc_2": 2,
+      "bnd_1": 845,
+      "bnd_2": 0,
+      "sw_1": 510,
+      "sw_2": 205,
+      "inst_match_1": 5547,
+      "inst_match_2": 9036,
+      "matched_1": 5547,
+      "matched_2": 9036
+    },
+    "flicker": {
+      "spearman_dSwitches_vs_dInstF1": 0.13433751399665966,
+      "spearman_dSwitches_vs_dF1": 0.13433751399665966,
+      "tracks_switches_down": 46,
+      "tracks_switches_down_and_instF1_up": 32,
+      "tracks_switches_down_and_F1_down": 14,
+      "inst_f1_equals_onset_f1_r2": 60
+    }
+  },
+  "error_taxonomy": {
+    "continuous": {
+      "note": "tick-exact matching (|dt|<=5 ticks); higher than the official float-boundary numbers, see provenance_check.csv",
+      "n_gt": 354242.0,
+      "n_pred": 329140.0,
+      "matched": 12872.0,
+      "precision": 0.03910797836786778,
+      "recall": 0.036336741549562165,
+      "f1": 0.03767146339821652,
+      "miss": {
+        "no_candidate_content_absent": 288053.0,
+        "right_key_wrong_timing_near": 30843.0,
+        "same_key_far": 18786.0,
+        "octave": 2086.0,
+        "program_swap": 1602.0
+      },
+      "fp": {
+        "right_key_wrong_timing": 150168.0,
+        "wrong_pitch_near_onset": 157487.0,
+        "octave": 953.0,
+        "program_swap": 1252.0,
+        "nothing_near": 6408.0
+      },
+      "drums": {
+        "gt": 113273.0,
+        "pred": 127775.0,
+        "tp": 11074.0,
+        "recall": 0.09776380955744088,
+        "precision": 0.08666797104284876
+      },
+      "pitched": {
+        "gt": 240969.0,
+        "pred": 201365.0,
+        "tp": 1798.0,
+        "recall": 0.007461540696106138,
+        "precision": 0.008929059171156854
+      },
+      "pitched_matched_offset": {
+        "ok": 419.0,
+        "too_short": 1211.0,
+        "too_long": 168.0
+      }
+    },
+    "reset": {
+      "note": "tick-exact matching (|dt|<=5 ticks); higher than the official float-boundary numbers, see provenance_check.csv",
+      "n_gt": 354242.0,
+      "n_pred": 1162640.0,
+      "matched": 23445.0,
+      "precision": 0.02016531342461983,
+      "recall": 0.06618356942429186,
+      "f1": 0.030912094678425876,
+      "miss": {
+        "no_candidate_content_absent": 164996.0,
+        "right_key_wrong_timing_near": 29373.0,
+        "same_key_far": 132359.0,
+        "octave": 2899.0,
+        "program_swap": 1170.0
+      },
+      "fp": {
+        "right_key_wrong_timing": 560238.0,
+        "wrong_pitch_near_onset": 566137.0,
+        "octave": 3064.0,
+        "program_swap": 2942.0,
+        "nothing_near": 6814.0
+      },
+      "drums": {
+        "gt": 113273.0,
+        "pred": 272714.0,
+        "tp": 17681.0,
+        "recall": 0.1560919195218631,
+        "precision": 0.06483348856311007
+      },
+      "pitched": {
+        "gt": 240969.0,
+        "pred": 889926.0,
+        "tp": 5764.0,
+        "recall": 0.023920089306093316,
+        "precision": 0.00647694302672357
+      },
+      "pitched_matched_offset": {
+        "ok": 1874.0,
+        "too_short": 3642.0,
+        "too_long": 248.0
+      }
+    }
+  },
+  "provenance": {
+    "rows_verified": 120,
+    "official_matched_total": 26282,
+    "tick_matched_total": 36317,
+    "ratio": 1.381820257210258,
+    "explanation": "canonical GT and decoder output live on the 10 ms grid; 14% of matched pairs sit at exactly |dt|=5 ticks where float subtraction gives cost slightly > 0.05 and the official path drops them",
+    "deltas_onset": {
+      "0": 7185,
+      "5": 5209
+    }
+  },
+  "error_propagation": {
+    "r2_continuous_note_zero": {
+      "definition": "chunk with >=20 GT notes and ZERO matched notes",
+      "n_tracks_with_signals": 46,
+      "pooled_transitions": {
+        "p_bad_given_bad": 0.7516218721037998,
+        "p_bad_given_good": 0.18256130790190736,
+        "persistence_ratio": 4.117092941225292,
+        "null_mean": 0.9997626044362375,
+        "null_p95": 1.080548483451276,
+        "perm_p_value": 0.0004997501249375312
+      },
+      "persistence_ratio_track_mean": Infinity,
+      "persistence_ratio_track_median": 3.000612244897959,
+      "n_tracks_infinite_ratio": 1,
+      "hazard": [
+        {
+          "k": 1,
+          "n": 268,
+          "p_next_bad": 0.5261194029850746
+        },
+        {
+          "k": 2,
+          "n": 141,
+          "p_next_bad": 0.6879432624113475
+        },
+        {
+          "k": 3,
+          "n": 97,
+          "p_next_bad": 0.7628865979381443
+        },
+        {
+          "k": 4,
+          "n": 74,
+          "p_next_bad": 0.8783783783783784
+        },
+        {
+          "k": 5,
+          "n": 65,
+          "p_next_bad": 0.7538461538461538
+        },
+        {
+          "k": 6,
+          "n": 49,
+          "p_next_bad": 0.7959183673469388
+        },
+        {
+          "k": 7,
+          "n": 39,
+          "p_next_bad": 0.8717948717948718
+        },
+        {
+          "k": 8,
+          "n": 34,
+          "p_next_bad": 0.8823529411764706
+        }
+      ],
+      "run_stats_mean": {
+        "p_bad": 0.4308481529549803,
+        "n_runs": 5.826086956521739,
+        "mean_run_len": 6.065359338728902,
+        "max_run_len": 12.58695652173913,
+        "expected_run_len_independence": 2.604678687058753,
+        "frac_chunks_in_runs_ge3": 0.34386608638936833
+      },
+      "p_bad_mean": 0.4308481529549803,
+      "empty_pred_chunk_rate": 0.030612244897959183
+    },
+    "r2_reset_note_zero": {
+      "definition": "chunk with >=20 GT notes and ZERO matched notes",
+      "n_tracks_with_signals": 55,
+      "pooled_transitions": {
+        "p_bad_given_bad": 0.5604395604395604,
+        "p_bad_given_good": 0.13793103448275862,
+        "persistence_ratio": 4.063186813186813,
+        "null_mean": 0.9984562678602237,
+        "null_p95": 1.1270542391579053,
+        "perm_p_value": 0.0004997501249375312
+      },
+      "persistence_ratio_track_mean": 4.138783069553466,
+      "persistence_ratio_track_median": 2.4338624338624335,
+      "n_tracks_infinite_ratio": 0,
+      "hazard": [
+        {
+          "k": 1,
+          "n": 320,
+          "p_next_bad": 0.475
+        },
+        {
+          "k": 2,
+          "n": 152,
+          "p_next_bad": 0.5855263157894737
+        },
+        {
+          "k": 3,
+          "n": 89,
+          "p_next_bad": 0.6292134831460674
+        },
+        {
+          "k": 4,
+          "n": 56,
+          "p_next_bad": 0.625
+        },
+        {
+          "k": 5,
+          "n": 35,
+          "p_next_bad": 0.6285714285714286
+        },
+        {
+          "k": 6,
+          "n": 22,
+          "p_next_bad": 0.7272727272727273
+        },
+        {
+          "k": 7,
+          "n": 16,
+          "p_next_bad": 0.8125
+        },
+        {
+          "k": 8,
+          "n": 13,
+          "p_next_bad": 0.5384615384615384
+        }
+      ],
+      "run_stats_mean": {
+        "p_bad": 0.23657998475700243,
+        "n_runs": 5.818181818181818,
+        "mean_run_len": 2.1405490350410132,
+        "max_run_len": 4.418181818181818,
+        "expected_run_len_independence": 1.4265215862972465,
+        "frac_chunks_in_runs_ge3": 0.13880358901706416
+      },
+      "p_bad_mean": 0.23657998475700243,
+      "empty_pred_chunk_rate": 0.028205969170219745
+    },
+    "r2_continuous_note_rel": {
+      "definition": "chunk note-F1 below the track's own median chunk F1",
+      "n_tracks_with_signals": 40,
+      "pooled_transitions": {
+        "p_bad_given_bad": 0.6097318768619663,
+        "p_bad_given_good": 0.34144222415291053,
+        "persistence_ratio": 1.785754173710237,
+        "null_mean": 0.9999904744121905,
+        "null_p95": 1.0790623437201516,
+        "perm_p_value": 0.0004997501249375312
+      },
+      "persistence_ratio_track_mean": 2.6845208510766683,
+      "persistence_ratio_track_median": 1.981470588235294,
+      "n_tracks_infinite_ratio": 0,
+      "hazard": [
+        {
+          "k": 1,
+          "n": 393,
+          "p_next_bad": 0.5139949109414759
+        },
+        {
+          "k": 2,
+          "n": 202,
+          "p_next_bad": 0.5594059405940595
+        },
+        {
+          "k": 3,
+          "n": 113,
+          "p_next_bad": 0.7168141592920354
+        },
+        {
+          "k": 4,
+          "n": 81,
+          "p_next_bad": 0.6419753086419753
+        },
+        {
+          "k": 5,
+          "n": 52,
+          "p_next_bad": 0.6538461538461539
+        },
+        {
+          "k": 6,
+          "n": 34,
+          "p_next_bad": 0.7941176470588235
+        },
+        {
+          "k": 7,
+          "n": 27,
+          "p_next_bad": 0.8518518518518519
+        },
+        {
+          "k": 8,
+          "n": 23,
+          "p_next_bad": 0.6521739130434783
+        }
+      ],
+      "run_stats_mean": {
+        "p_bad": 0.46527300458145904,
+        "n_runs": 9.825,
+        "mean_run_len": 3.1093472499722496,
+        "max_run_len": 8.65,
+        "expected_run_len_independence": 1.8722549254171184,
+        "frac_chunks_in_runs_ge3": 0.2931254558753603
+      },
+      "p_bad_mean": 0.46527300458145904
+    },
+    "r2_reset_note_rel": {
+      "definition": "chunk note-F1 below the track's own median chunk F1",
+      "n_tracks_with_signals": 53,
+      "pooled_transitions": {
+        "p_bad_given_bad": 0.5888059701492537,
+        "p_bad_given_good": 0.365142478462558,
+        "persistence_ratio": 1.6125375843107512,
+        "null_mean": 1.000511208749753,
+        "null_p95": 1.0679915591295135,
+        "perm_p_value": 0.0004997501249375312
+      },
+      "persistence_ratio_track_mean": 1.7832221113146598,
+      "persistence_ratio_track_median": 1.6541353383458648,
+      "n_tracks_infinite_ratio": 0,
+      "hazard": [
+        {
+          "k": 1,
+          "n": 551,
+          "p_next_bad": 0.5372050816696915
+        },
+        {
+          "k": 2,
+          "n": 296,
+          "p_next_bad": 0.6081081081081081
+        },
+        {
+          "k": 3,
+          "n": 180,
+          "p_next_bad": 0.5833333333333334
+        },
+        {
+          "k": 4,
+          "n": 105,
+          "p_next_bad": 0.6571428571428571
+        },
+        {
+          "k": 5,
+          "n": 69,
+          "p_next_bad": 0.7681159420289855
+        },
+        {
+          "k": 6,
+          "n": 53,
+          "p_next_bad": 0.5283018867924528
+        },
+        {
+          "k": 7,
+          "n": 28,
+          "p_next_bad": 0.5714285714285714
+        },
+        {
+          "k": 8,
+          "n": 16,
+          "p_next_bad": 1.0
+        }
+      ],
+      "run_stats_mean": {
+        "p_bad": 0.46905039229915635,
+        "n_runs": 10.39622641509434,
+        "mean_run_len": 2.5741082169772516,
+        "max_run_len": 6.943396226415095,
+        "expected_run_len_independence": 1.8849505766907335,
+        "frac_chunks_in_runs_ge3": 0.29351114370571474
+      },
+      "p_bad_mean": 0.46905039229915635
+    },
+    "r1_continuous_token": {
+      "definition": "tokens >= 95% of 4096 cap or <= 20 tokens",
+      "n_tracks": 52,
+      "rate": 0.4599229961498075,
+      "pooled_transitions": {
+        "p_bad_given_bad": 0.9322162985529322,
+        "p_bad_given_good": 0.057679844458846406,
+        "persistence_ratio": 16.161907288395216,
+        "null_mean": 1.0014738854437155,
+        "null_p95": 1.067763088032282,
+        "perm_p_value": 0.0004997501249375312
+      }
+    },
+    "r1_reset_token": {
+      "definition": "tokens >= 95% of 4096 cap or <= 20 tokens",
+      "n_tracks": 60,
+      "rate": 0.19969278033794163,
+      "pooled_transitions": {
+        "p_bad_given_bad": 0.3066255778120185,
+        "p_bad_given_good": 0.1727447216890595,
+        "persistence_ratio": 1.7750214004451292,
+        "null_mean": 0.9983158710773603,
+        "null_p95": 1.141847902215022,
+        "perm_p_value": 0.0004997501249375312
+      }
+    },
+    "r2_continuous_token": {
+      "definition": "tokens >= 95% of 4096 cap or <= 20 tokens",
+      "n_tracks": 34,
+      "rate": 0.06896551724137931,
+      "pooled_transitions": {
+        "p_bad_given_bad": 0.7,
+        "p_bad_given_good": 0.021664766248574687,
+        "persistence_ratio": 32.310526315789474,
+        "null_mean": 1.0037644391730705,
+        "null_p95": 1.6283819628647216,
+        "perm_p_value": 0.0004997501249375312
+      }
+    },
+    "r2_reset_token": {
+      "definition": "tokens >= 95% of 4096 cap or <= 20 tokens",
+      "n_tracks": 60,
+      "rate": 0.12073732718894009,
+      "pooled_transitions": {
+        "p_bad_given_bad": 0.33163265306122447,
+        "p_bad_given_good": 0.09154437456324249,
+        "persistence_ratio": 3.622643713974139,
+        "null_mean": 1.0013537831277806,
+        "null_p95": 1.26040028863317,
+        "perm_p_value": 0.0004997501249375312
+      }
+    }
+  },
+  "data_audit": {
+    "split_stats": {
+      "train": {
+        "n": 120,
+        "median_notes_per_track": 5492.5,
+        "median_density_notes_per_s": 24.6535,
+        "median_drum_share": 0.29255,
+        "median_polyphony": 4.766500000000001,
+        "median_groups_per_track": 9.0,
+        "total_tokens": 3920803
+      },
+      "valid": {
+        "n": 20,
+        "median_notes_per_track": 6261.5,
+        "median_density_notes_per_s": 25.430500000000002,
+        "median_drum_share": 0.29055,
+        "median_polyphony": 4.3065,
+        "median_groups_per_track": 8.0,
+        "total_tokens": 670110
+      },
+      "test": {
+        "n": 60,
+        "median_notes_per_track": 5540.5,
+        "median_density_notes_per_s": 22.048000000000002,
+        "median_drum_share": 0.3075,
+        "median_polyphony": 4.789,
+        "median_groups_per_track": 8.0,
+        "total_tokens": 1953222
+      }
+    },
+    "train_vs_test_ks": {
+      "n_notes": {
+        "ks_stat": 0.0917,
+        "ks_p": 0.88209
+      },
+      "density_notes_per_s": {
+        "ks_stat": 0.1917,
+        "ks_p": 0.10135
+      },
+      "polyphony_mean": {
+        "ks_stat": 0.075,
+        "ks_p": 0.97519
+      },
+      "drum_share": {
+        "ks_stat": 0.1167,
+        "ks_p": 0.63597
+      },
+      "median_dur_s": {
+        "ks_stat": 0.1,
+        "ks_p": 0.8088
+      },
+      "n_groups": {
+        "ks_stat": 0.0667,
+        "ks_p": 0.9932
+      },
+      "tokens_total": {
+        "ks_stat": 0.1083,
+        "ks_p": 0.72466
+      },
+      "tokens_per_note": {
+        "ks_stat": 0.1917,
+        "ks_p": 0.10135
+      },
+      "duration_s": {
+        "ks_stat": 0.3083,
+        "ks_p": 0.00086
+      }
+    },
+    "ks_note": "all complexity features match across splits; only duration_s differs (test tracks are longer by corpus design, KS p=0.0009)"
+  },
+  "case_audit": {
+    "kind": "scripted structural audit of note arrays (no human listening in this offline round)",
+    "selection": [
+      [
+        "Track01876",
+        "degraded_top3"
+      ],
+      [
+        "Track01895",
+        "improved_top3"
+      ],
+      [
+        "Track01902",
+        "degraded_top3"
+      ],
+      [
+        "Track01906",
+        "degraded_top3"
+      ],
+      [
+        "Track01907",
+        "changed_least3"
+      ],
+      [
+        "Track01952",
+        "changed_least3"
+      ],
+      [
+        "Track02019",
+        "improved_top3"
+      ],
+      [
+        "Track02029",
+        "changed_least3"
+      ],
+      [
+        "Track02047",
+        "improved_top3"
+      ]
+    ],
+    "csv": "results/r2_postmortem/track_case_audit.csv"
+  },
+  "token_probe": {
+    "clean": {
+      "EOS": {
+        "n_positions": 24,
+        "mean_ce": 1.7417780455822747,
+        "token_acc": 0.5833333333333334,
+        "argmax_class_share": {
+          "EOS": 0.5833333333333334,
+          "shift": 0.4166666666666667
+        }
+      },
+      "drum": {
+        "n_positions": 483,
+        "mean_ce": 2.7205745664723584,
+        "token_acc": 0.33540372670807456,
+        "argmax_class_share": {
+          "drum": 0.5300207039337475,
+          "program": 0.22981366459627328,
+          "velocity": 0.2401656314699793
+        }
+      },
+      "pitch": {
+        "n_positions": 3089,
+        "mean_ce": 1.4836360892845224,
+        "token_acc": 0.5629653609582389,
+        "argmax_class_share": {
+          "pitch": 0.9928779540304306,
+          "program": 0.002589834898025251,
+          "shift": 0.0006474587245063128,
+          "tie": 0.0038847523470378763
+        }
+      },
+      "program": {
+        "n_positions": 1274,
+        "mean_ce": 1.779964166778188,
+        "token_acc": 0.42778649921507067,
+        "argmax_class_share": {
+          "drum": 0.02197802197802198,
+          "pitch": 0.011773940345368918,
+          "program": 0.695447409733124,
+          "shift": 0.0007849293563579278,
+          "tie": 0.01020408163265306,
+          "velocity": 0.2598116169544741
+        }
+      },
+      "shift": {
+        "n_positions": 3414,
+        "mean_ce": 1.775693458430638,
+        "token_acc": 0.5474516695957821,
+        "argmax_class_share": {
+          "EOS": 0.009373169302870533,
+          "pitch": 0.0017574692442882249,
+          "shift": 0.9868189806678384,
+          "velocity": 0.002050380785002929
+        }
+      },
+      "tie": {
+        "n_positions": 24,
+        "mean_ce": 1.6601526104689885,
+        "token_acc": 0.5416666666666666,
+        "argmax_class_share": {
+          "pitch": 0.2916666666666667,
+          "program": 0.16666666666666666,
+          "tie": 0.5416666666666666
+        }
+      },
+      "velocity": {
+        "n_positions": 2931,
+        "mean_ce": 0.5882176171399282,
+        "token_acc": 0.7744796997611737,
+        "argmax_class_share": {
+          "drum": 0.005458887751620608,
+          "pitch": 0.000341180484476288,
+          "program": 0.10303650631183896,
+          "velocity": 0.8911634254520642
+        }
+      }
+    },
+    "noisy": {
+      "EOS": {
+        "n_positions": 24,
+        "mean_ce": 1.8910899943051238,
+        "token_acc": 0.5,
+        "argmax_class_share": {
+          "EOS": 0.5,
+          "shift": 0.5
+        }
+      },
+      "drum": {
+        "n_positions": 483,
+        "mean_ce": 2.8734843530181187,
+        "token_acc": 0.2898550724637681,
+        "argmax_class_share": {
+          "drum": 0.47619047619047616,
+          "program": 0.2401656314699793,
+          "shift": 0.008281573498964804,
+          "velocity": 0.2753623188405797
+        }
+      },
+      "pitch": {
+        "n_positions": 3089,
+        "mean_ce": 1.835709906671306,
+        "token_acc": 0.47361605697636777,
+        "argmax_class_share": {
+          "drum": 0.0003237293622531564,
+          "pitch": 0.9579151829070897,
+          "program": 0.00356102298478472,
+          "shift": 0.006798316607316284,
+          "tie": 0.004208481709291033,
+          "velocity": 0.027193266429265135
+        }
+      },
+      "program": {
+        "n_positions": 1274,
+        "mean_ce": 1.953541832840073,
+        "token_acc": 0.39717425431711145,
+        "argmax_class_share": {
+          "drum": 0.027472527472527472,
+          "pitch": 0.01098901098901099,
+          "program": 0.6507064364207221,
+          "shift": 0.002354788069073783,
+          "tie": 0.01098901098901099,
+          "velocity": 0.29748822605965464
+        }
+      },
+      "shift": {
+        "n_positions": 3414,
+        "mean_ce": 1.9675714892110725,
+        "token_acc": 0.515817223198594,
+        "argmax_class_share": {
+          "EOS": 0.010251903925014646,
+          "drum": 0.00029291154071470416,
+          "pitch": 0.006444053895723492,
+          "program": 0.00029291154071470416,
+          "shift": 0.9715875805506737,
+          "velocity": 0.011130638547158758
+        }
+      },
+      "tie": {
+        "n_positions": 24,
+        "mean_ce": 1.8974475356129308,
+        "token_acc": 0.5,
+        "argmax_class_share": {
+          "drum": 0.041666666666666664,
+          "pitch": 0.2916666666666667,
+          "program": 0.16666666666666666,
+          "tie": 0.5
+        }
+      },
+      "velocity": {
+        "n_positions": 2931,
+        "mean_ce": 0.6768896682837116,
+        "token_acc": 0.7502558853633572,
+        "argmax_class_share": {
+          "drum": 0.004776526782668032,
+          "pitch": 0.009553053565336063,
+          "program": 0.09621289662231321,
+          "shift": 0.002729443875810304,
+          "velocity": 0.8867280791538724
+        }
+      }
+    },
+    "first_error": {
+      "units": 24,
+      "units_with_zero_error": 0,
+      "median_first_error_pos": 0.0,
+      "median_unit_len": 329.5,
+      "mean_token_error_rate": 0.4546382955454677
+    }
+  },
+  "cascade": {
+    "drum": {
+      "n": 95,
+      "damage_mean": 2.0,
+      "damage_p50": 2.0,
+      "damage_p90": 2.0,
+      "damage_zero_share": 0.0,
+      "notes_lost_mean": 1.0,
+      "notes_added_mean": 1.0
+    },
+    "pitch": {
+      "n": 144,
+      "damage_mean": 0.8333333333333334,
+      "damage_p50": 0.0,
+      "damage_p90": 2.0,
+      "damage_zero_share": 0.5833333333333334,
+      "notes_lost_mean": 0.4166666666666667,
+      "notes_added_mean": 0.4166666666666667
+    },
+    "program": {
+      "n": 141,
+      "damage_mean": 2.141843971631206,
+      "damage_p50": 2.0,
+      "damage_p90": 6.0,
+      "damage_zero_share": 0.41134751773049644,
+      "notes_lost_mean": 1.070921985815603,
+      "notes_added_mean": 1.070921985815603
+    },
+    "shift": {
+      "n": 144,
+      "damage_mean": 0.8055555555555556,
+      "damage_p50": 0.5,
+      "damage_p90": 2.0,
+      "damage_zero_share": 0.5,
+      "notes_lost_mean": 0.5277777777777778,
+      "notes_added_mean": 0.2777777777777778
+    },
+    "velocity": {
+      "n": 144,
+      "damage_mean": 1.0,
+      "damage_p50": 1.0,
+      "damage_p90": 1.0,
+      "damage_zero_share": 0.0,
+      "notes_lost_mean": 0.5486111111111112,
+      "notes_added_mean": 0.4513888888888889
+    }
+  },
+  "ckpt_proxy": {
+    "rows": [
+      {
+        "checkpoint": "ckpt_003000.pt",
+        "step": 3000,
+        "variant": "carry_clean",
+        "loss": 1.384685,
+        "tok": 4113,
+        "acc": 0.610017,
+        "units": 12
+      },
+      {
+        "checkpoint": "ckpt_003000.pt",
+        "step": 3000,
+        "variant": "carry_noisy",
+        "loss": 1.611681,
+        "tok": 4113,
+        "acc": 0.550936,
+        "units": 12
+      },
+      {
+        "checkpoint": "ckpt_003000.pt",
+        "step": 3000,
+        "variant": "fresh_clean",
+        "loss": 1.384073,
+        "tok": 4113,
+        "acc": 0.609531,
+        "units": 12
+      },
+      {
+        "checkpoint": "ckpt_004000.pt",
+        "step": 4000,
+        "variant": "carry_clean",
+        "loss": 1.384272,
+        "tok": 4113,
+        "acc": 0.607343,
+        "units": 12
+      },
+      {
+        "checkpoint": "ckpt_004000.pt",
+        "step": 4000,
+        "variant": "carry_noisy",
+        "loss": 1.621622,
+        "tok": 4113,
+        "acc": 0.547532,
+        "units": 12
+      },
+      {
+        "checkpoint": "ckpt_004000.pt",
+        "step": 4000,
+        "variant": "fresh_clean",
+        "loss": 1.384095,
+        "tok": 4113,
+        "acc": 0.607343,
+        "units": 12
+      },
+      {
+        "checkpoint": "ckpt_005000.pt",
+        "step": 5000,
+        "variant": "carry_clean",
+        "loss": 1.385556,
+        "tok": 4113,
+        "acc": 0.607829,
+        "units": 12
+      },
+      {
+        "checkpoint": "ckpt_005000.pt",
+        "step": 5000,
+        "variant": "carry_noisy",
+        "loss": 1.618453,
+        "tok": 4113,
+        "acc": 0.549234,
+        "units": 12
+      },
+      {
+        "checkpoint": "ckpt_005000.pt",
+        "step": 5000,
+        "variant": "fresh_clean",
+        "loss": 1.385294,
+        "tok": 4113,
+        "acc": 0.608801,
+        "units": 12
+      }
+    ],
+    "official_criterion": {
+      "criterion": "TF val loss (R1 protocol, train.py)",
+      "best": "step 4000 (1.3994)",
+      "runner_up": "step 5000 (1.4010)"
+    },
+    "free_running_reference": {
+      "source": "results/slakh_r2_valdiag/summary.json",
+      "best": "step 5000 (macro onset F1 0.0551 continuous)",
+      "runner_up": "step 4000 (0.0399)"
+    },
+    "carry_clean_ranking": [
+      4000,
+      3000,
+      5000
+    ],
+    "carry_noisy_ranking": [
+      3000,
+      5000,
+      4000
+    ],
+    "fresh_clean_ranking": [
+      3000,
+      4000,
+      5000
+    ]
+  },
+  "verdicts": {
+    "fixed_catastrophic_free_running_collapse": "SUPPORTED",
+    "improved_held_out_transcription": "SUPPORTED (continuous arm; reset slightly worse)",
+    "proved_persistent_state_itself_beneficial": "NOT SUPPORTED (A+B confounded, no ablation)",
+    "near_practical_AMT": "NOT SUPPORTED (pitched-note recall ~0.7-2.4%; ~97% of GT notes unmatched)"
+  }
+}

@@ -1,0 +1,34 @@
+{
+  "pooled": {
+    "P1": 0.0070940489025134185,
+    "P2": 0.027453363310445403,
+    "R1": 0.015658786930968095,
+    "R2": 0.025507986066022663,
+    "f1_1": 0.009764426821808453,
+    "f1_2": 0.02644494587214764,
+    "d_f1": 0.01668051905033919,
+    "p_effect": 0.012761192807879377,
+    "r_effect": 0.00391932624245981,
+    "n_pred_1": 781923,
+    "n_pred_2": 329140,
+    "n_gt": 354242,
+    "trunc_1": 1246,
+    "trunc_2": 2,
+    "bnd_1": 845,
+    "bnd_2": 0,
+    "sw_1": 510,
+    "sw_2": 205,
+    "inst_match_1": 5547,
+    "inst_match_2": 9036,
+    "matched_1": 5547,
+    "matched_2": 9036
+  },
+  "flicker": {
+    "spearman_dSwitches_vs_dInstF1": 0.13433751399665966,
+    "spearman_dSwitches_vs_dF1": 0.13433751399665966,
+    "tracks_switches_down": 46,
+    "tracks_switches_down_and_instF1_up": 32,
+    "tracks_switches_down_and_F1_down": 14,
+    "inst_f1_equals_onset_f1_r2": 60
+  }
+}

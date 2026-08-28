@@ -1,0 +1,57 @@
+mode,kind,source,duration_bin,count
+continuous,pitched,gt,0.01(1 tick),3821
+continuous,pitched,gt,"(0.01,0.05]",8649
+continuous,pitched,gt,"(0.05,0.1]",24303
+continuous,pitched,gt,"(0.1,0.25]",86842
+continuous,pitched,gt,"(0.25,0.5]",55188
+continuous,pitched,gt,"(0.5,1.0]",29706
+continuous,pitched,gt,>1.0,32460
+continuous,pitched,pred,0.01(1 tick),28644
+continuous,pitched,pred,"(0.01,0.05]",39817
+continuous,pitched,pred,"(0.05,0.1]",12675
+continuous,pitched,pred,"(0.1,0.25]",99652
+continuous,pitched,pred,"(0.25,0.5]",18627
+continuous,pitched,pred,"(0.5,1.0]",898
+continuous,pitched,pred,>1.0,1052
+continuous,drum,gt,0.01(1 tick),38801
+continuous,drum,gt,"(0.01,0.05]",30018
+continuous,drum,gt,"(0.05,0.1]",19383
+continuous,drum,gt,"(0.1,0.25]",20508
+continuous,drum,gt,"(0.25,0.5]",4043
+continuous,drum,gt,"(0.5,1.0]",430
+continuous,drum,gt,>1.0,90
+continuous,drum,pred,0.01(1 tick),101658
+continuous,drum,pred,"(0.01,0.05]",26117
+continuous,drum,pred,"(0.05,0.1]",0
+continuous,drum,pred,"(0.1,0.25]",0
+continuous,drum,pred,"(0.25,0.5]",0
+continuous,drum,pred,"(0.5,1.0]",0
+continuous,drum,pred,>1.0,0
+reset,pitched,gt,0.01(1 tick),3821
+reset,pitched,gt,"(0.01,0.05]",8649
+reset,pitched,gt,"(0.05,0.1]",24303
+reset,pitched,gt,"(0.1,0.25]",86842
+reset,pitched,gt,"(0.25,0.5]",55188
+reset,pitched,gt,"(0.5,1.0]",29706
+reset,pitched,gt,>1.0,32460
+reset,pitched,pred,0.01(1 tick),234983
+reset,pitched,pred,"(0.01,0.05]",323245
+reset,pitched,pred,"(0.05,0.1]",60908
+reset,pitched,pred,"(0.1,0.25]",222560
+reset,pitched,pred,"(0.25,0.5]",27510
+reset,pitched,pred,"(0.5,1.0]",6161
+reset,pitched,pred,>1.0,14559
+reset,drum,gt,0.01(1 tick),38801
+reset,drum,gt,"(0.01,0.05]",30018
+reset,drum,gt,"(0.05,0.1]",19383
+reset,drum,gt,"(0.1,0.25]",20508
+reset,drum,gt,"(0.25,0.5]",4043
+reset,drum,gt,"(0.5,1.0]",430
+reset,drum,gt,>1.0,90
+reset,drum,pred,0.01(1 tick),171044
+reset,drum,pred,"(0.01,0.05]",101670
+reset,drum,pred,"(0.05,0.1]",0
+reset,drum,pred,"(0.1,0.25]",0
+reset,drum,pred,"(0.25,0.5]",0
+reset,drum,pred,"(0.5,1.0]",0
+reset,drum,pred,>1.0,0

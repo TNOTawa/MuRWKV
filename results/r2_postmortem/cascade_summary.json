@@ -1,0 +1,47 @@
+{
+  "drum": {
+    "n": 95,
+    "damage_mean": 2.0,
+    "damage_p50": 2.0,
+    "damage_p90": 2.0,
+    "damage_zero_share": 0.0,
+    "notes_lost_mean": 1.0,
+    "notes_added_mean": 1.0
+  },
+  "pitch": {
+    "n": 144,
+    "damage_mean": 0.8333333333333334,
+    "damage_p50": 0.0,
+    "damage_p90": 2.0,
+    "damage_zero_share": 0.5833333333333334,
+    "notes_lost_mean": 0.4166666666666667,
+    "notes_added_mean": 0.4166666666666667
+  },
+  "program": {
+    "n": 141,
+    "damage_mean": 2.141843971631206,
+    "damage_p50": 2.0,
+    "damage_p90": 6.0,
+    "damage_zero_share": 0.41134751773049644,
+    "notes_lost_mean": 1.070921985815603,
+    "notes_added_mean": 1.070921985815603
+  },
+  "shift": {
+    "n": 144,
+    "damage_mean": 0.8055555555555556,
+    "damage_p50": 0.5,
+    "damage_p90": 2.0,
+    "damage_zero_share": 0.5,
+    "notes_lost_mean": 0.5277777777777778,
+    "notes_added_mean": 0.2777777777777778
+  },
+  "velocity": {
+    "n": 144,
+    "damage_mean": 1.0,
+    "damage_p50": 1.0,
+    "damage_p90": 1.0,
+    "damage_zero_share": 0.0,
+    "notes_lost_mean": 0.5486111111111112,
+    "notes_added_mean": 0.4513888888888889
+  }
+}

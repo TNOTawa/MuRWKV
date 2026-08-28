@@ -1,0 +1,110 @@
+{
+  "rows": [
+    {
+      "checkpoint": "ckpt_003000.pt",
+      "step": 3000,
+      "variant": "carry_clean",
+      "loss": 1.384685,
+      "tok": 4113,
+      "acc": 0.610017,
+      "units": 12
+    },
+    {
+      "checkpoint": "ckpt_003000.pt",
+      "step": 3000,
+      "variant": "carry_noisy",
+      "loss": 1.611681,
+      "tok": 4113,
+      "acc": 0.550936,
+      "units": 12
+    },
+    {
+      "checkpoint": "ckpt_003000.pt",
+      "step": 3000,
+      "variant": "fresh_clean",
+      "loss": 1.384073,
+      "tok": 4113,
+      "acc": 0.609531,
+      "units": 12
+    },
+    {
+      "checkpoint": "ckpt_004000.pt",
+      "step": 4000,
+      "variant": "carry_clean",
+      "loss": 1.384272,
+      "tok": 4113,
+      "acc": 0.607343,
+      "units": 12
+    },
+    {
+      "checkpoint": "ckpt_004000.pt",
+      "step": 4000,
+      "variant": "carry_noisy",
+      "loss": 1.621622,
+      "tok": 4113,
+      "acc": 0.547532,
+      "units": 12
+    },
+    {
+      "checkpoint": "ckpt_004000.pt",
+      "step": 4000,
+      "variant": "fresh_clean",
+      "loss": 1.384095,
+      "tok": 4113,
+      "acc": 0.607343,
+      "units": 12
+    },
+    {
+      "checkpoint": "ckpt_005000.pt",
+      "step": 5000,
+      "variant": "carry_clean",
+      "loss": 1.385556,
+      "tok": 4113,
+      "acc": 0.607829,
+      "units": 12
+    },
+    {
+      "checkpoint": "ckpt_005000.pt",
+      "step": 5000,
+      "variant": "carry_noisy",
+      "loss": 1.618453,
+      "tok": 4113,
+      "acc": 0.549234,
+      "units": 12
+    },
+    {
+      "checkpoint": "ckpt_005000.pt",
+      "step": 5000,
+      "variant": "fresh_clean",
+      "loss": 1.385294,
+      "tok": 4113,
+      "acc": 0.608801,
+      "units": 12
+    }
+  ],
+  "official_criterion": {
+    "criterion": "TF val loss (R1 protocol, train.py)",
+    "best": "step 4000 (1.3994)",
+    "runner_up": "step 5000 (1.4010)"
+  },
+  "free_running_reference": {
+    "source": "results/slakh_r2_valdiag/summary.json",
+    "best": "step 5000 (macro onset F1 0.0551 continuous)",
+    "runner_up": "step 4000 (0.0399)"
+  },
+  "carry_clean_ranking": [
+    4000,
+    3000,
+    5000
+  ],
+  "carry_noisy_ranking": [
+    3000,
+    5000,
+    4000
+  ],
+  "fresh_clean_ranking": [
+    3000,
+    4000,
+    5000
+  ]
+}
