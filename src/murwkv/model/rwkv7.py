@@ -153,8 +153,12 @@ class _WKVCUDA(torch.autograd.Function):
         sa = torch.empty(B, T, H, N, dtype=torch.float32, device=r.device)
         _WK_OP.forward(r.contiguous(), w.contiguous(), k.contiguous(), v.contiguous(), a.contiguous(), b.contiguous(), y, s, sa)
         ctx.save_for_backward(r, w, k, v, a, b, s, sa)
-        # s: (B, H, T//16, N, N); final state = last chunk boundary per head
-        return y, s[:, :, -1]
+        # s: (B, H, T//16, N, N) — the kernel's chunk-state save layout holds
+        # S^T (element (c,i,j) = S[j,i]; verified vs the python scan), so the
+        # returned final state is transposed back into the ROW convention used
+        # by wkv7_scan / RWKVState (was unconsumed before R2 — carry now
+        # crosses the kernel/scan boundary and must be convention-consistent).
+        return y, s[:, :, -1].transpose(-1, -2)
 
     @staticmethod
     def backward(ctx, dy, dstate):
@@ -164,14 +168,50 @@ class _WKVCUDA(torch.autograd.Function):
         return dr, dw, dk, dv, da, db
 
 
-def wkv7_cuda(r, w, k, v, a, b):
+def wkv7_cuda(r, w, k, v, a, b, init_state=None):
     """CUDA clampw op on (B,T,H,N) bf16 tensors; T must be %16==0.
+
+    With `init_state` (B,H,N,N) fp32 in the ROW convention (== wkv7_scan /
+    RWKVState layout), the recurrence is seeded with that state (R2 extension:
+    `forward_init` kernel; the official zero-init path is unchanged). The
+    returned final_state is at the TRUE sequence end, in the ROW convention
+    (the kernel's internal chunk-state buffer is S^T; see _WKVCUDA). The
+    gradient INTO init_state is not returned (detached carry semantics).
 
     Returns (y, final_state (B,H,N,N) fp32).
     """
     B, T, H, N = r.shape
     assert T % CHUNK_LEN == 0
-    return _WKVCUDA.apply(r, w, k, v, a, b)
+    if init_state is None:
+        return _WKVCUDA.apply(r, w, k, v, a, b)
+    return _WKVCUDA_INIT.apply(r, w, k, v, a, b, init_state)
+
+
+class _WKVCUDA_INIT(torch.autograd.Function):
+    """CUDA clampw forward seeded with an initial state (see wkv7_cuda).
+
+    backward reuses the official kernel backward: it reconstructs stateT from
+    the saved chunk-boundary states, so dL/d(inputs) accounts for the propagated
+    initial state while dL/d(init_state) is discarded (truncated BPTT).
+    """
+
+    @staticmethod
+    def forward(ctx, r, w, k, v, a, b, s_init):
+        B, T, H, N = r.shape
+        y = torch.empty_like(v)
+        s = torch.empty(B, H, T // CHUNK_LEN, N, N, dtype=torch.float32, device=r.device)
+        sa = torch.empty(B, T, H, N, dtype=torch.float32, device=r.device)
+        _WK_OP.forward_init(r.contiguous(), w.contiguous(), k.contiguous(), v.contiguous(), a.contiguous(), b.contiguous(), y, s, sa, s_init.contiguous())
+        ctx.save_for_backward(r, w, k, v, a, b, s, sa)
+        # kernel save layout is S^T (see _WKVCUDA); return ROW-convention state
+        return y, s[:, :, -1].transpose(-1, -2)
+
+    @staticmethod
+    def backward(ctx, dy, dstate):
+        r, w, k, v, a, b, s, sa = ctx.saved_tensors
+        dr, dw, dk, dv, da, db = [torch.empty_like(x) for x in (r, w, k, v, a, b)]
+        _WK_OP.backward(r.contiguous(), w.contiguous(), k.contiguous(), v.contiguous(), a.contiguous(), b.contiguous(), dy.contiguous(), s, sa, dr, dw, dk, dv, da, db)
+        return dr, dw, dk, dv, da, db, None
 
 
 # ---------------------------------------------------------------------------
@@ -290,8 +330,10 @@ class RWKV_Tmix_x070(nn.Module):
         xr, xw, xk, xv, xa, xg = self._mix(x)
         r, w, k, v, a, kk, g, v_first = self._proj(xr, xw, xk, xv, xa, xg, v_first)
         V = lambda t: t.view(B, T, H, -1)  # noqa: E731
-        if use_cuda_kernel and KERNEL_AVAILABLE and T % CHUNK_LEN == 0 and init_state is None:
-            xw_, S_final = wkv7_cuda(V(r), V(w), V(k), V(v), V(-kk), V(kk * a))
+        if use_cuda_kernel and KERNEL_AVAILABLE and T % CHUNK_LEN == 0:
+            if init_state is not None:
+                init_state = init_state.detach().float().contiguous()
+            xw_, S_final = wkv7_cuda(V(r), V(w), V(k), V(v), V(-kk), V(kk * a), init_state=init_state)
         else:
             xw_, S_final, _ = wkv7_scan(V(r), V(w), V(k), V(v), V(-kk), V(kk * a), state=init_state)
         self._last_state = S_final  # (B,H,N,N) fp32 — recurrent state at seq end

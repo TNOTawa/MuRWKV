@@ -159,6 +159,71 @@ class MuRWKV(nn.Module):
         x = self.ln_out(x)
         return self.head(x)
 
+    def forward_gpt_carry(self, mel, is_audio, midi_id, seg_tokens: int, state=None, use_cuda_kernel=False):
+        """Segmented-carry training forward (R2 lever B: exposure mismatch).
+
+        The flat plan [A_u0 M_u0 A_u1 M_u1 ...] is processed in consecutive
+        parallel passes. Continuity across passes follows the CONTINUOUS
+        INFERENCE protocol exactly:
+
+          * the recurrent state S is carried across passes, detached at each
+            boundary (truncated BPTT — the model sees stale carried state,
+            gradients stop at the boundary);
+          * pass p>0 re-feeds the previous real position's embedding as its
+            first element (shift lead) and crops that output — the same
+            bridging continuous inference applies at every chunk boundary;
+          * the audio frontend runs ONCE over the full mel, so the causal-conv
+            context is exact across pass boundaries (== conv carry).
+
+        Cut grid: pass 0 covers real positions [0, seg+1); pass p covers
+        [p*seg+1, (p+1)*seg+1) with seg = 16k-1 real positions, so every pass
+        (incl. its 1-position lead) is 16-aligned and CUDA-kernel eligible.
+        The last pass is padded with PAD positions to a 16 boundary (outputs
+        masked, nothing carried afterwards — same as the monolithic path's end
+        padding).
+
+        Only B=1 is supported. Returns (logits (1, L, vocab) aligned with the
+        input plan, state) — loss/targets stay the caller's business.
+        """
+        B, L = is_audio.shape
+        assert B == 1, "forward_gpt_carry supports B=1 (state carry is per-sequence)"
+        seg_real = ((int(seg_tokens) + 15) // 16) * 16 - 1  # ≡15 (mod 16)
+        assert seg_real >= 31, "seg_tokens too small"
+        if state is None:
+            state = self.initial_state(B, mel.device)
+        if L <= seg_real + 1:
+            n_passes = 1
+        else:
+            n_passes = 2 + (L - seg_real - 2) // seg_real  # 1 + ceil((L-seg_real-1)/seg_real)
+        c_last = 0 if n_passes == 1 else (n_passes - 1) * seg_real + 1
+        lead_slot = 1 if n_passes > 1 else 0  # only multi-pass runs prepend a lead
+        pad_need = (-(L - c_last + lead_slot)) % 16
+        if pad_need:
+            is_audio = torch.cat([is_audio, is_audio.new_zeros(B, pad_need)], dim=1)
+            midi_id = torch.cat([midi_id, midi_id.new_zeros(B, pad_need)], dim=1)
+        x_all = self.embed_plan(mel, is_audio, midi_id)  # frontend once: exact conv context
+        parts = []
+        for p in range(n_passes):
+            if p == 0:
+                out_end = min(seg_real + 1, L)
+                lo, hi, crop = 0, out_end + (pad_need if n_passes == 1 else 0), 0
+            else:
+                c0 = p * seg_real + 1
+                out_end = min(c0 + seg_real, L)
+                lo, hi, crop = c0 - 1, out_end + (pad_need if p == n_passes - 1 else 0), 1
+            x_full = x_all[:, lo:hi]
+            v_first = torch.empty_like(x_full)
+            for blk in self.blocks:
+                x_full, v_first = blk.forward_parallel(
+                    x_full, v_first, use_cuda_kernel,
+                    init_state=state.S[blk.layer_id] if p > 0 else None,
+                )
+                # detached carry: gradients stop at the pass boundary
+                state.S[blk.layer_id] = blk._last_state.detach()
+            parts.append(self.head(self.ln_out(x_full[:, crop:])))
+        logits = torch.cat(parts, dim=1)[:, :L]
+        return logits, state
+
     def build_targets(self, is_audio: torch.Tensor, midi_id: torch.Tensor, unit_midi_lens: list):
         """Loss plan: for each unit, positions [audio_end-1 .. audio_end+M-2]
         predict the next flat token (the unit's MIDI tokens, shifted by one).

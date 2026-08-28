@@ -24,6 +24,7 @@ import torch
 from ..data.babyslakh import BabySlakh, BabySlakhDataset, build_splits, collate_bucket, write_split_json
 from ..model.murwkv_model import MuRWKV, MuRWKVConfig, PAD_ID, count_params
 from ..model.rwkv7 import KERNEL_AVAILABLE, KERNEL_IMPORT_ERROR
+from ..tokenizer import VOCAB_SIZE
 
 
 def param_groups(model: MuRWKV, weight_decay: float):
@@ -72,6 +73,21 @@ def build_optimizer(model, args):
     return opt
 
 
+def apply_history_noise(midi_id: torch.Tensor, is_audio: torch.Tensor, p: float) -> torch.Tensor:
+    """R2 lever A: corrupt MIDI INPUT tokens with probability p (uniform over
+    real MIDI event ids >= 3; audio positions and PAD padding are never
+    corrupted). Scheduled-sampling proxy: the model's history during training
+    looks like its own erroneous output instead of perfect GT. Loss targets
+    must always come from the CLEAN ids (single source of truth for that rule
+    is the caller: build_targets on the uncorrupted tensor)."""
+    if p <= 0:
+        return midi_id
+    midi_pos = (~is_audio) & (midi_id >= 3)
+    flip = (torch.rand_like(midi_id, dtype=torch.float32) < p) & midi_pos
+    repl = torch.randint(3, VOCAB_SIZE, midi_id.shape, device=midi_id.device)
+    return torch.where(flip, repl, midi_id)
+
+
 def run(args):
     rng = random.Random(args.seed)
     torch.manual_seed(args.seed)
@@ -116,6 +132,11 @@ def run(args):
     print(f"[data] windows={len(ds)} stats={stats}")
 
     # ---- validation set (OFFICIAL validation split only; test is sealed) ----
+    # val windows use --val-units (default = --units) so the selection
+    # criterion can be held constant across rounds (R1: units=4, fresh state,
+    # clean teacher-forced monolithic forward — R2 keeps this identical for
+    # comparability even when training windows are longer).
+    val_units = args.val_units if args.val_units > 0 else args.units
     val_ds = None
     val_idx = []
     if args.val_every and args.val_every > 0:
@@ -126,7 +147,7 @@ def run(args):
         else:
             vstats = {"truncated_chunks": 0, "tracks": 0, "chunks": 0, "tokens": 0,
                       "shortened": 0, "clipped_overlaps": 0}
-            val_ds = BabySlakhDataset(bs, val_tracks, n_units=args.units,
+            val_ds = BabySlakhDataset(bs, val_tracks, n_units=val_units,
                                       mel_cache_dir=mel_cache, token_stats=vstats,
                                       max_tokens_per_chunk=args.max_tokens_per_chunk)
             assert vstats["truncated_chunks"] == 0, f"PIPELINE BUG: val {vstats['truncated_chunks']} truncated"
@@ -202,9 +223,28 @@ def run(args):
             T = is_audio.shape[1]
             use_kernel = KERNEL_AVAILABLE and T % 16 == 0
             assert T % 16 == 0, "batch L must be padded to a multiple of 16 for the kernel"
+            # ---- R2 lever A: noisy history (scheduled-sampling proxy) ----
+            # Corrupt MIDI INPUT tokens with annealed probability p; the loss
+            # TARGETS stay clean teacher-forced GT (build_targets below). This
+            # exposes the state to self-generated-style (erroneous) MIDI
+            # history during training instead of the perfect GT history that
+            # continuous inference never gets. Audio positions are never
+            # corrupted; PAD padding is never corrupted.
+            noise_p = args.noise_p * min(1.0, step / max(1, args.noise_anneal)) if args.noise_p > 0 else 0.0
+            midi_in = apply_history_noise(midi_id, is_audio, noise_p)
             opt.zero_grad(set_to_none=True)
             with torch.autocast("cuda", dtype=torch.bfloat16, enabled=False):
-                logits = model.forward_gpt(mel, is_audio, midi_id, use_cuda_kernel=use_kernel)
+                if args.carry_seg > 0:
+                    # ---- R2 lever B: segmented state-carry forward ----
+                    # detached S carry + shift-lead bridging at every segment
+                    # boundary (the continuous-inference continuity protocol);
+                    # audio frontend once per window (exact conv context).
+                    logits, _ = model.forward_gpt_carry(
+                        mel, is_audio, midi_in, seg_tokens=args.carry_seg,
+                        state=None, use_cuda_kernel=use_kernel,
+                    )
+                else:
+                    logits = model.forward_gpt(mel, is_audio, midi_in, use_cuda_kernel=use_kernel)
                 targets, mask = model.build_targets(is_audio, midi_id, batch["unit_midi_lens"])
                 loss, n_tok, acc = model.loss_and_metrics(logits, targets, mask)
                 # EOS-position accuracy (positions whose target is EOS)
@@ -226,7 +266,7 @@ def run(args):
                 g["lr"] = lr * g["my_lr_scale"]
             opt.step()
             step += 1
-            row = {"step": step, "loss": float(loss), "acc": float(acc), "eos_acc": float(eos_acc), "gnorm": float(gnorm), "lr": lr, "n_tok": n_tok}
+            row = {"step": step, "loss": float(loss), "acc": float(acc), "eos_acc": float(eos_acc), "gnorm": float(gnorm), "lr": lr, "n_tok": n_tok, "noise_p": noise_p}
             log_rows.append(row)
             if step % args.log_every == 0 or step == 1:
                 dt = time.time() - t_last
@@ -289,6 +329,10 @@ def main():
                          "default track set = corpus train split (never merges val/test into training)")
     ap.add_argument("--tracks", nargs="*", default=None)
     ap.add_argument("--units", type=int, default=4)
+    ap.add_argument("--val-units", type=int, default=0,
+                    help="window size (units) for the validation criterion; "
+                         "0 = same as --units. Keep at the R1 value (4) when "
+                         "comparing val curves across rounds")
     ap.add_argument("--max-tokens-per-chunk", type=int, default=2048,
                     help="tokenizer cap; Slakh2100 chunks reach ~2.3k tokens -> use 4096 there")
     ap.add_argument("--val-every", type=int, default=0,
@@ -311,6 +355,18 @@ def main():
     ap.add_argument("--log-every", type=int, default=10)
     ap.add_argument("--save-every", type=int, default=500)
     ap.add_argument("--pad-to", type=int, default=None)
+    ap.add_argument("--carry-seg", type=int, default=0,
+                    help="R2 lever B: >0 enables segmented state-carry training — the plan is "
+                         "processed in consecutive parallel passes of ~N real positions with the "
+                         "RWKV state carried (detached) across passes and the previous position's "
+                         "embedding re-fed as shift lead (continuous-inference continuity "
+                         "protocol). 0 = monolithic forward (R1 protocol). "
+                         "Requires --units large enough that windows span several segments")
+    ap.add_argument("--noise-p", type=float, default=0.0,
+                    help="R2 lever A: max probability of corrupting a MIDI input token "
+                         "(scheduled-sampling proxy; targets stay clean GT). 0 = off")
+    ap.add_argument("--noise-anneal", type=int, default=1000,
+                    help="steps to linearly anneal noise probability 0 -> --noise-p")
     ap.add_argument("--mel-cache", type=str, default="")
     args = ap.parse_args()
     run(args)

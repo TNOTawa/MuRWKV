@@ -78,6 +78,78 @@ void cuda_forward(int B,int T,int H,bf*r,bf*w,bf*k,bf*v,bf*a,bf*b,bf*y,float*s,f
     forward_kernel<_N_><<<dim3(H,B),dim3(_N_)>>>(T,H,r,w,k,v,a,b,y,s,sa);
 }
 
+//######################################################################################################
+
+// R2 extension: same recurrence as forward_kernel, but the state is SEEDED with
+// an initial S (B,H,N,N) fp32 (layout identical to one chunk of s__: row i
+// stride N, column j stride 1). Zero init (the official path) is the special
+// case s_init == 0. The backward pass is reused unchanged: it reconstructs
+// stateT from the saved chunk-boundary states, so gradients w.r.t. the token
+// inputs already account for the propagated initial state, and the gradient
+// INTO the initial state is simply not returned — exactly detached (truncated)
+// BPTT carry semantics.
+template<int N> __launch_bounds__(N,2)
+__global__ void forward_kernel_init(int T,int H,F_ r_,F_ w_,F_ k_,F_ v_,F_ a_,F_ b_,bf* __restrict__ y_,float* s__,float* __restrict__ sa_,const float* __restrict__ s_init_)
+{
+    const int bb=blockIdx.y, hh=blockIdx.x, i=threadIdx.x;
+    float* __restrict__ s_ = s__ + i64(bb*H+hh) * i64((T/_CHUNK_LEN_)*N*N);
+    const float* __restrict__ s0_ = s_init_ + i64(bb*H+hh) * i64(N*N);
+    float state[N];
+#pragma unroll
+    for (int j=0; j<N; ++j) {
+        state[j] = s0_[i*N+j];
+    }
+    __shared__ float r[N];
+    __shared__ float w[N];
+    __shared__ float k[N];
+    __shared__ float a[N];
+    __shared__ float b[N];
+
+    for (int t = 0; t < T; ++t)
+    {
+        const int idx = ((bb*T+t)*H+hh)*N+i;
+
+        __syncthreads();
+        r[i] = to_float(r_[idx]);
+        w[i] = __expf(W_SCALE / (1.0f + __expf(-to_float(w_[idx]))));
+        k[i] = to_float(k_[idx]);
+        a[i] = to_float(a_[idx]);
+        b[i] = to_float(b_[idx]);
+        __syncthreads();
+
+        float sa = 0.0f;
+#pragma unroll
+        for (int j=0; j<N; ++j) {
+            sa += state[j] * a[j];
+        }
+        sa_[idx] = sa;
+
+        float vi = to_float(v_[idx]);
+        float y=0.0f;
+#pragma unroll
+        for (int j=0; j<N; ++j) {
+            float s = state[j];
+            s = s * w[j] + (sa * b[j] + k[j] * vi);
+            y += s * r[j];
+            state[j] = s;
+        }
+
+        y_[idx] = to_bf(y);
+
+        if ((t+1)%_CHUNK_LEN_ == 0) {
+            int base = (t/_CHUNK_LEN_)*N*N + i;
+#pragma unroll
+            for (int j=0; j<N; ++j) {
+                s_[base+j*N] = state[j];
+            }
+        }
+    }
+}
+void cuda_forward_init(int B,int T,int H,bf*r,bf*w,bf*k,bf*v,bf*a,bf*b,bf*y,float*s,float*sa,const float*s_init)
+{
+    forward_kernel_init<_N_><<<dim3(H,B),dim3(_N_)>>>(T,H,r,w,k,v,a,b,y,s,sa,s_init);
+}
+
 //###################################################################################################### 
 
 template<int N>

@@ -257,6 +257,144 @@ def test_streaming_parity():
     print("OK streaming chunks == joint batch")
 
 
+def test_scan_vs_cuda_kernel_init():
+    """R2: CUDA kernel seeded with an initial state (forward_init) must match
+    the python scan with the same initial state — outputs, final state, and
+    input gradients; and the gradient into the init state must be discarded
+    (detached carry semantics)."""
+    if not KERNEL_AVAILABLE:
+        print("SKIP scan-vs-kernel-init (kernel unavailable)")
+        return
+    torch.manual_seed(0)
+    B, T, H, N = 2, 128, 8, 64
+    C = H * N
+    r = torch.randn(B, T, C, dtype=torch.bfloat16, device="cuda") * 0.3
+    w = torch.randn(B, T, C, dtype=torch.bfloat16, device="cuda") * 2.0
+    k = torch.randn(B, T, C, dtype=torch.bfloat16, device="cuda") * 0.1
+    v = torch.randn(B, T, C, dtype=torch.bfloat16, device="cuda") * 0.1
+    a = torch.randn(B, T, C, dtype=torch.bfloat16, device="cuda") * 0.1
+    b = torch.randn(B, T, C, dtype=torch.bfloat16, device="cuda") * 0.1
+    views = [x.view(B, T, H, N) for x in (r, w, k, v, a, b)]
+    S0 = torch.randn(B, H, N, N, dtype=torch.float32, device="cuda") * 0.1
+
+    y_cuda, S_cuda = wkv7_cuda(*views, init_state=S0)
+    y_torch, S_torch, _ = wkv7_scan(*[x.float() for x in views], state=S0.clone())
+    d = (y_cuda.float() - y_torch.to(torch.bfloat16).float()).abs().max().item()
+    ds = (S_cuda - S_torch).abs().max().item()
+    print(f"scan-vs-kernel(init) fwd: max_abs_diff={d:.3e}  final_state diff={ds:.3e}")
+    assert d < 5e-2, f"init-state fwd mismatch {d}"
+    assert ds < 5e-2, f"init-state final-state mismatch {ds}"
+
+    # chained continuation (catches state-convention bugs decisively): a pass
+    # over A then a pass over B seeded with the carried state must equal one
+    # pass over A+B — in outputs over B AND in the final state.
+    T1 = T // 2
+    viewsA = [x[:, :T1].contiguous() for x in views]
+    viewsB = [x[:, T1:].contiguous() for x in views]
+    yA, SA = wkv7_cuda(*viewsA, init_state=S0)
+    yB, SB = wkv7_cuda(*viewsB, init_state=SA)
+    yAB, SAB = wkv7_cuda(*views, init_state=S0)
+    dy = (yB.float() - yAB.float()[:, T1:]).abs().max().item()
+    dss = (SB - SAB).abs().max().item()
+    print(f"kernel chained(A->B) vs single-pass: y diff={dy:.3e}  state diff={dss:.3e}")
+    assert dy < 5e-2, f"chained continuation y mismatch {dy}"
+    assert dss < 5e-2, f"chained continuation state mismatch {dss}"
+
+    # backward: grads w.r.t. inputs match; grad into S0 is None (truncated BPTT)
+    def run(path):
+        torch.manual_seed(1)
+        R = [x.clone().requires_grad_() for x in views]
+        s0 = S0.clone().requires_grad_()
+        if path == "cuda":
+            out = wkv7_cuda(*R, init_state=s0)[0]
+        else:
+            out = wkv7_scan(*[x.float() for x in R], state=s0)[0].to(torch.bfloat16)
+        loss = (out.float() ** 2).mean()
+        loss.backward()
+        return [x.grad.detach().float() for x in R], (s0.grad if path == "cuda" else None)
+
+    gc, g0c = run("cuda")
+    gt, _ = run("torch")
+    for name, c, t in zip("rwkvab", gc, gt):
+        d = (c - t).abs().max().item()
+        print(f"scan-vs-kernel(init) bwd d{name}: {d:.3e}")
+        assert d < 2e-1, f"init-state bwd mismatch {name}: {d}"
+    assert g0c is None, "gradient leaked into the detached carried state"
+    print("OK scan-vs-kernel with init state (fwd+bwd, no grad into carry)")
+
+
+def test_carry_vs_joint():
+    """R2: segmented-carry training forward vs one joint forward.
+
+    Case A (python scan, both paths): plan length L = 3*seg_real + 1 produces
+    three 16-aligned passes with NO tail padding, so the first segment must be
+    EXACT and the final carried state comparable to the joint one.
+    Case B (CUDA kernel, both paths): kernel-eligible plan; first segment
+    exact, all positions within the lead-bridging tolerance (cf.
+    test_cross_chunk_state_carry). Also checks finite gradients through the
+    seeded-kernel backward path.
+    """
+    torch.manual_seed(13)
+    cfg = MuRWKVConfig(n_layer=2, n_embd=128, head_size=64)
+    model = randomize_model(MuRWKV(cfg)).cuda().bfloat16().eval()
+    B = 1
+    CF = 500  # CHUNK_FRAMES; keep the real audio/MIDI plan layout
+    seg_real = 511  # seg_tokens=512
+
+    def make_plan(L):
+        mel = torch.randn(B, L, cfg.n_mels, device="cuda").bfloat16() * 0.3
+        is_audio = torch.zeros(B, L, dtype=torch.bool, device="cuda")
+        midi_id = torch.zeros(B, L, dtype=torch.long, device="cuda")
+        # alternate 500 audio frames + 44 midi tokens -> fits L=1534 exactly
+        pos = 0
+        while pos < L:
+            a_end = min(pos + CF, L)
+            is_audio[:, pos:a_end] = True
+            m_end = min(a_end + (L - a_end), L)
+            midi_id[:, a_end:m_end] = torch.randint(
+                3, cfg.vocab_size, (B, m_end - a_end), device="cuda")
+            pos = m_end
+        return mel, is_audio, midi_id
+
+    with torch.no_grad():
+        # ---- case A: scan/scan, no tail padding ----
+        L = 3 * seg_real + 1  # 1534
+        mel, is_audio, midi_id = make_plan(L)
+        lg_joint = model.forward_gpt(mel, is_audio, midi_id, use_cuda_kernel=False)
+        S_joint = [blk._last_state.clone() for blk in model.blocks]
+        lg_carry, st = model.forward_gpt_carry(
+            mel, is_audio, midi_id, seg_tokens=512, use_cuda_kernel=False)
+        assert lg_carry.shape == lg_joint.shape, (lg_carry.shape, lg_joint.shape)
+        d0 = (lg_carry[:, :seg_real] - lg_joint[:, :seg_real]).abs().max().item()
+        dall = (lg_carry - lg_joint).abs().max().item()
+        ds = max((st.S[i] - S_joint[i]).abs().max().item() for i in range(cfg.n_layer))
+        print(f"carry-vs-joint(scan): first-seg diff={d0:.3e} all diff={dall:.3e} final-state diff={ds:.3e}")
+        assert d0 < 1e-4, f"first segment must match joint exactly, got {d0}"
+        assert dall < 5e-2, f"carry-vs-joint mismatch {dall}"
+        assert ds < 5e-2, f"final state mismatch {ds}"
+
+        # ---- case B: kernel/kernel, 16-aligned plan ----
+        L = 2 * (CF + 124)  # 1248, %16==0
+        mel, is_audio, midi_id = make_plan(L)
+        lg_joint = model.forward_gpt(mel, is_audio, midi_id, use_cuda_kernel=True)
+        lg_carry, _ = model.forward_gpt_carry(
+            mel, is_audio, midi_id, seg_tokens=512, use_cuda_kernel=True)
+        d0 = (lg_carry[:, :seg_real] - lg_joint[:, :seg_real]).abs().max().item()
+        dall = (lg_carry - lg_joint).abs().max().item()
+        print(f"carry-vs-joint(kernel): first-seg diff={d0:.3e} all diff={dall:.3e}")
+        assert d0 < 1e-4, f"kernel first segment mismatch {d0}"
+        assert dall < 5e-2, f"kernel carry-vs-joint mismatch {dall}"
+
+    # gradient path through the seeded kernel backward
+    model.train()
+    lg, _ = model.forward_gpt_carry(mel, is_audio, midi_id, seg_tokens=512, use_cuda_kernel=KERNEL_AVAILABLE)
+    loss = lg.float().pow(2).mean()
+    loss.backward()
+    bad = [n for n, p in model.named_parameters() if p.grad is not None and not torch.isfinite(p.grad).all()]
+    assert not bad, f"non-finite grads through carry backward: {bad[:5]}"
+    print("OK carry-vs-joint parity + finite backward through seeded kernel")
+
+
 def test_bf16_smoke():
     torch.manual_seed(3)
     cfg = MuRWKVConfig(n_layer=2, n_embd=128, head_size=64)
@@ -280,5 +418,7 @@ if __name__ == "__main__":
     test_parallel_vs_rnn()
     test_cross_chunk_state_carry()
     test_streaming_parity()
+    test_scan_vs_cuda_kernel_init()
+    test_carry_vs_joint()
     test_bf16_smoke()
     print("GATE 2 PARITY: ALL PASS")

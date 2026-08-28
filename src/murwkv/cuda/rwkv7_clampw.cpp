@@ -14,6 +14,16 @@ void forward(torch::Tensor &r, torch::Tensor &w, torch::Tensor &k, torch::Tensor
     cuda_forward(B, T, H, (bf*)r.data_ptr(), (bf*)w.data_ptr(), (bf*)k.data_ptr(), (bf*)v.data_ptr(), (bf*)a.data_ptr(), (bf*)b.data_ptr(), (bf*)y.data_ptr(), (float*)s.data_ptr(), (float*)sa.data_ptr());
 }
 
+// R2 extension: forward pass seeded with an initial recurrent state S
+// (B,H,N,N) fp32. The official `forward` above (zero-initialized state) is
+// untouched; gradients into s_init are not returned (detached carry).
+void cuda_forward_init(int B, int T, int H, bf*r, bf*w, bf*k, bf*v, bf*a, bf*b, bf*y, float*s, float*sa, const float*s_init);
+
+void forward_init(torch::Tensor &r, torch::Tensor &w, torch::Tensor &k, torch::Tensor &v, torch::Tensor &a, torch::Tensor &b, torch::Tensor &y, torch::Tensor &s, torch::Tensor &sa, torch::Tensor &s_init) {
+    int B = r.sizes()[0], T = r.sizes()[1], H = r.sizes()[2];
+    cuda_forward_init(B, T, H, (bf*)r.data_ptr(), (bf*)w.data_ptr(), (bf*)k.data_ptr(), (bf*)v.data_ptr(), (bf*)a.data_ptr(), (bf*)b.data_ptr(), (bf*)y.data_ptr(), (float*)s.data_ptr(), (float*)sa.data_ptr(), (const float*)s_init.data_ptr());
+}
+
 void cuda_backward(int B, int T, int H, bf*r, bf*w, bf*k, bf*v, bf*a, bf*b, bf*dy, float*s, float*sa, bf*dr, bf*dw, bf*dk, bf*dv, bf*da, bf*db);
 
 void backward(torch::Tensor &r, torch::Tensor &w, torch::Tensor &k, torch::Tensor &v, torch::Tensor &a, torch::Tensor &b, torch::Tensor &dy,
@@ -25,5 +35,6 @@ void backward(torch::Tensor &r, torch::Tensor &w, torch::Tensor &k, torch::Tenso
 
 TORCH_LIBRARY(rwkv7_clampw, m) {
     m.def("forward", forward);
+    m.def("forward_init", forward_init);
     m.def("backward", backward);
 }
