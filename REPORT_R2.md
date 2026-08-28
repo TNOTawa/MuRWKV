@@ -237,16 +237,20 @@ explained by a teacher-forced val gain.
 - Budget context (recorded by the round driver): ≈4 h of GPU budget from
   09:58. Training consumed none of it (the 5,000-step run had finished at
   09:57:41; total run wall ≈ 24 min stepping ≈ 0.287 s/step + tokenization).
-- Evaluation wall: val-diagnostic best_val completed 10:50; official-test
-  pool (best_val) 10:11:47 first attempt, final wave finished 12:16. A
-  first pool attempt (5×12-track shards) lost all workers to a
-  supervisor-side process kill at ~10:40 — **ordered by the session owner,
-  because observation item 1 (val-only free-running diagnostic of BOTH
-  candidate checkpoints) had to be on record before the test pool opened**;
-  no OOM (cgroup `oom_kill 0`). It was relaunched as a completion-checked
-  dynamic pool (2-track workers, retry on loss;
-  `scripts/run_r2_eval_pool.sh`). The final/latest val diagnostic finished
-  at 11:55, overlapping the pool's wall-clock; neither diagnostic influenced
+- Evaluation wall: val-diagnostic best_val 10:04–10:28 (6 fixed val tracks);
+  val-diagnostic latest/final 10:25–10:38 (`final.pt` ≡ `latest.pt` verified
+  bit-identical, 0/244 tensor diffs); official-test pool (best_val)
+  10:11:47–12:21. A first pool attempt (5×12-track shards) lost all workers
+  to an external process kill at ~10:40 (cause not directly observable; the
+  parallel session states it was intentional, to get observation item 1 —
+  the val-only diagnostic of BOTH candidate checkpoints — on record before
+  the test pool opened; no OOM: cgroup `oom_kill 0`; 19/120 track-modes'
+  log-only rows were lost — per-track JSONs are written at worker exit).
+  Two relaunches of `scripts/run_r2_eval_pool.sh` followed (a shard-
+  completion bookkeeping bug, then a malformed worker command — both fixed;
+  validly completed shards were detected and skipped, not recomputed); the
+  final driver wave ran 11:26–12:21 and all 30 shards verified valid. The
+  two val diagnostics overlap the pool's wall-clock; neither influenced
   checkpoint selection (best_val was fixed by val loss at train time) and
   the latest checkpoint was never evaluated on test (§5.3). Test pool for
   `latest`: **not run**. No new training, no new experiments, no protocol
