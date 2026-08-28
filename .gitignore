@@ -2,12 +2,18 @@
 .env
 *.env
 **/credentials*
-**/*token*
-# exception: postmortem analysis script (contains no secrets; tokenizer.py
-# stays tracked the same way - already-tracked files ignore ignore rules)
-!scripts/r2_postmortem/token_probe.py
 **/*.pem
 **/*.key
+
+# GitHub token helper: environment-specific script; reads the real token from
+# /root/.gh_token (outside the repo) and shreds it after use. Keep untracked.
+scripts/gh_login_token.sh
+
+# postmortem token-probe outputs (regenerable from the tracked script)
+results/r2_postmortem/token_probe.csv
+results/r2_postmortem/token_probe_summary.json
+# exception: the postmortem analysis script itself (contains no secrets) is tracked
+!scripts/r2_postmortem/token_probe.py
 
 # data (large, never commit) — root-anchored so the src/murwkv/data/ package is tracked
 /data/
