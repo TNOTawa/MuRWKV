@@ -276,10 +276,11 @@ def run(args):
             if step % args.log_every == 0 or step == 1:
                 dt = time.time() - t_last
                 t_last = time.time()
+                n_logged = args.log_every if step % args.log_every == 0 else step
                 passes = (T + 2046) // 2047 if args.carry_seg else 1
                 tbl = (f"[step {step}/{args.steps}] loss {float(loss):.4f} acc {float(acc)*100:.1f}% "
-                       f"gnorm {float(gnorm):.3f} lr {lr:.2e} tok {n_tok} {dt:.1f}s/step "
-                       f"[data {(t1-t0)*1e3:.0f}ms fwd {((t2-t1))*1e3:.0f}ms bwd+opt {max(0.0, (dt-(t2-t0)))*1e3:.0f}ms T={T} passes={passes}]")
+                       f"gnorm {float(gnorm):.3f} lr {lr:.2e} tok {n_tok} {dt/max(1,n_logged):.2f}s/step "
+                       f"[data {(t1-t0)*1e3:.0f}ms fwd {(t2-t1)*1e3:.0f}ms bwd+opt {max(0.0, (dt-(t2-t0)))*1e3:.0f}ms/{n_logged}steps T={T} passes={passes}]")
                 print(tbl, flush=True)
             if step % args.save_every == 0:
                 ckpt = {
